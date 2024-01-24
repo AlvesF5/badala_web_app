@@ -1,20 +1,22 @@
-import { getServerSession } from "next-auth";
-import { ReactNode } from "react";
-import { nextAuthOptions } from "../api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
 
-interface PrivateLayoutProps{
-    children: ReactNode
-}
+// import { getServerSession } from "next-auth/next";
+// import { ReactNode } from "react";
 
-export default async function PrivateLayout({children}: PrivateLayoutProps){
-    const session = await getServerSession(nextAuthOptions)
+// import { redirect } from "next/navigation";
+// import { authOptions } from "../api/auth/[...nextauth]/route";
 
-    console.log("Sessão aqui "+session)
+// interface PrivateLayoutProps{
+//     children: ReactNode
+// }
 
-    if(!session){
-        redirect('/login')
-    }
+// export default async function PrivateLayout({children}: PrivateLayoutProps){
+//     const session = await getServerSession(authOptions);
 
-    return <>{children}</>
-}
+//     console.log("Sessão aqui "+session)
+
+//     if(!session){
+//         redirect('/login')
+//     }
+
+//     return <>{children}</>
+// }
