@@ -1,5 +1,5 @@
 import { userLogin } from "@/actions/LoginAction";
-import { isAuthenticated } from '@/Utils/Auth';
+import { isAuthenticated } from '@/utils/Auth';
 import { redirect } from 'next/navigation'
 
 export default function Login() {
