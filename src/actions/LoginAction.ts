@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from 'next/navigation';
+import { setCookie } from 'cookies-next';
 
 
 export const  userLogin = async(formData: FormData) => {
@@ -32,7 +33,8 @@ export const  userLogin = async(formData: FormData) => {
         throw new Error("Falha ao fazer login")
     }
 
-    cookies().set('balada-user-token', userResp.user.token);
+    // cookies().set('balada-user-token', userResp.user.token);
+    setCookie('balada-user-token', userResp.user.token, {cookies});
 
   
     redirect('/');

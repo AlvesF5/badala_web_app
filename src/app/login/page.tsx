@@ -1,13 +1,12 @@
-'use client'
-
-
 import { userLogin } from "@/actions/LoginAction";
-import { jwtDecode } from "jwt-decode";
-import { cookies } from "next/headers";
-import { useRouter } from "next/navigation";
-
+import { isAuthenticated } from '@/Utils/Auth';
+import { redirect } from 'next/navigation'
 
 export default function Login() {
+
+  if (isAuthenticated()) {
+    redirect('/')
+  }
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen">
@@ -30,7 +29,7 @@ export default function Login() {
 
         <button
           type="submit"
-          className="h-12 rounded-md bg-gray-300 text-gray-800 hover:bg-gray-400"
+          className="h-12 rounded-md bg-balada_green_900 text-white hover:bg-balada_violet_500"
         >
           Entrar
         </button>
