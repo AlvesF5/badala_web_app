@@ -4,6 +4,7 @@ import { userLogin } from "@/app/actions/LoginAction";
 import { useFormState, useFormStatus } from 'react-dom';
 import { useCookies } from 'next-client-cookies';
 import { redirect } from 'next/navigation'
+import { Toaster, toast } from 'sonner';
 
 const initialState = {
   message: "",
@@ -25,11 +26,6 @@ function SubmitButton() {
 
 export default function Login() {
 
-  // if (isAuthenticated()) {
-  //   redirect('/')
-  // }
-
-
   const token = useCookies().get('balada-user-token');
 
   if (token) {
@@ -39,6 +35,7 @@ export default function Login() {
   const [state, formAction] = useFormState(userLogin, initialState)
 
   return (
+
     <div className="flex flex-col items-center justify-center w-full h-screen">
       <h1 className="text-3xl mb-6">Login</h1>
 
@@ -57,10 +54,17 @@ export default function Login() {
           placeholder="Digite sua senha"
         />
 
+
         {state.message ? (
-          <p aria-live="polite" className="bg-red-500 text-white py-1 px-2 rounded-md">
-            {state?.message}
-          </p>
+          <div hidden>
+            {toast.error(state?.message, {
+              description: "Por favor, confira se os dados informados estão corretos.",
+              style: {
+                background: 'red',
+              },
+              className: 'class',
+            })}
+          </div>
         ) : null}
 
         <SubmitButton />

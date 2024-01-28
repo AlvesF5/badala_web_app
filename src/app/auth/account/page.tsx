@@ -1,10 +1,16 @@
-const Account = () => {
+'use client';
+
+import { toast } from "react-hot-toast";
+
+function Account(){
     return (
-        <main className="text-center h-screen flex justify-center items-center">
+        <div className="text-center h-screen flex justify-center items-center">
             <div>
                 <h1>Account</h1>
+                
             </div>
-        </main>
+            {toast.success('You did it!')}
+        </div>
     );
 };
 

@@ -1,4 +1,4 @@
-const Settings = () => {
+function Settings(){
     return (
         <main className="text-center h-screen flex justify-center items-center">
             <div>
