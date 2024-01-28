@@ -24,14 +24,13 @@ export async function userLogin(prevState: any, formData: FormData) {
 
     console.log("Status retornado: "+resp.status)
 
-    if (resp.status===500) {
+    if (resp.status===400) {
       return {message: "Usuário e/ou senha inválidos!"}
       console.log(Error("Usuário e/ou senha inválidos!"))
     }
 
     const userResp = await resp.json();
 
-    // cookies().set('balada-user-token', userResp.user.token);
     setCookie('balada-user-token', userResp.user.token, { cookies });
     return redirect('/');
 
