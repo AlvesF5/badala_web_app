@@ -1,7 +1,7 @@
 export default function StepThree() {
     return (
         <div>
-                  <main className=" flex w-4/12 mx-auto justify-center items-center h-screen">
+            <main className=" flex w-4/12 mx-auto justify-center items-center h-screen">
                 <div className='w-full h-full flex flex-col justify-between'>
                     <div className='flex flex-col gap-8'>
                         <div className='flex flex-col'>
