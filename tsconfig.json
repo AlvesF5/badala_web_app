@@ -24,6 +24,6 @@
       "src/components/*": ["./src/components/*"],
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/providers/providers.js", "src/app/api/auth/[...nextauth]/route.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/providers/providers.js", "src/app/api/auth/[...nextauth]/route.ts", "src/components/signup/Steps.jsx"],
   "exclude": ["node_modules"]
 }

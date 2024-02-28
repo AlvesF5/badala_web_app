@@ -365,3 +365,27 @@ p {
 
 
 /* End Slide Story */
+
+.step-item{
+  @apply relative flex flex-col justify-center items-center w-full bg-balada_gray_800;
+}
+
+.step-item:not(:first-child):before{
+  @apply content-[''] bg-white absolute w-full h-[3px] right-2/4 top-[38%] -translate-y-2;
+}
+
+.step{
+  @apply w-10 h-10 flex justify-center items-center z-10 relative rounded-full font-semibold text-white bg-gray-700;
+}
+
+.active .step{
+  @apply bg-gray-700;
+}
+
+.complete .step{
+  @apply bg-balada_green_900
+}
+
+.complete:not(:first-child):before{
+  @apply bg-balada_green_800;
+}
