@@ -1,4 +1,4 @@
-export default function StepThree() {
+export default function StepThree({data,updateFielHandler}: { data: any; updateFielHandler: any}) {
     return (
         <div>
             <main className=" flex w-full mx-auto justify-center items-center h-full">

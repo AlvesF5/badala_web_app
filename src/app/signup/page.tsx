@@ -8,6 +8,7 @@ import logo from "../../images/logo.png"
 import Image from "next/image"
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr'
 import { FiSend } from 'react-icons/Fi'
+import {useState} from "react";
 
 //Hooks
 import useForm from "@/hooks/useForm";
@@ -15,8 +16,24 @@ import StepReview from "@/components/signup/StepReview"
 
 export default function SignUp() {
 
+    const formTemplate = {
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        retryPassword: ""
+    }
+
+    const [data, setData] = useState(formTemplate);
+
+    const updateFielHandler = (key:any, value:any) => {
+        setData((prev) =>{
+            return{...prev, [key]: value};
+        })
+    }
+
     // eslint-disable-next-line react/jsx-key
-    const formComponents = [<StepOne />, <StepTwo />, <StepThree />, <StepReview/>];
+    const formComponents = [<StepOne data={data}  updateFielHandler={updateFielHandler}/>, <StepTwo data={data} updateFielHandler={updateFielHandler}/>, <StepThree data={data} updateFielHandler={updateFielHandler}/>, <StepReview data={data} updateFielHandler={updateFielHandler}/>];
 
     const { currentStep, currentComponent, changeStep, isLastStep, isFirstStep } = useForm(formComponents);
 

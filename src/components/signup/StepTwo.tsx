@@ -1,55 +1,33 @@
-export default function StepTwo() {
+export default function StepTwo({data,updateFielHandler}: { data: any; updateFielHandler: any}) {
     return (
         <div>
             <main className=" flex w-full mx-auto justify-center items-center h-full">
                 <div className='w-full h-full flex flex-col justify-center'>
                     <div className='flex flex-col gap-8'>
-                        <div className='flex flex-col gap-4 text-white'>
-                            <div className='flex flex-col justify-start w-full'>
-                                <h1 className='text-primary-marine-blue text-2xl md:text-3xl font-black text-balada_violet_500'>Informações pessoais</h1>
-                                <p className='text-neutro-cool-gray text-sm text-white'>
-                                    Por favor, insira um e-mail e senha válidos
-                                </p>
+                        <div className='flex flex-col justify-start w-full'>
+                            <h1 className='text-primary-marine-blue text-2xl md:text-3xl font-black text-balada_violet_500'>Informações pessoais</h1>
+                            <p className='text-neutro-cool-gray text-sm text-white'>
+                                Por favor, insira seus dados cadastrais
+                            </p>
+                        </div>
+                        <div className="grid md:grid-cols-2 md:gap-6">
+                            <div className="relative z-0 w-full mb-5 group">
+                                <input type="text" name="floating_first_name" id="floating_first_name" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <label htmlFor="floating_first_name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">First name</label>
                             </div>
-                            <div className='flex flex-col gap-1'>
-                                <label htmlFor='name' className='text-primary-marine-blue font-medium text-sm'>
-                                    Email
-                                </label>
-                                <input
-                                    type='text'
-                                    placeholder='Ex: contato@baladaeventos.com'
-                                    id='email'
-                                    name='email'
-
-                                    className='text-md  text-gray-800 border border-neutro-light-gray rounded-lg px-3 py-2.5 outline-none focus:border-primary-purplish-blue'
-                                    // required
-                                />
+                            <div className="relative z-0 w-full mb-5 group">
+                                <input type="text" name="floating_last_name" id="floating_last_name" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <label htmlFor="floating_last_name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Last name</label>
                             </div>
-                            <div className='flex flex-col gap-1'>
-                                <label htmlFor='email' className='text-primary-marine-blue font-medium text-sm'>
-                                    Senha
-                                </label>
-                                <input
-                                    type='password'
-                                    id='password'
-                                    name='password'
-
-                                    className='text-sm text-gray-800 border border-neutro-light-gray rounded-lg px-3 py-2.5 outline-none focus:border-primary-purplish-blue'
-                                    // required
-                                />
+                        </div>
+                        <div className="grid md:grid-cols-2 md:gap-6">
+                            <div className="relative z-0 w-full mb-5 group">
+                                <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="floating_phone" id="floating_phone" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <label htmlFor="floating_phone" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Phone number (123-456-7890)</label>
                             </div>
-                            <div className='flex flex-col gap-1'>
-                                <label htmlFor='phone' className='text-primary-marine-blue font-medium text-sm'>
-                                    Repetir Senha
-                                </label>
-                                <input
-                                    type='password'
-                                    id='retry-password'
-                                    name='retry-password'
-
-                                    className='text-sm text-gray-800 border border-neutro-light-gray rounded-lg px-3 py-2.5 outline-none focus:border-primary-purplish-blue'
-                                    // required
-                                />
+                            <div className="relative z-0 w-full mb-5 group">
+                                <input type="text" name="floating_company" id="floating_company" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <label htmlFor="floating_company" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Company (Ex. Google)</label>
                             </div>
                         </div>
                     </div>
