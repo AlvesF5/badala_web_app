@@ -24,7 +24,8 @@ export default function SignUp() {
         retryPassword: "",
         phone: "",
         birthDate: "",
-        documentNumber: ""
+        documentNumber: "",
+        gender: ""
     }
 
     const [data, setData] = useState(formTemplate);
