@@ -25,7 +25,14 @@ export default function SignUp() {
         phone: "",
         birthDate: "",
         documentNumber: "",
-        gender: ""
+        gender: "",
+        cep: "",
+        street: "",
+        number: "",
+        state: "",
+        city: "",
+        neighborhood: "",
+        complement: ""
     }
 
     const [data, setData] = useState(formTemplate);

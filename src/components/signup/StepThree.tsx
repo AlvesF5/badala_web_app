@@ -10,76 +10,112 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                                 Por favor, insira suas informações de moradia
                             </p>
                         </div>
-                        <div className="grid md:grid-cols-2 md:gap-6">
-                            <div className="relative z-0 w-full mb-5 group">
+                        <div className="grid md:grid-cols-6 md:gap-6">
+                            <div className="relative z-0 w-full mb-5 group col-span-1">
                                 <input
                                     type="text"
-                                    value={data.firstName || ""}
-                                    onChange={(e) => updateFielHandler("firstName", e.target.value)}
-                                    name="firstName"
-                                    id="firstName"
+                                    value={data.cep || ""}
+                                    onChange={(e) => updateFielHandler("cep", e.target.value)}
+                                    name="cep"
+                                    id="cep"
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    required />
+                                // required 
+                                />
                                 <label
-                                    htmlFor="firstName"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Nome</label>
+                                    htmlFor="cep"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">CEP</label>
                             </div>
-                            <div className="relative z-0 w-full mb-5 group">
+                            <div className="relative z-0 w-full mb-5 group col-span-4">
                                 <input
                                     type="text"
-                                    value={data.lastName || ""}
-                                    onChange={(e) => updateFielHandler("lastName", e.target.value)}
-                                    name="lastName"
-                                    id="lastName"
+                                    value={data.street || ""}
+                                    onChange={(e) => updateFielHandler("street", e.target.value)}
+                                    name="street"
+                                    id="street"
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    required />
+                                // required 
+                                />
                                 <label
-                                    htmlFor="lastName"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Sobrenome</label>
+                                    htmlFor="street"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Rua</label>
+                            </div>
+                            <div className="relative z-0 w-full mb-5 group col-span-1">
+                                <input
+                                    type="text"
+                                    value={data.number || ""}
+                                    onChange={(e) => updateFielHandler("number", e.target.value)}
+                                    name="number"
+                                    id="number"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                // required 
+                                />
+                                <label
+                                    htmlFor="number"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Número</label>
                             </div>
                         </div>
-                        <div className="grid md:grid-cols-3 md:gap-6">
-                            <div className="relative z-0 w-full mb-5 group">
+                        <div className="grid md:grid-cols-6 md:gap-6">
+                            <div className="relative z-0 w-full mb-5 group col-span-1">
+                                <select
+                                    value={data.state || ""}
+                                    onChange={(e) => updateFielHandler("state", e.target.value)}
+                                    name="state"
+                                    id="state"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 focus:bg-balada_gray_800 peer"
+                                    // required
+                                >
+                                    <option selected value="AM">AM</option>
+                                    <option value="BA">BA</option>
+                                </select>
+                                <label
+                                    htmlFor="state"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Estado</label>
+                            </div>
+                            <div className="relative z-0 w-full mb-5 group col-span-3">
                                 <input
                                     type="text"
-                                    value={data.documentNumber || ""}
-                                    onChange={(e) => updateFielHandler("documentNumber", e.target.value)}
-                                    pattern="(\d{3}\.?\d{3}\.?\d{3}-?\d{2})|(\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2})"
-                                    name="documentNumber"
-                                    id="documentNumber"
+                                    value={data.city || ""}
+                                    onChange={(e) => updateFielHandler("city", e.target.value)}
+                                    name="city"
+                                    id="city"
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    required />
+                                // required 
+                                />
                                 <label
-                                    htmlFor="documentNumber"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">CPF (Apenas Números)</label>
+                                    htmlFor="city"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Cidade</label>
                             </div>
-                            <div className="relative z-0 w-full mb-5 group">
+                            <div className="relative z-0 w-full mb-5 group col-span-2">
                                 <input
-                                    type="tel"
-                                    value={data.phone || ""}
-                                    onChange={(e) => updateFielHandler("phone", e.target.value)}
-                                    pattern="(\(?\d{2}\)?\s)?(\d{4,5}\-\d{4})"
-                                    name="phone"
-                                    id="phone"
+                                    type="text"
+                                    value={data.neighborhood || ""}
+                                    onChange={(e) => updateFielHandler("neighborhood", e.target.value)}
+                                    name="neighborhood"
+                                    id="neighborhood"
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    required />
+                                // required 
+                                />
                                 <label
-                                    htmlFor="phone"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Celular (Whatsapp)</label>
+                                    htmlFor="neighborhood"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Bairro</label>
                             </div>
-                            <div className="relative z-0 w-full mb-5 group">
+                        </div>
+                        <div className="grid md:grid-cols-1 md:gap-6">
+                            <div className="relative z-0 w-full mb-5 group col-span-3">
                                 <input
-                                    type="date"
-                                    value={data.birthDate || ""}
-                                    onChange={(e) => updateFielHandler("birthDate", e.target.value)}
-                                    name="birthDate"
-                                    id="birthDate"
+                                    type="text"
+                                    value={data.complement || ""}
+                                    onChange={(e) => updateFielHandler("complement", e.target.value)}
+                                    name="complement"
+                                    id="complement"
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    required />
+                                // required 
+                                />
                                 <label
-                                    htmlFor="birthDate"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Data de nascimento</label>
+                                    htmlFor="complement"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Complemento</label>
                             </div>
+
                         </div>
                     </div>
 
