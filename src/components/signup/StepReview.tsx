@@ -60,7 +60,7 @@ export default function StepReview({ data, updateFielHandler }: { data: any; upd
                                 </dd>
                             </div>
                         </div>
-                        <div className="border-t border-gray-600 px-4 py-5 sm:p-0">
+                        <div className="border-t border-gray-600 md:px-4 py-5 sm:p-0">
                             <dl className="sm:divide-y sm:divide-gray-200">
                                 <div className="py-2 sm:py-5 sm:grid sm:grid-cols-6">
                                     <div className=" flex gap-2 sm:col-span-3">

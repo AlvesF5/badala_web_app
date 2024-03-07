@@ -10,8 +10,8 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                                 Por favor, insira suas informações de moradia
                             </p>
                         </div>
-                        <div className="grid md:grid-cols-6 md:gap-6">
-                            <div className="relative z-0 w-full mb-5 group col-span-1">
+                        <div className="grid grid-cols-6 md:gap-6 gap-2">
+                            <div className="relative z-0 w-full mb-5 group md:col-span-1 col-span-2">
                                 <input
                                     type="text"
                                     value={data.cep || ""}
@@ -53,8 +53,6 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                                     htmlFor="number"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Número</label>
                             </div>
-                        </div>
-                        <div className="grid md:grid-cols-6 md:gap-6">
                             <div className="relative z-0 w-full mb-5 group col-span-1">
                                 <select
                                     value={data.state || ""}
@@ -71,7 +69,7 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                                     htmlFor="state"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Estado</label>
                             </div>
-                            <div className="relative z-0 w-full mb-5 group col-span-3">
+                            <div className="relative z-0 w-full mb-5 group md:col-span-3 col-span-4">
                                 <input
                                     type="text"
                                     value={data.city || ""}
@@ -85,7 +83,7 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                                     htmlFor="city"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Cidade</label>
                             </div>
-                            <div className="relative z-0 w-full mb-5 group col-span-2">
+                            <div className="relative z-0 w-full mb-5 group md:col-span-2 col-span-6">
                                 <input
                                     type="text"
                                     value={data.neighborhood || ""}
@@ -99,9 +97,7 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                                     htmlFor="neighborhood"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Bairro</label>
                             </div>
-                        </div>
-                        <div className="grid md:grid-cols-1 md:gap-6">
-                            <div className="relative z-0 w-full mb-5 group col-span-3">
+                            <div className="relative z-0 w-full mb-5 group col-span-6">
                                 <input
                                     type="text"
                                     value={data.complement || ""}
@@ -115,7 +111,6 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                                     htmlFor="complement"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Complemento</label>
                             </div>
-
                         </div>
                     </div>
 
