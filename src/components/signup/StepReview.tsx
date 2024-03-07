@@ -1,4 +1,23 @@
+import { Icon } from 'react-icons-kit';
+import { eyeOff } from 'react-icons-kit/feather/eyeOff';
+import { eye } from 'react-icons-kit/feather/eye';
+import { useState } from "react";
+
 export default function StepReview({ data, updateFielHandler }: { data: any; updateFielHandler: any }) {
+    const [password, setPassword] = useState("");
+    const [type, setType] = useState('password');
+    const [icon, setIcon] = useState(eye);
+
+    const handleToggle = () => {
+        if (type === 'password') {
+            setIcon(eyeOff);
+            setType('text')
+        } else {
+            setIcon(eye)
+            setType('password')
+        }
+    }
+
     return (
         <div>
             <main className=" flex w-full mx-auto justify-center items-center h-full">
@@ -11,12 +30,33 @@ export default function StepReview({ data, updateFielHandler }: { data: any; upd
                             <h3 className="text-lg leading-6 font-medium text-balada_violet_500">
                                 Email e senha
                             </h3>
-                            <div className=" py-2 sm:grid sm:grid-cols-3 sm:gap-4">
-                                <dt className="text-sm font-medium text-white sm:col-span-2">
+                            <div className=" py-2 sm:gap-4 flex justify-between">
+                                <dt className="text-sm font-medium text-white">
                                     {data.email}
                                 </dt>
-                                <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-1">
-                                    {data.password}
+                                <dd className="mt-1 text-sm text-white sm:mt-0 flex justify-end right-0">
+                                    <span className="flex gap-2" onClick={handleToggle}>
+                                        <div className='flex gap-5'>
+                                            <div>
+                                                <input
+                                                    type={type}
+                                                    name="password"
+                                                    value={data.password}
+                                                    onChange={(e) => setPassword(e.target.value)}
+                                                    autoComplete="current-password"
+                                                    className='text-white w-full bg-balada_gray_800 text-right'
+                                                />
+                                            </div>
+                                            <div>
+                                                <Icon className="absolute -ml-4" icon={icon} size={20} />
+                                            </div>
+                                        </div>
+
+                                        <div>
+
+                                        </div>
+                                    </span>
+
                                 </dd>
                             </div>
                         </div>
