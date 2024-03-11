@@ -2,6 +2,7 @@ import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import { useState } from "react";
+import {formatedDate,formatedCPF,formatedNumber}  from '@/utils/Functions';
 
 export default function StepReview({ data, updateFielHandler }: { data: any; updateFielHandler: any }) {
     const [password, setPassword] = useState("");
@@ -17,6 +18,17 @@ export default function StepReview({ data, updateFielHandler }: { data: any; upd
             setType('password')
         }
     }
+
+    function selectGender(value:any) {
+        switch(value) {
+            case "MA":
+              return "Masculino"
+            case "FE":
+              return "Feminino"
+            case "NB":
+              return "Não Binário"
+          }
+     }
 
     return (
         <div>
@@ -60,52 +72,52 @@ export default function StepReview({ data, updateFielHandler }: { data: any; upd
                                 </dd>
                             </div>
                         </div>
-                        <div className="border-t border-gray-600 md:px-4 py-5 sm:p-0">
+                        <div className="border-t border-gray-600 py-5 sm:p-0">
                             <dl className="sm:divide-y sm:divide-gray-200">
-                                <div className="py-2 sm:py-5 sm:grid sm:grid-cols-6">
-                                    <div className=" flex gap-2 sm:col-span-3">
-                                        <dt className="text-sm font-medium text-balada_violet_500 sm:col-span-2">
-                                            Nome completo:
+                                <div className="py-2 sm:py-5 grid grid-cols-6">
+                                    <div className=" flex gap-1 md:gap-2 col-span-3">
+                                        <dt className="text-sm font-medium text-balada_violet_500 col-span-2">
+                                            Nome:
                                         </dt>
-                                        <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2 flex justify-start">
+                                        <dd className="text-sm text-white sm:mt-0 sm:col-span-2 flex justify-start">
                                             {data.firstName} {data.lastName}
                                         </dd>
                                     </div>
-                                    <div className="flex gap-3 sm:col-span-3 justify-end">
-                                        <dt className="text-sm font-medium text-balada_violet_500 sm:col-span-1">
+                                    <div className="flex gap-1 md:gap-3 col-span-3 justify-end">
+                                        <dt className="text-sm font-medium text-balada_violet_500 col-span-1">
                                             CPF:
                                         </dt>
-                                        <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-1 flex justify-end">
-                                            {data.documentNumber}
+                                        <dd className="text-sm text-white sm:mt-0 sm:col-span-1 flex justify-end">
+                                            {formatedCPF(data.documentNumber)}
                                         </dd>
                                     </div>
 
                                 </div>
                             </dl>
                             <dl className="sm:divide-y sm:divide-gray-200">
-                                <div className="py-2 sm:py-5 sm:grid sm:grid-cols-6">
-                                    <div className=" flex gap-2 sm:col-span-2">
+                                <div className="py-2 grid grid-cols-6">
+                                    <div className=" flex gap-1 md:gap-2 md:col-span-2 col-span-3">
                                         <dt className="text-sm font-medium text-balada_violet_500">
                                             Celular:
                                         </dt>
-                                        <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-1 flex justify-start">
-                                            {data.phone}
+                                        <dd className="text-sm text-white col-span-1 flex justify-start">
+                                            {formatedNumber(data.phone)}
                                         </dd>
                                     </div>
-                                    <div className=" flex gap-2 sm:col-span-2">
-                                        <dt className="text-sm font-medium text-balada_violet_500  flex justify-end">
+                                    <div className=" flex gap-1 md:gap-2 md:col-span-2 col-span-3">
+                                        <dt className="text-sm font-medium text-balada_violet_500  flex justify-end ml-6">
                                             Gênero:
                                         </dt>
-                                        <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-1 flex">
-                                            {data.gender}
+                                        <dd className="text-sm text-white flex">
+                                            {selectGender(data.gender)}
                                         </dd>
                                     </div>
-                                    <div className=" flex gap-2 sm:col-span-2 justify-end">
-                                        <dt className="text-sm font-medium text-balada_violet_500 sm:col-span-1">
+                                    <div className=" flex gap-1 md:gap-2 md:col-span-2 col-span-4 md:justify-end mt-4 md:mt-0">
+                                        <dt className="text-sm font-medium text-balada_violet_500">
                                             Data Nascimento:
                                         </dt>
-                                        <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-1 flex justify-end">
-                                            {data.birthDate}
+                                        <dd className="text-sm text-white col-span-1 flex md:justify-end">
+                                            {formatedDate(data.birthDate)}
                                         </dd>
                                     </div>
 
@@ -117,7 +129,7 @@ export default function StepReview({ data, updateFielHandler }: { data: any; upd
                                         <dt className="text-sm font-medium text-balada_violet_500">
                                             Endereço:
                                         </dt>
-                                        <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-1 flex justify-end">
+                                        <dd className="text-sm text-white col-span-1 flex justify-end">
                                             {data.street} Nº {data.number}, {data.complement}, Bairro: {data.neighborhood}, Cidade: {data.city}-{data.state}, CEP:{data.cep}
                                         </dd>
                                     </div>
