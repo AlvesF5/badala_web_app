@@ -2,7 +2,7 @@ import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import { useState } from "react";
-import {formatedDate,formatedCPF,formatedNumber}  from '@/utils/Functions';
+import {formatedDate,formatedCPF,formatedNumber,selectGender}  from '@/utils/Functions';
 
 export default function StepReview({ data, updateFielHandler }: { data: any; updateFielHandler: any }) {
     const [password, setPassword] = useState("");
@@ -19,17 +19,7 @@ export default function StepReview({ data, updateFielHandler }: { data: any; upd
         }
     }
 
-    function selectGender(value:any) {
-        switch(value) {
-            case "MA":
-              return "Masculino"
-            case "FE":
-              return "Feminino"
-            case "NB":
-              return "Não Binário"
-          }
-     }
-
+   
     return (
         <div>
             <main className=" flex w-full mx-auto justify-center items-center h-full">

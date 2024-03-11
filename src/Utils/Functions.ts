@@ -27,4 +27,16 @@ export const formatedNumber = (number:string) => {
     }
     return r;
 }
+
+export const selectGender = (value:string) => {
+    switch(value) {
+        case "MA":
+          return "Masculino"
+        case "FE":
+          return "Feminino"
+        case "NB":
+          return "Não Binário"
+      }
+ }
+
   
