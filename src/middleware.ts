@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 
 export default async function middleware(req: NextRequest) {
-
+  
   const isAuthenticated = () => {
 
     const token = cookies().get('balada-user-token');

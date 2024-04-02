@@ -120,7 +120,7 @@ export default function StepReview({ data, updateFielHandler }: { data: any; upd
                                             Endereço:
                                         </dt>
                                         <dd className="text-sm text-white col-span-1 flex justify-end">
-                                            {data.street} Nº {data.number}, {data.complement}, Bairro: {data.neighborhood}, Cidade: {data.city}-{data.state}, CEP:{data.cep}
+                                            {data.street} Nº {data.number}, {data.complement}, Bairro: {data.neighborhood}, Cidade: {data.city}-{data.state}, CEP: {data.cep}
                                         </dd>
                                     </div>
                                 </div>

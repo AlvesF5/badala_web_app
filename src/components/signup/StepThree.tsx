@@ -1,4 +1,23 @@
+import {getCepAddress} from '@/app/actions/GetCepAddressAction';
+import {useForm} from 'react-hook-form';
+
 export default function StepThree({ data, updateFielHandler }: { data: any; updateFielHandler: any }) {
+
+    const {setValue, register, getValues} = useForm();
+
+    const checkCEP = (e:any, data:any) =>{
+        const cep = e.target.value.replace(/\D/g,'');
+        fetch(`https://viacep.com.br/ws/${cep}/json`)
+        .then(res => res.json()).then(address => {
+            console.log(address);
+            updateFielHandler("street", address.logradouro)
+            updateFielHandler("state", address.uf)
+            updateFielHandler("city", address.localidade)
+            updateFielHandler("neighborhood", address.bairro)
+            updateFielHandler("complement", address.complemento)
+        });
+    }
+
     return (
         <div>
             <main className=" flex w-full mx-auto justify-center items-center h-full">
@@ -15,7 +34,7 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                                 <input
                                     type="text"
                                     value={data.cep || ""}
-                                    onChange={(e) => updateFielHandler("cep", e.target.value)}
+                                    onChange={(e) => {if(e.target.value.length==8){checkCEP(e,data)}; updateFielHandler("cep", e.target.value)}}
                                     name="cep"
                                     id="cep"
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -28,6 +47,7 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                             <div className="relative z-0 w-full mb-5 group col-span-4">
                                 <input
                                     type="text"
+                                    {...register("street")}
                                     value={data.street || ""}
                                     onChange={(e) => updateFielHandler("street", e.target.value)}
                                     name="street"
@@ -62,8 +82,34 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 focus:bg-balada_gray_800 peer"
                                 // required
                                 >
-                                    <option selected value="AM">AM</option>
-                                    <option value="BA">BA</option>
+                                    <option selected value="AC">Acre</option>
+                                    <option value="AL">Alagoas</option>
+                                    <option value="AP">Amapá</option>
+                                    <option value="AM">Amazonas</option>
+                                    <option value="BA">Bahia</option>
+                                    <option value="CE">Ceará</option>
+                                    <option value="DF">Distrito Federal</option>
+                                    <option value="ES">Espírito Santo</option>
+                                    <option value="GO">Goiás</option>
+                                    <option value="MA">Maranhão</option>
+                                    <option value="MT">Mato Grosso</option>
+                                    <option value="MS">Mato Grosso do Sul</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="PA">Pará</option>
+                                    <option value="PB">Paraíba</option>
+                                    <option value="PR">Paraná</option>
+                                    <option value="PE">Pernambuco</option>
+                                    <option value="PI">Piauí</option>
+                                    <option value="RJ">Rio de Janeiro</option>
+                                    <option value="RN">Rio Grande do Norte</option>
+                                    <option value="RS">Rio Grande do Sul</option>
+                                    <option value="RO">Rondônia</option>
+                                    <option value="RR">Roraima</option>
+                                    <option value="SC">Santa Catarina</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="SE">Sergipe</option>
+                                    <option value="TO">Tocantins</option>
+                                    <option value="EX">Estrangeiro</option>
                                 </select>
                                 <label
                                     htmlFor="state"

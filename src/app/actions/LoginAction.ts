@@ -14,6 +14,7 @@ export async function userLogin(prevState: any, formData: FormData) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
       },
       body: JSON.stringify({
         email: email,
