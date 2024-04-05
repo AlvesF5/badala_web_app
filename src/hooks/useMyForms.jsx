@@ -1,16 +1,15 @@
 import {useState} from "react";
 
-export default function useForm(steps){
+export default function useMyForms(steps){
 
     const [currentStep, setCurrentStep] = useState(0);
 
     function changeStep(i,e){
-       if(e) e.preventDefault();
+            if(e) e.preventDefault();
 
-        if(i<0 || i>= steps.length) return
-        setCurrentStep(i);
+            if(i<0 || i>= steps.length) return
+            setCurrentStep(i);
     }
-
 
     return{
         currentStep,

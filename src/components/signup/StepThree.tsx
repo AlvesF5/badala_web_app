@@ -1,9 +1,12 @@
-import {getCepAddress} from '@/app/actions/GetCepAddressAction';
 import {useForm} from 'react-hook-form';
 
 export default function StepThree({ data, updateFielHandler }: { data: any; updateFielHandler: any }) {
 
-    const {setValue, register, getValues} = useForm();
+    const {register, handleSubmit, formState:{errors}} = useForm();
+
+    const handleForm = (data:any) => {
+        console.log({data})
+    }
 
     const checkCEP = (e:any, data:any) =>{
         const cep = e.target.value.replace(/\D/g,'');
@@ -62,6 +65,7 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                             <div className="relative z-0 w-full mb-5 group col-span-1">
                                 <input
                                     type="text"
+                                    {...register("number")}
                                     value={data.number || ""}
                                     onChange={(e) => updateFielHandler("number", e.target.value)}
                                     name="number"
@@ -76,6 +80,7 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                             <div className="relative z-0 w-full mb-5 group col-span-1">
                                 <select
                                     value={data.state || ""}
+                                    {...register("state")}
                                     onChange={(e) => updateFielHandler("state", e.target.value)}
                                     name="state"
                                     id="state"
@@ -118,6 +123,7 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                             <div className="relative z-0 w-full mb-5 group md:col-span-3 col-span-4">
                                 <input
                                     type="text"
+                                    {...register("city")}
                                     value={data.city || ""}
                                     onChange={(e) => updateFielHandler("city", e.target.value)}
                                     name="city"
@@ -132,6 +138,7 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                             <div className="relative z-0 w-full mb-5 group md:col-span-2 col-span-6">
                                 <input
                                     type="text"
+                                    {...register("neighborhood")}
                                     value={data.neighborhood || ""}
                                     onChange={(e) => updateFielHandler("neighborhood", e.target.value)}
                                     name="neighborhood"
@@ -146,6 +153,7 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                             <div className="relative z-0 w-full mb-5 group col-span-6">
                                 <input
                                     type="text"
+                                    {...register("complement")}
                                     value={data.complement || ""}
                                     onChange={(e) => updateFielHandler("complement", e.target.value)}
                                     name="complement"
