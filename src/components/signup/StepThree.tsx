@@ -1,18 +1,11 @@
-import {useForm} from 'react-hook-form';
-
-export default function StepThree({ data, updateFielHandler }: { data: any; updateFielHandler: any }) {
-
-    const {register, handleSubmit, formState:{errors}} = useForm();
-
-    const handleForm = (data:any) => {
-        console.log({data})
-    }
+export default function StepThree({  data, updateFielHandler, register, errors}: { data: any; updateFielHandler: any, register: any, errors: any }) {
 
     const checkCEP = (e:any, data:any) =>{
         const cep = e.target.value.replace(/\D/g,'');
         fetch(`https://viacep.com.br/ws/${cep}/json`)
         .then(res => res.json()).then(address => {
             console.log(address);
+            updateFielHandler("cep", address.cep)
             updateFielHandler("street", address.logradouro)
             updateFielHandler("state", address.uf)
             updateFielHandler("city", address.localidade)
@@ -36,13 +29,14 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                             <div className="relative z-0 w-full mb-5 group md:col-span-1 col-span-2">
                                 <input
                                     type="text"
+                                    {...register("cep")}
                                     value={data.cep || ""}
                                     onChange={(e) => {if(e.target.value.length==8){checkCEP(e,data)}; updateFielHandler("cep", e.target.value)}}
                                     name="cep"
                                     id="cep"
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                // required 
                                 />
+                                {errors?.cep && <span className=' text-red-500 absolute text-sm top-12'>{errors.cep.message}</span>}
                                 <label
                                     htmlFor="cep"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">CEP</label>
@@ -56,8 +50,8 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                                     name="street"
                                     id="street"
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                // required 
                                 />
+                                {errors?.street && <span className=' text-red-500 absolute text-sm top-12'>{errors.street.message}</span>}
                                 <label
                                     htmlFor="street"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Rua/Logradouro</label>
@@ -71,8 +65,8 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                                     name="number"
                                     id="number"
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                // required 
                                 />
+                                {errors?.number && <span className=' text-red-500 absolute text-sm top-12'>{errors.number.message}</span>}
                                 <label
                                     htmlFor="number"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Número</label>
@@ -85,7 +79,6 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                                     name="state"
                                     id="state"
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 focus:bg-balada_gray_800 peer"
-                                // required
                                 >
                                     <option selected value="AC">Acre</option>
                                     <option value="AL">Alagoas</option>
@@ -116,6 +109,7 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                                     <option value="TO">Tocantins</option>
                                     <option value="EX">Estrangeiro</option>
                                 </select>
+                                {errors?.state && <span className=' text-red-500 absolute text-sm top-12'>{errors.state.message}</span>}
                                 <label
                                     htmlFor="state"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Estado</label>
@@ -129,8 +123,8 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                                     name="city"
                                     id="city"
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                // required 
                                 />
+                                {errors?.city && <span className=' text-red-500 absolute text-sm top-12'>{errors.city.message}</span>}
                                 <label
                                     htmlFor="city"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Cidade</label>
@@ -144,8 +138,8 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                                     name="neighborhood"
                                     id="neighborhood"
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                // required 
                                 />
+                                {errors?.neighborhood && <span className=' text-red-500 absolute text-sm top-12'>{errors.neighborhood.message}</span>}
                                 <label
                                     htmlFor="neighborhood"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Bairro</label>
@@ -159,8 +153,8 @@ export default function StepThree({ data, updateFielHandler }: { data: any; upda
                                     name="complement"
                                     id="complement"
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                // required 
                                 />
+                                {errors?.complement && <span className=' text-red-500 absolute text-sm top-12'>{errors.complement.message}</span>}
                                 <label
                                     htmlFor="complement"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Complemento</label>
