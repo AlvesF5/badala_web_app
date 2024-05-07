@@ -14,7 +14,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 //Hooks
 import useMyForms from "@/hooks/useMyForms";
 import StepReview from "@/components/signup/StepReview";
-import { z } from 'zod';
 import { schemaUserLogin, schemaUserPersonalInfo, schemaUserAddress } from "@/utils/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -58,7 +57,7 @@ export default function SignUp() {
     }
 
     // eslint-disable-next-line react/jsx-key
-    const formComponents = [<StepOne data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepTwo data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepThree data={data} updateFielHandler={updateFielHandler} register={register} errors={errors}/>, <StepReview data={data} updateFielHandler={updateFielHandler} />];
+    const formComponents = [<StepOne data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepTwo data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepThree data={data} updateFielHandler={updateFielHandler} register={register} errors={errors}/>, <StepReview data={data} register={register} errors={errors}/>];
 
     const { currentStep, currentComponent, changeStep, isLastStep, isFirstStep } = useMyForms(formComponents);
 
@@ -72,16 +71,13 @@ export default function SignUp() {
             <div className="flex flex-col h-full items-center w-full mt-44 gap-8">
                 <div className=" flex">
                     <Image src={logo} width={240} alt="" className="" />
-
                 </div>
                 
                 <Steps currentStep={currentStep} />
                 
                 <FormProvider {...methods}>
                     <form onSubmit={methods.handleSubmit(onSubmit)} className="w-full flex justify-center flex-col items-center">
-
                         <div className=" w-9/12 md:w-4/12">
-                            
                             {currentComponent}
                         </div>
 
@@ -91,7 +87,6 @@ export default function SignUp() {
                                 <button type="button" className='py-1 px-4 bg-balada_green_900 flex items-center rounded-md uppercase'><span>Enviar</span><FiSend /></button>
                             )}
                         </div>
-
                     </form>
                 </FormProvider>
             </div>

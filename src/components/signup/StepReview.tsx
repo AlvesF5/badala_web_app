@@ -2,10 +2,10 @@ import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import { useState } from "react";
-import {formatedDate,formatedCPF,formatedNumber,selectGender}  from '@/utils/Functions';
-import {useForm} from 'react-hook-form';
+import { formatedDate, formatedCPF, formatedNumber, selectGender } from '@/utils/Functions';
+import { useForm } from 'react-hook-form';
 
-export default function StepReview({ data, updateFielHandler }: { data: any; updateFielHandler: any }) {
+export default function StepReview({ data, register, errors }: { data: any; register: any, errors: any }) {
     const [password, setPassword] = useState("");
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState(eye);
@@ -20,10 +20,8 @@ export default function StepReview({ data, updateFielHandler }: { data: any; upd
         }
     }
 
-    const {register, handleSubmit, formState:{errors}} = useForm();
-
-    const handleForm = (data:any) => {
-        console.log({data})
+    const handleForm = (data: any) => {
+        console.log({ data })
     }
 
     return (
@@ -126,12 +124,17 @@ export default function StepReview({ data, updateFielHandler }: { data: any; upd
                                             Endereço:
                                         </dt>
                                         <dd className="text-sm text-white col-span-1 flex justify-end">
-                                            {data.street} Nº {data.number}, {data.complement}, Bairro: {data.neighborhood}, Cidade: {data.city}-{data.state}, CEP: {data.cep}
+                                            {data.street} Nº {data.number}, Complemento: {data.complement}, Bairro: {data.neighborhood}, Cidade: {data.city}-{data.state}, CEP: {data.cep}
                                         </dd>
                                     </div>
                                 </div>
                             </dl>
                         </div>
+                    </div>
+
+                    <div className='flex gap-2 w-full justify-center items-center'>
+                        <input {...register('agree')} type="checkbox" id="agree" name="agree" />
+                        <label htmlFor="agree" className=' text-sm'>Ao continuar você concorda com os termos de uso.</label>
                     </div>
 
                 </div>

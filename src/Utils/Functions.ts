@@ -8,12 +8,15 @@ export const formatedDate = (date:Date) => {
 };
 
 export const formatedCPF = (cpf:string) =>{
-    cpf = cpf.replace(/[^\d]/g, "");
-    
-    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+    if(cpf){
+      cpf = cpf.replace(/[^\d]/g, "");
+      return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+    }
+    return ""
 }
 
 export const formatedNumber = (number:string) => {
+   if(number){
     var r = number.replace(/\D/g, "");
     r = r.replace(/^0/, "");
     if (r.length > 10) {
@@ -26,6 +29,9 @@ export const formatedNumber = (number:string) => {
       r = r.replace(/^(\d*)/, "($1");
     }
     return r;
+   }
+
+   return ""
 }
 
 export const selectGender = (value:string) => {
