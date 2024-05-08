@@ -132,10 +132,15 @@ export default function StepReview({ data, register, errors }: { data: any; regi
                         </div>
                     </div>
 
-                    <div className='flex gap-2 w-full justify-center items-center'>
-                        <input {...register('agree')} type="checkbox" id="agree" name="agree" />
-                        <label htmlFor="agree" className=' text-sm'>Ao continuar você concorda com os termos de uso.</label>
+                    <div className='flex flex-col justify-center w-full items-center gap-2'>
+                        <div className='flex gap-2 w-full justify-center items-center'>
+                            <input {...register('agree')} type="checkbox" id="agree" name="agree" />
+                            <label htmlFor="agree" className=' text-sm'>Ao continuar você concorda com os termos de uso.</label>
+                        </div>
+                        {errors?.agree && <span className=' text-red-500 text-sm top-12'>{errors.agree.message}</span>}
                     </div>
+
+
 
                 </div>
             </main>

@@ -14,7 +14,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 //Hooks
 import useMyForms from "@/hooks/useMyForms";
 import StepReview from "@/components/signup/StepReview";
-import { schemaUserLogin, schemaUserPersonalInfo, schemaUserAddress } from "@/utils/schemas";
+import { schemaUserLogin, schemaUserPersonalInfo, schemaUserAddress, schemaUserTerms } from "@/utils/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function SignUp() {
@@ -24,10 +24,10 @@ export default function SignUp() {
     const methods = useForm({
         mode: 'all',
         reValidateMode: 'onChange',
-        resolver: zodResolver(step === 0 ? schemaUserLogin : step === 1 ? schemaUserPersonalInfo : schemaUserAddress)
+        resolver: zodResolver(step === 0 ? schemaUserLogin : step === 1 ? schemaUserPersonalInfo : step === 2 ? schemaUserAddress : schemaUserTerms)
     })
 
-    const {register, formState: { errors } } = methods
+    const {register, formState: { errors }, getValues } = methods
 
     const formTemplate = {
         firstName: "",
@@ -57,7 +57,7 @@ export default function SignUp() {
     }
 
     // eslint-disable-next-line react/jsx-key
-    const formComponents = [<StepOne data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepTwo data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepThree data={data} updateFielHandler={updateFielHandler} register={register} errors={errors}/>, <StepReview data={data} register={register} errors={errors}/>];
+    const formComponents = [<StepOne data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepTwo data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepThree data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} getValues={getValues}/>, <StepReview data={data} register={register} errors={errors}/>];
 
     const { currentStep, currentComponent, changeStep, isLastStep, isFirstStep } = useMyForms(formComponents);
 
@@ -84,7 +84,7 @@ export default function SignUp() {
                         <div className='actions flex flex-row gap-2 mt-3 text-white font-semibold text-md w-9/12 md:w-4/12 justify-end'>
                             {!isFirstStep && (<button type="button" onClick={() => {changeStep(currentStep - 1); setStep(currentStep - 1)}} className='py-3 px-3 bg-balada_violet_500 flex items-center rounded-md uppercase'><GrFormPrevious /><span>Voltar</span></button>)}
                             {!isLastStep ? (<button type="submit" className='py-3 px-3 bg-balada_green_900 flex items-center rounded-md uppercase'><span>Avançar</span><GrFormNext /></button>) : (
-                                <button type="button" className='py-1 px-4 bg-balada_green_900 flex items-center rounded-md uppercase'><span>Enviar</span><FiSend /></button>
+                                <button type="submit" className='py-1 px-4 bg-balada_green_900 flex items-center rounded-md uppercase'><span>Enviar</span><FiSend /></button>
                             )}
                         </div>
                     </form>

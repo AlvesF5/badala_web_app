@@ -1,4 +1,4 @@
-export default function StepThree({  data, updateFielHandler, register, errors}: { data: any; updateFielHandler: any, register: any, errors: any }) {
+export default function StepThree({  data, updateFielHandler, register, errors, getValues}: { data: any; updateFielHandler: any, register: any, errors: any, getValues : any}) {
 
     const checkCEP = (e:any, data:any) =>{
         const cep = e.target.value.replace(/\D/g,'');
