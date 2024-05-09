@@ -22,12 +22,12 @@ export default function SignUp() {
     const [step, setStep] = useState(0);
 
     const methods = useForm({
-        mode: 'onChange',
+        mode: 'all',
         reValidateMode: 'onChange',
         resolver: zodResolver(step === 0 ? schemaUserLogin : step === 1 ? schemaUserPersonalInfo : step === 2 ? schemaUserAddress : schemaUserTerms)
     })
 
-    const {handleSubmit, register, formState: { errors }} = methods
+    const {handleSubmit, register, formState: { errors }, setValue, getValues} = methods
 
     const formTemplate = {
         firstName: "",
@@ -50,7 +50,7 @@ export default function SignUp() {
 
     const [data, setData] = useState(formTemplate);
 
-    const updateFielHandler = (key: any, value: any, e: any) => {
+    const updateFielHandler = (key: any, value: any) => {
         setData((prev) => {
             return { ...prev, [key]: value };
         })
@@ -59,7 +59,7 @@ export default function SignUp() {
     
 
     // eslint-disable-next-line react/jsx-key
-    const formComponents = [<StepOne data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepTwo data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepThree data={data} updateFielHandler={updateFielHandler} register={register} errors={errors}/>, <StepReview data={data} register={register} errors={errors} />];
+    const formComponents = [<StepOne data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepTwo data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepThree data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} setValue={setValue} getValues={getValues}/>, <StepReview data={data} register={register} errors={errors}/>];
 
     const { currentStep, currentComponent, changeStep, isLastStep, isFirstStep } = useMyForms(formComponents);
 
