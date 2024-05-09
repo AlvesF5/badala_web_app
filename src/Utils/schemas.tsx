@@ -31,5 +31,7 @@ export const schemaUserAddress = z.object({
 
 export const schemaUserTerms = z.object({
     agree: z.boolean(),
-});
+}).refine((fields) => fields.agree === true, {
+    path: ['agree'],
+    message: 'Para continuar é preciso aceitar os termos de uso!'});
 
