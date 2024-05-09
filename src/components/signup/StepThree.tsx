@@ -4,7 +4,9 @@ export default function StepThree({ data, updateFielHandler, register, errors, s
 
     const checkCEP = (e: any) => {
         const cep = e.target.value.replace(/\D/g, '');
-        fetch(`https://viacep.com.br/ws/${cep}/json`)
+
+        if (cep.length === 8){
+            fetch(`https://viacep.com.br/ws/${cep}/json`)
             .then(res => res.json()).then(address => {
                 console.log(address);
 
@@ -23,6 +25,8 @@ export default function StepThree({ data, updateFielHandler, register, errors, s
                 updateFielHandler("complement", getValues("complement"))
 
             });
+        }
+
     }
 
     return (
@@ -33,7 +37,7 @@ export default function StepThree({ data, updateFielHandler, register, errors, s
                         <div className='flex flex-col justify-start w-full'>
                             <h1 className='text-primary-marine-blue text-2xl md:text-3xl font-black text-balada_violet_500'>Informações de endereço</h1>
                             <p className='text-neutro-cool-gray text-sm text-white'>
-                                Por favor, insira suas informações de moradia
+                                Por favor, digite o CEP para o endereço ser preenchido automaticamente.
                             </p>
                         </div>
                         <div className="grid grid-cols-6 md:gap-6 gap-2">
@@ -42,7 +46,7 @@ export default function StepThree({ data, updateFielHandler, register, errors, s
                                     type="text"
                                     {...register("cep")}
                                     value={data.cep || ""}
-                                    onChange={(e) => { if (e.target.value.length == 8) { checkCEP(e) }; updateFielHandler("cep", e.target.value) }}
+                                    onChange={(e) => {checkCEP(e); updateFielHandler("cep", e.target.value) }}
                                     name="cep"
                                     id="cep"
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
