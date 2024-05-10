@@ -27,7 +27,7 @@ export default function SignUp() {
         resolver: zodResolver(step === 0 ? schemaUserLogin : step === 1 ? schemaUserPersonalInfo : step === 2 ? schemaUserAddress : schemaUserTerms)
     })
 
-    const {handleSubmit, register, formState: { errors }, setValue, getValues} = methods
+    const { handleSubmit, register, formState: { errors, isValid }, setValue, getValues } = methods
 
     const formTemplate = {
         firstName: "",
@@ -56,19 +56,24 @@ export default function SignUp() {
         })
     }
 
-    
+
 
     // eslint-disable-next-line react/jsx-key
-    const formComponents = [<StepOne data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepTwo data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepThree data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} setValue={setValue} getValues={getValues}/>, <StepReview data={data} register={register} errors={errors}/>];
+    const formComponents = [<StepOne data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepTwo data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepThree data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} setValue={setValue} getValues={getValues} />, <StepReview data={data} register={register} errors={errors} />];
 
     const { currentStep, currentComponent, changeStep, isLastStep, isFirstStep } = useMyForms(formComponents);
 
     const onSubmit = (data: any, e: any) => {
         changeStep(currentStep + 1, e)
         setStep(currentStep + 1)
+    }
 
-        if(currentStep===3){
-            console.log(data)
+    const createUser = () => {
+        if (isValid) {
+            console.log(data.firstName)
+            console.log(data.lastName)
+            console.log(data.email)
+            console.log(data.city)
         }
     }
 
@@ -89,7 +94,7 @@ export default function SignUp() {
                         <div className='actions flex flex-row gap-2 mt-3 text-white font-semibold text-md w-9/12 md:w-4/12 justify-end'>
                             {!isFirstStep && (<button type="button" onClick={() => { changeStep(currentStep - 1); setStep(currentStep - 1) }} className='py-3 px-3 bg-balada_violet_500 flex items-center rounded-md uppercase'><GrFormPrevious /><span>Voltar</span></button>)}
                             {!isLastStep ? (<button type="submit" className='py-3 px-3 bg-balada_green_900 flex items-center rounded-md uppercase'><span>Avançar</span><GrFormNext /></button>) : (
-                                <button type="submit" className='py-1 px-4 bg-balada_green_900 flex items-center rounded-md uppercase'><span>Enviar</span><FiSend /></button>
+                                <button type="submit" onClick={createUser} className={`py-1 px-4 flex items-center rounded-md uppercase ${isValid ? 'bg-balada_green_900 text-white' : 'bg-red-500 text-white'}`}><span>Enviar</span><FiSend /></button>
                             )}
                         </div>
                     </form>

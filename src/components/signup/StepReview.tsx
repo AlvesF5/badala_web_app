@@ -20,10 +20,6 @@ export default function StepReview({ data, register, errors }: { data: any; regi
         }
     }
 
-    const handleForm = (data: any) => {
-        console.log({ data })
-    }
-
     return (
         <div>
             <main className=" flex w-full mx-auto justify-center items-center h-full">
