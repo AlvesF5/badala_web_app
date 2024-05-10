@@ -66,6 +66,10 @@ export default function SignUp() {
     const onSubmit = (data: any, e: any) => {
         changeStep(currentStep + 1, e)
         setStep(currentStep + 1)
+
+        if(currentStep===3){
+            console.log(data)
+        }
     }
 
     return (
@@ -82,7 +86,6 @@ export default function SignUp() {
                         <div className=" w-9/12 md:w-4/12">
                             {currentComponent}
                         </div>
-
                         <div className='actions flex flex-row gap-2 mt-3 text-white font-semibold text-md w-9/12 md:w-4/12 justify-end'>
                             {!isFirstStep && (<button type="button" onClick={() => { changeStep(currentStep - 1); setStep(currentStep - 1) }} className='py-3 px-3 bg-balada_violet_500 flex items-center rounded-md uppercase'><GrFormPrevious /><span>Voltar</span></button>)}
                             {!isLastStep ? (<button type="submit" className='py-3 px-3 bg-balada_green_900 flex items-center rounded-md uppercase'><span>Avançar</span><GrFormNext /></button>) : (

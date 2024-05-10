@@ -1,3 +1,5 @@
+import {mask} from "remask"
+
 export default function StepTwo({ data, updateFielHandler, register, errors }: { data: any; updateFielHandler: any, register: any, errors: any }) {
     return (
         <div>
@@ -65,7 +67,7 @@ export default function StepTwo({ data, updateFielHandler, register, errors }: {
                                 <input
                                     type="text"
                                     {...register('documentNumber')}
-                                    value={data.documentNumber || ""}
+                                    value={mask(data.documentNumber, ['999.999.999-99']) || ""}
                                     onChange={(e) => updateFielHandler("documentNumber", e.target.value)}
                                     pattern="(\d{3}\.?\d{3}\.?\d{3}-?\d{2})|(\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2})"
                                     name="documentNumber"
@@ -75,13 +77,13 @@ export default function StepTwo({ data, updateFielHandler, register, errors }: {
                                 {errors?.documentNumber && <span className=' text-red-500 absolute text-sm top-12'>{errors.documentNumber.message}</span>}
                                 <label
                                     htmlFor="documentNumber"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">CPF (Apenas Números)</label>
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">CPF</label>
                             </div>
                             <div className="relative z-0 w-full mb-5 group col-span-3">
                                 <input
                                     type="tel"
                                     {...register('phone')}
-                                    value={data.phone || ""}
+                                    value={mask(data.phone, ['(99) 99999-9999']) || ""}
                                     onChange={(e) => updateFielHandler("phone", e.target.value)}
                                     pattern="(\(?\d{2}\)?\s)?(\d{4,5}\-\d{4})"
                                     name="phone"

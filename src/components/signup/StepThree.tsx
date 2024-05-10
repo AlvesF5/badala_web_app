@@ -1,4 +1,4 @@
-
+import {mask} from "remask"
 
 export default function StepThree({ data, updateFielHandler, register, errors, setValue, getValues }: { data: any; updateFielHandler: any, register: any, errors: any, setValue: any, getValues: any }) {
 
@@ -45,7 +45,7 @@ export default function StepThree({ data, updateFielHandler, register, errors, s
                                 <input
                                     type="text"
                                     {...register("cep")}
-                                    value={data.cep || ""}
+                                    value={mask(data.cep, ['99999-999']) || ""}
                                     onChange={(e) => {checkCEP(e); updateFielHandler("cep", e.target.value) }}
                                     name="cep"
                                     id="cep"

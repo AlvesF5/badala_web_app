@@ -16,7 +16,11 @@ export const schemaUserPersonalInfo = z.object({
     phone: z.string().min(11, "Número precisa ter pelo menos 11 caracteres"),
     birthDate: z.string().min(1, "Data de nascimento não pode ser vazio"),
     documentNumber: z.string().min(1, "CPF não pode ser vazio"),
-    gender: z.string().min(1, "Gênero não pode ser vazio"),
+    gender: z.enum(['MA', 'FE', 'NB'], {
+        errorMap: () =>{
+            return {message: "Selecione uma opção válida!"}
+        }
+    }),
 });
 
 export const schemaUserAddress = z.object({
