@@ -16,7 +16,8 @@ import useMyForms from "@/hooks/useMyForms";
 import StepReview from "@/components/signup/StepReview";
 import { schemaUserLogin, schemaUserPersonalInfo, schemaUserAddress, schemaUserTerms } from "@/utils/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {mask,unMask} from "remask"
+import { unMask } from "remask";
+import { Toaster, toast } from 'sonner';
 
 export default function SignUp() {
 
@@ -96,8 +97,15 @@ export default function SignUp() {
                 }),
             })
                 .then(response => response.json()) // Converte a resposta para JSON
-                .then(data => console.log(data)) // Exibe os dados recebidos na resposta
-                .catch(error => console.error('Erro ao fazer a requisição:', error)); // Captura e exibe erros, se houver
+                .then(data => {
+                    console.log(data); // Exibe os dados recebidos na resposta
+                    toast.success('Cadastro realizado com sucesso!');
+                })
+                .catch(error => {
+                    toast.error('Erro ao realizar o cadastro!');
+                    console.error('Erro ao fazer a requisição:', error); // Captura e exibe erros, se houver
+                })
+
 
             console.log(data.firstName)
             console.log(data.lastName)
