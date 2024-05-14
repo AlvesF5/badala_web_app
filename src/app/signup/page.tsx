@@ -69,26 +69,35 @@ export default function SignUp() {
 
     const createUser = () => {
         if (isValid) {
-            // fetch('https://seu-endpoint.com/api/data', {
-            //     method: 'POST', // Método HTTP
-            //     headers: {
-            //         'Content-Type': 'application/json', // Informa o tipo de conteúdo que está sendo enviado
-            //     },
-            //     body: JSON.stringify({
-            //         firstName: data.firstName,
-            //         lastName: data.lastName,
-            //         email: data.email,
-            //         password: data.password,
-            //         retryPassword: data.retryPassword,
-            //         phone: unMask(data.phone),
-            //         birthDate: "",
-            //         documentNumber: "",
-            //         gender: "",
-            //     }),
-            // })
-            //     .then(response => response.json()) // Converte a resposta para JSON
-            //     .then(data => console.log(data)) // Exibe os dados recebidos na resposta
-            //     .catch(error => console.error('Erro ao fazer a requisição:', error)); // Captura e exibe erros, se houver
+            fetch('http://localhost:8080/v1/user/create', {
+                method: 'POST', // Método HTTP
+                headers: {
+                    'Content-Type': 'application/json', // Informa o tipo de conteúdo que está sendo enviado
+                },
+                body: JSON.stringify({
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    email: data.email,
+                    password: data.password,
+                    retryPassword: data.retryPassword,
+                    phone: unMask(data.phone),
+                    birthDate: data.birthDate,
+                    documentNumber: unMask(data.documentNumber),
+                    gender: data.gender,
+                    address: {
+                        cep: unMask(data.cep),
+                        street: data.street,
+                        number: data.number,
+                        state: data.state,
+                        city: data.city,
+                        neighborhood: data.neighborhood,
+                        complement: data.complement
+                    }
+                }),
+            })
+                .then(response => response.json()) // Converte a resposta para JSON
+                .then(data => console.log(data)) // Exibe os dados recebidos na resposta
+                .catch(error => console.error('Erro ao fazer a requisição:', error)); // Captura e exibe erros, se houver
 
             console.log(data.firstName)
             console.log(data.lastName)
