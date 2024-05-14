@@ -16,6 +16,7 @@ import useMyForms from "@/hooks/useMyForms";
 import StepReview from "@/components/signup/StepReview";
 import { schemaUserLogin, schemaUserPersonalInfo, schemaUserAddress, schemaUserTerms } from "@/utils/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {mask,unMask} from "remask"
 
 export default function SignUp() {
 
@@ -56,8 +57,6 @@ export default function SignUp() {
         })
     }
 
-
-
     // eslint-disable-next-line react/jsx-key
     const formComponents = [<StepOne data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepTwo data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} />, <StepThree data={data} updateFielHandler={updateFielHandler} register={register} errors={errors} setValue={setValue} getValues={getValues} />, <StepReview data={data} register={register} errors={errors} />];
 
@@ -70,10 +69,32 @@ export default function SignUp() {
 
     const createUser = () => {
         if (isValid) {
+            // fetch('https://seu-endpoint.com/api/data', {
+            //     method: 'POST', // Método HTTP
+            //     headers: {
+            //         'Content-Type': 'application/json', // Informa o tipo de conteúdo que está sendo enviado
+            //     },
+            //     body: JSON.stringify({
+            //         firstName: data.firstName,
+            //         lastName: data.lastName,
+            //         email: data.email,
+            //         password: data.password,
+            //         retryPassword: data.retryPassword,
+            //         phone: unMask(data.phone),
+            //         birthDate: "",
+            //         documentNumber: "",
+            //         gender: "",
+            //     }),
+            // })
+            //     .then(response => response.json()) // Converte a resposta para JSON
+            //     .then(data => console.log(data)) // Exibe os dados recebidos na resposta
+            //     .catch(error => console.error('Erro ao fazer a requisição:', error)); // Captura e exibe erros, se houver
+
             console.log(data.firstName)
             console.log(data.lastName)
             console.log(data.email)
             console.log(data.city)
+            console.log(unMask(data.documentNumber))
         }
     }
 
