@@ -68,50 +68,56 @@ export default function SignUp() {
         setStep(currentStep + 1)
     }
 
-    const createUser = () => {
+    const createUser = async () => {
         if (isValid) {
-            fetch('http://localhost:8080/v1/user/create', {
-                method: 'POST', // Método HTTP
-                headers: {
-                    'Content-Type': 'application/json', // Informa o tipo de conteúdo que está sendo enviado
-                },
-                body: JSON.stringify({
-                    firstName: data.firstName,
-                    lastName: data.lastName,
-                    email: data.email,
-                    password: data.password,
-                    retryPassword: data.retryPassword,
-                    phone: unMask(data.phone),
-                    birthDate: data.birthDate,
-                    documentNumber: unMask(data.documentNumber),
-                    gender: data.gender,
-                    address: {
-                        cep: unMask(data.cep),
-                        street: data.street,
-                        number: data.number,
-                        state: data.state,
-                        city: data.city,
-                        neighborhood: data.neighborhood,
-                        complement: data.complement
-                    }
-                }),
-            })
-                .then(response => response.json()) // Converte a resposta para JSON
-                .then(data => {
-                    console.log(data); // Exibe os dados recebidos na resposta
+            try {
+                const response = await fetch('http://localhost:8080/v1/user/create', {
+                    method: 'POST', // Método HTTP
+                    headers: {
+                        'Content-Type': 'application/json', // Informa o tipo de conteúdo que está sendo enviado
+                    },
+                    body: JSON.stringify({
+                        firstName: data.firstName,
+                        lastName: data.lastName,
+                        email: data.email,
+                        password: data.password,
+                        retryPassword: data.retryPassword,
+                        phone: unMask(data.phone),
+                        birthDate: data.birthDate,
+                        documentNumber: unMask(data.documentNumber),
+                        gender: data.gender,
+                        address: {
+                            cep: unMask(data.cep),
+                            street: data.street,
+                            number: data.number,
+                            state: data.state,
+                            city: data.city,
+                            neighborhood: data.neighborhood,
+                            complement: data.complement
+                        }
+                    }),
+                });
+
+                 // Tenta ler o corpo da resposta como JSON
+                const errorJson = await response.json();
+                // Extrai a mensagem de erro da estrutura específica
+                const errorMessage = errorJson.errors.join(', ');
+
+                if (!response.ok) {
+                    toast.error(`Erro ao realizar o cadastro! ${errorMessage}`);
+                }
+
+                if (response.ok) {
                     toast.success('Cadastro realizado com sucesso!');
-                })
-                .catch(error => {
-                    toast.error('Erro ao realizar o cadastro!');
-                    console.error('Erro ao fazer a requisição:', error); // Captura e exibe erros, se houver
-                })
+                }
 
-
-            console.log(data.firstName)
-            console.log(data.lastName)
-            console.log(data.email)
-            console.log(data.city)
-            console.log(unMask(data.documentNumber))
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    toast.error(`Erro ao realizar o cadastro: ${error.message}`);
+                } else {
+                    console.log('Ocorreu um erro desconhecido');
+                }
+            }
         }
     }
 
@@ -137,6 +143,7 @@ export default function SignUp() {
                         </div>
                     </form>
                 </FormProvider>
+                <Toaster position="bottom-center" />
             </div>
         </div>
     )
