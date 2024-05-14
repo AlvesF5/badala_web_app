@@ -9,7 +9,7 @@ import Image from "next/image"
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr'
 import { FiSend } from 'react-icons/Fi'
 import { useState } from "react";
-import { FormProvider, useForm, Controller } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 //Hooks
 import useMyForms from "@/hooks/useMyForms";
@@ -18,6 +18,7 @@ import { schemaUserLogin, schemaUserPersonalInfo, schemaUserAddress, schemaUserT
 import { zodResolver } from "@hookform/resolvers/zod";
 import { unMask } from "remask";
 import { Toaster, toast } from 'sonner';
+import { FaRegFaceFrown, FaRegFaceGrinWide } from "react-icons/fa6";
 
 export default function SignUp() {
 
@@ -103,7 +104,7 @@ export default function SignUp() {
                 if (!response.ok) {
                     const errorJson = await response.json();
                     const errorMessage = errorJson.errors.join(', ');
-                    toast.error(`Erro ao realizar o cadastro! ${errorMessage}`);
+                    toast.error(`Erro ao realizar o cadastro: ${errorMessage}`);
                 }
 
                 if (response.ok) {
@@ -142,7 +143,23 @@ export default function SignUp() {
                         </div>
                     </form>
                 </FormProvider>
-                <Toaster position="bottom-center" />
+                <Toaster
+                    toastOptions={{
+                        className: 'flex justify-center items-center p-3 rounded-md gap-2 text-md',
+                        unstyled: true,
+                        classNames: {
+                            error: 'bg-red-500 text-white',
+                            success: 'bg-balada_green_900 text-white',
+                            warning: 'text-yellow-400',
+                            info: 'bg-blue-400',
+                        },
+                    }}
+                    position="bottom-center"
+                    icons={{
+                        success: <div className="text-xl"> <FaRegFaceGrinWide /></div>,
+                        error: <div className="text-xl"><FaRegFaceFrown /></div>,
+                    }}
+                />
             </div>
         </div>
     )
