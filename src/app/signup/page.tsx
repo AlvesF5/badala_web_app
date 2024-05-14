@@ -98,12 +98,11 @@ export default function SignUp() {
                     }),
                 });
 
-                 // Tenta ler o corpo da resposta como JSON
-                const errorJson = await response.json();
-                // Extrai a mensagem de erro da estrutura específica
-                const errorMessage = errorJson.errors.join(', ');
+
 
                 if (!response.ok) {
+                    const errorJson = await response.json();
+                    const errorMessage = errorJson.errors.join(', ');
                     toast.error(`Erro ao realizar o cadastro! ${errorMessage}`);
                 }
 
