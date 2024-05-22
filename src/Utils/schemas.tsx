@@ -1,6 +1,9 @@
 
 import { z } from 'zod';
 
+const currentDate = new Date();
+const minimumAge = new Date(currentDate.getFullYear() - 14, currentDate.getMonth(), currentDate.getDate());
+
 export const schemaUserLogin = z.object({
     email: z.string().email('Insira um e-mail com formato válido!'),
     password: z.string().min(8, 'Senha precisa ter pelo menos 8 caracteres.'),
@@ -14,7 +17,11 @@ export const schemaUserPersonalInfo = z.object({
     firstName: z.string().min(3, 'Nome precisa ter pelo menos 3 caracteres'),
     lastName: z.string().min(5, 'Sobrenome precisa ter pelo menos 5 caracteres'),
     phone: z.string().min(11, "Número precisa ter pelo menos 11 caracteres"),
-    birthDate: z.string().min(1, "Data de nascimento não pode ser vazio"),
+    birthDate: z.string()
+        .transform((date) => new Date(date))
+        .refine(date => date <= minimumAge, {
+        message: "Você deve ter pelo menos 14 anos de idade."
+    }),
     documentNumber: z.string().min(1, "CPF não pode ser vazio"),
     gender: z.enum(['MA', 'FE', 'NB'], {
         errorMap: () =>{

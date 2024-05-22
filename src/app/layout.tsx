@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import './components.css'
 import { Toaster } from 'sonner';
+import { FaRegFaceFrown, FaRegFaceGrinWide } from "react-icons/fa6";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,6 +20,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <Toaster
+          toastOptions={{
+            className: 'flex justify-center items-center p-3 rounded-md gap-2 text-md',
+            unstyled: true,
+            classNames: {
+              error: 'bg-red-500 text-white',
+              success: 'bg-balada_green_900 text-white',
+              warning: 'text-yellow-400',
+              info: 'bg-blue-400',
+            },
+          }}
+          position="top-center"
+          icons={{
+            success: <div className="text-xl"> <FaRegFaceGrinWide /></div>,
+            error: <div className="text-xl"><FaRegFaceFrown /></div>,
+          }}
+        />
         {children}
       </body>
     </html>

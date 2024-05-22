@@ -17,8 +17,8 @@ import StepReview from "@/components/signup/StepReview";
 import { schemaUserLogin, schemaUserPersonalInfo, schemaUserAddress, schemaUserTerms } from "@/utils/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { unMask } from "remask";
-import { Toaster, toast } from 'sonner';
-import { FaRegFaceFrown, FaRegFaceGrinWide } from "react-icons/fa6";
+import { toast } from 'sonner';
+
 
 export default function SignUp() {
 
@@ -143,23 +143,6 @@ export default function SignUp() {
                         </div>
                     </form>
                 </FormProvider>
-                <Toaster
-                    toastOptions={{
-                        className: 'flex justify-center items-center p-3 rounded-md gap-2 text-md',
-                        unstyled: true,
-                        classNames: {
-                            error: 'bg-red-500 text-white',
-                            success: 'bg-balada_green_900 text-white',
-                            warning: 'text-yellow-400',
-                            info: 'bg-blue-400',
-                        },
-                    }}
-                    position="bottom-center"
-                    icons={{
-                        success: <div className="text-xl"> <FaRegFaceGrinWide /></div>,
-                        error: <div className="text-xl"><FaRegFaceFrown /></div>,
-                    }}
-                />
             </div>
         </div>
     )
