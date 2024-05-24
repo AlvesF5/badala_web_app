@@ -20,12 +20,12 @@ export const schemaUserPersonalInfo = z.object({
     birthDate: z.string()
         .transform((date) => new Date(date))
         .refine(date => date <= minimumAge, {
-        message: "Você deve ter pelo menos 14 anos de idade."
+        message: "Idade deve ser maior que 14"
     }),
     documentNumber: z.string().min(1, "CPF não pode ser vazio"),
     gender: z.enum(['MA', 'FE', 'NB'], {
         errorMap: () =>{
-            return {message: "Selecione uma opção válida!"}
+            return {message: "Selecione uma opção válida para o gênero!"}
         }
     }),
 });

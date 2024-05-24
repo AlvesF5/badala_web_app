@@ -394,3 +394,11 @@ p {
 .input_form_create_user{
   @apply block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600;
 }
+
+.div_container_form_errors{
+  @apply flex flex-col justify-center items-center absolute bottom-5 w-10/12 md:w-4/12
+}
+
+.label_error_input_forms{
+  @apply text-red-500 text-sm
+}

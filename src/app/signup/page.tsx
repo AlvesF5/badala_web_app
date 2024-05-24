@@ -132,10 +132,10 @@ export default function SignUp() {
 
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit)} className="w-full flex justify-center flex-col items-center">
-                        <div className=" w-9/12 md:w-4/12">
+                        <div className=" w-10/12 md:w-4/12">
                             {currentComponent}
                         </div>
-                        <div className='actions flex flex-row gap-2 mt-3 text-white font-semibold text-md w-9/12 md:w-4/12 justify-end'>
+                        <div className='actions flex flex-row gap-2 mt-3 text-white font-semibold text-md w-10/12 md:w-4/12 justify-end'>
                             {!isFirstStep && (<button type="button" onClick={() => { changeStep(currentStep - 1); setStep(currentStep - 1) }} className='py-3 px-3 bg-balada_violet_500 flex items-center rounded-md uppercase'><GrFormPrevious /><span>Voltar</span></button>)}
                             {!isLastStep ? (<button type="submit" className='py-3 px-3 bg-balada_green_900 flex items-center rounded-md uppercase'><span>Avançar</span><GrFormNext /></button>) : (
                                 <button type="submit" onClick={createUser} className={`py-1 px-4 flex items-center rounded-md uppercase ${isValid ? 'bg-balada_green_900 text-white' : 'bg-red-500 text-white'}`}><span>Enviar</span><FiSend /></button>
