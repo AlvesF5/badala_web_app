@@ -3,12 +3,33 @@ import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import { useState } from "react";
 import { formatedDate, formatedCPF, formatedNumber, selectGender } from '@/utils/Functions';
-import { useForm } from 'react-hook-form';
+
+
+const Modal = ({ isOpen, onClose, children }: { isOpen: any, onClose: any, children: any }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 bg-green-950 bg-opacity-50 z-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-10/12 md:w-4/12">
+                {children}
+                <button
+                    onClick={onClose}
+                    className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-150"
+                >
+                    Fechar
+                </button>
+            </div>
+        </div>
+    );
+};
 
 export default function StepReview({ data, register, errors }: { data: any; register: any, errors: any }) {
     const [password, setPassword] = useState("");
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState(eye);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
 
     const handleToggle = () => {
         if (type === 'password') {
@@ -131,13 +152,13 @@ export default function StepReview({ data, register, errors }: { data: any; regi
                     <div className='flex flex-col justify-center w-full items-center gap-2'>
                         <div className='flex gap-2 w-full justify-center items-center'>
                             <input {...register('agree')} type="checkbox" id="agree" name="agree" />
-                            <label htmlFor="agree" className=' text-sm text-white'>Ao continuar você concorda com os termos de uso.</label>
+                            <label htmlFor="agree" className=' text-sm text-white'>Ao continuar você concorda com os <span onClick={openModal} className=' text-balada_green_900 font-semibold cursor-pointer'>termos de uso.</span></label>
                         </div>
                         {errors?.agree && <span className=' text-red-500 text-sm top-12'>{errors.agree.message}</span>}
                     </div>
-
-
-
+                    <Modal isOpen={isModalOpen} onClose={closeModal}>
+                        <p>Conteúdo do modal aqui.</p>
+                    </Modal>
                 </div>
             </main>
 
