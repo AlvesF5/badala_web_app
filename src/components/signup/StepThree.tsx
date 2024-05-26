@@ -1,30 +1,51 @@
-import { mask } from "remask"
+import { mask, unMask } from "remask"
+import { toast } from 'sonner';
 
 export default function StepThree({ data, updateFielHandler, register, errors, setValue, getValues }: { data: any; updateFielHandler: any, register: any, errors: any, setValue: any, getValues: any }) {
 
-    const checkCEP = (e: any) => {
-        const cep = e.target.value.replace(/\D/g, '');
+    const checkCEP = async (e: any) => {
+        const cep: string = e.target.value.replace(/\D/g, '');
 
         if (cep.length === 8) {
-            fetch(`https://viacep.com.br/ws/${cep}/json`)
-                .then(res => res.json()).then(address => {
-                    console.log(address);
+            try {
+                const response = await fetch(`https://viacep.com.br/ws/${cep}/json`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json', // Informa o tipo de conteúdo que está sendo enviado
+                    },
+                    body: null
+                });
 
+              
+                const address = await response.json();
+                
+                if (address.erro===true) {
+                    toast.error(`Por favor, verifique se o CEP digitado está correto e digite novamente!`);
+                }
+
+
+                if(address.cep===mask(cep, ['99999-999'])){
                     setValue('cep', address.cep, { shouldValidate: true });
                     setValue('street', address.logradouro, { shouldValidate: true });
                     setValue('state', address.uf, { shouldValidate: true });
                     setValue('city', address.localidade, { shouldValidate: true });
                     setValue('neighborhood', address.bairro, { shouldValidate: true });
                     setValue('complement', address.complemento, { shouldValidate: true });
-
-                    updateFielHandler("cep", getValues("cep"))
+    
                     updateFielHandler("street", getValues("street"))
                     updateFielHandler("state", getValues("state"))
                     updateFielHandler("city", getValues("city"))
                     updateFielHandler("neighborhood", getValues("neighborhood"))
                     updateFielHandler("complement", getValues("complement"))
+                }
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    toast.error(`Erro ao buscar endereço com cep digitado: ${error.message}`);
+                } else {
+                    console.log('Ocorreu um erro desconhecido');
+                }
+            }
 
-                });
         }
 
     }
@@ -45,7 +66,7 @@ export default function StepThree({ data, updateFielHandler, register, errors, s
                                 <input
                                     type="text"
                                     {...register("cep")}
-                                    value={mask(data.cep, ['99999-999']) || ""}
+                                    value={mask(data?.cep, ['99999-999']) || ""}
                                     onChange={(e) => { checkCEP(e); updateFielHandler("cep", e.target.value) }}
                                     name="cep"
                                     id="cep"

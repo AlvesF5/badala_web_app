@@ -400,5 +400,5 @@ p {
 }
 
 .label_error_input_forms{
-  @apply text-red-500 text-sm
+  @apply text-red-500 text-sm md:text-base
 }

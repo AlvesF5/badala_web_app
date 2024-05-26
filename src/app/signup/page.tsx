@@ -10,6 +10,8 @@ import { GrFormNext, GrFormPrevious } from 'react-icons/gr'
 import { FiSend } from 'react-icons/Fi'
 import { useState } from "react";
 import { FormProvider, useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+
 
 //Hooks
 import useMyForms from "@/hooks/useMyForms";
@@ -18,11 +20,33 @@ import { schemaUserLogin, schemaUserPersonalInfo, schemaUserAddress, schemaUserT
 import { zodResolver } from "@hookform/resolvers/zod";
 import { unMask } from "remask";
 import { toast } from 'sonner';
+import Link from 'next/link';
 
+const Modal = ({ isOpen, onClose, children }: { isOpen: any, onClose: any, children: any }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 bg-green-950 bg-opacity-50 z-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-10/12 md:w-4/12">
+                <button
+                    onClick={onClose}
+                    className=" float-right -m-8 -mr-8 items-end text-white px-4 py-2 rounded bg-red-700 transition duration-150"
+                >
+                    X
+                </button>
+                {children}
+            </div>
+        </div>
+    );
+};
 
 export default function SignUp() {
-
     const [step, setStep] = useState(0);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleModalConfirm = () => {
+        setIsModalOpen(false);
+    };
 
     const methods = useForm({
         mode: 'all',
@@ -99,8 +123,6 @@ export default function SignUp() {
                     }),
                 });
 
-
-
                 if (!response.ok) {
                     const errorJson = await response.json();
                     const errorMessage = errorJson.errors.join(', ');
@@ -108,8 +130,9 @@ export default function SignUp() {
                 }
 
                 if (response.ok) {
-                    toast.success('Cadastro realizado com sucesso!');
+                    setIsModalOpen(true);
                 }
+
 
             } catch (error: unknown) {
                 if (error instanceof Error) {
@@ -143,6 +166,12 @@ export default function SignUp() {
                         </div>
                     </form>
                 </FormProvider>
+                <Modal isOpen={isModalOpen} onClose={handleModalConfirm}>
+                    <p>Cadastro realizado com sucesso! Um link de confirmação foi enviado para o e-mail cadastrado.</p>
+                    <Link href="/">
+                        <button className="button-balada-green">Ir para página inicial</button>
+                    </Link>
+                </Modal>
             </div>
         </div>
     )
