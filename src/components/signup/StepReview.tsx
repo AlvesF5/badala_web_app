@@ -53,9 +53,7 @@ const Modal = ({
             <span className="sr-only">Close modal</span>
           </button>
         </div>
-        <div className="p-2">
-        {children}
-        </div>
+        <div className="p-2">{children}</div>
       </div>
     </div>
   );
@@ -65,14 +63,14 @@ export default function StepReview({
   data,
   register,
   errors,
-  setValue, 
-  getValues
+  setValue,
+  getValues,
 }: {
   data: any;
   register: any;
   errors: any;
   setValue: any;
-  getValues: any
+  getValues: any;
 }) {
   const [password, setPassword] = useState("");
   const [type, setType] = useState("password");
@@ -98,14 +96,13 @@ export default function StepReview({
 
   const uncheckCheckbox = () => {
     setIsChecked(false);
+    closeModal()
   };
 
   const checkCheckbox = () => {
     setIsChecked(true);
+    closeModal()
   };
-
-
-
 
   return (
     <div>
@@ -219,20 +216,23 @@ export default function StepReview({
               <input
                 {...register("agree")}
                 type="checkbox"
-                checked={getValues("agree")}
+                checked={isChecked}
                 onChange={handleCheckboxChange}
                 id="agree"
                 name="agree"
               />
-              <label htmlFor="agree" className=" text-sm text-white">
-                Ao continuar você concorda com os{" "}
-                <span
-                  onClick={openModal}
-                  className=" text-balada_green_900 font-semibold cursor-pointer"
-                >
-                  termos de uso.
-                </span>
-              </label>
+              <div className="flex gap-1">
+                <label htmlFor="agree" className=" text-sm text-white">
+                  Ao continuar você concorda com os{" "}
+                </label>
+                <label className="text-balada_green_900 cursor-pointer -mt-0.5">
+                  <span
+                    onClick={openModal}
+                  >
+                    termos de uso.
+                  </span>
+                </label>
+              </div>
             </div>
             {errors?.agree && (
               <span className=" text-red-500 text-sm top-12">
