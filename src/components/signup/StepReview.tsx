@@ -92,15 +92,18 @@ export default function StepReview({
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
+    setValue('agree', !isChecked, { shouldValidate: true });
   };
 
   const uncheckCheckbox = () => {
     setIsChecked(false);
+    setValue('agree', false, { shouldValidate: true });
     closeModal()
   };
 
   const checkCheckbox = () => {
     setIsChecked(true);
+    setValue('agree', true, { shouldValidate: true });
     closeModal()
   };
 
