@@ -7,8 +7,8 @@ export default function StepTwo({ data, updateFielHandler, register, errors }: {
                 <div className='w-full h-full flex flex-col justify-center'>
                     <div className='flex flex-col gap-8'>
                         <div className='flex flex-col justify-start w-full'>
-                            <h1 className='text-primary-marine-blue text-2xl md:text-3xl font-black text-balada_violet_500'>Informações pessoais</h1>
-                            <p className='text-neutro-cool-gray text-sm text-white'>
+                            <h1 className='default_title_form'>Informações pessoais</h1>
+                            <p className='default_subtitle_form'>
                                 Por favor, insira seus dados cadastrais
                             </p>
                         </div>

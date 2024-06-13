@@ -15,10 +15,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        balada_cana: "#01B6B5",
         balada_gray_600: "#2b2a33",
         balada_gray_800: "#1c1b22",
         balada_gray_900: "#111115",
         balada_blue_800: "#000120",
+        balada_green_675: "#22c271",
         balada_green_800: "#0bd971",
         balada_green_900: "#0bab5a",
         balada_violet_500: "#3636ff",

@@ -26,8 +26,8 @@ export default function StepOne({ data, updateFielHandler, register, errors }: {
                     <div className='flex flex-col gap-8'>
                         <div className='flex flex-col gap-4 text-white'>
                             <div className='flex flex-col justify-start w-full'>
-                                <h1 className='text-primary-marine-blue text-2xl md:text-3xl font-black text-balada_violet_500'>Informações de login</h1>
-                                <p className='text-neutro-cool-gray text-sm text-white'>
+                                <h1 className='default_title_form'>Informações de login</h1>
+                                <p className='default_subtitle_form'>
                                     Por favor, insira um e-mail e senha válidos
                                 </p>
                             </div>
@@ -74,7 +74,7 @@ export default function StepOne({ data, updateFielHandler, register, errors }: {
                                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                     />
                                     <label htmlFor="retryPassword" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Repetir Senha</label>
-                                    <span className="flex justify-around items-center" onClick={handleToggle}>
+                                    <span className="flex justify-around items-center text-gray-400" onClick={handleToggle}>
                                         <Icon className="absolute mr-5" icon={icon} size={20} />
                                     </span>
                                 </div>

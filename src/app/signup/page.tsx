@@ -180,8 +180,8 @@ export default function SignUp() {
   return (
     <div>
       <div className="flex flex-col h-full items-center w-full mt-44 gap-8">
-        <div className=" flex">
-          <Image src={logo} width={240} alt="" className="" />
+        <div className="flex">
+          <Image src={logo} width={240} alt="" className=" dark:filter-none" />
         </div>
 
         <Steps currentStep={currentStep} />
@@ -200,7 +200,7 @@ export default function SignUp() {
                     changeStep(currentStep - 1);
                     setStep(currentStep - 1);
                   }}
-                  className="py-3 px-3 bg-balada_violet_500 flex items-center rounded-md uppercase"
+                  className="py-3 px-3 bg-balada_violet_500 flex items-center rounded-md uppercase text-sm"
                 >
                   <GrFormPrevious />
                   <span>Voltar</span>
@@ -209,7 +209,7 @@ export default function SignUp() {
               {!isLastStep ? (
                 <button
                   type="submit"
-                  className="py-3 px-3 bg-balada_green_900 flex items-center rounded-md uppercase"
+                  className="py-3 px-3 bg-balada_green_900 flex items-center rounded-md uppercase text-sm"
                 >
                   <span>Avançar</span>
                   <GrFormNext />
@@ -218,7 +218,7 @@ export default function SignUp() {
                 <button
                   type="submit"
                   onClick={createUser}
-                  className={`py-1 px-4 flex items-center rounded-md uppercase ${
+                  className={`py-1 px-4 flex items-center rounded-md uppercase text-sm ${
                     isValid
                       ? "bg-balada_green_900 text-white"
                       : "bg-red-500 text-white"

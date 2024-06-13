@@ -56,8 +56,8 @@ export default function StepThree({ data, updateFielHandler, register, errors, s
                 <div className='w-full h-full flex flex-col justify-center'>
                     <div className='flex flex-col gap-8'>
                         <div className='flex flex-col justify-start w-full'>
-                            <h1 className='text-primary-marine-blue text-2xl md:text-3xl font-black text-balada_violet_500'>Informações de endereço</h1>
-                            <p className='text-neutro-cool-gray text-sm text-white'>
+                            <h1 className='default_title_form'>Informações de endereço</h1>
+                            <p className='default_subtitle_form'>
                                 Por favor, digite o CEP para o endereço ser preenchido automaticamente.
                             </p>
                         </div>

@@ -367,15 +367,15 @@ p {
 /* End Slide Story */
 
 .step-item{
-  @apply relative flex flex-col justify-center items-center w-full bg-balada_gray_800;
+  @apply relative flex flex-col justify-center items-center w-full bg-balada_gray_800 text-gray-200;
 }
 
 .step-item:not(:first-child):before{
-  @apply content-[''] bg-white absolute w-full h-[3px] right-2/4 top-[38%] -translate-y-2;
+  @apply content-[''] bg-gray-700 absolute w-full h-[3px] right-2/4 top-[38%] -translate-y-2;
 }
 
 .step{
-  @apply w-10 h-10 flex justify-center items-center z-10 relative rounded-full font-semibold text-white bg-gray-700;
+  @apply w-10 h-10 flex justify-center items-center z-10 relative rounded-full font-semibold text-gray-200 bg-gray-700;
 }
 
 .active .step{
@@ -401,4 +401,12 @@ p {
 
 .label_error_input_forms{
   @apply text-red-500 text-sm md:text-base
+}
+
+.default_title_form{
+  @apply text-2xl md:text-3xl font-black text-balada_green_675
+}
+
+.default_subtitle_form{
+  @apply text-gray-400 text-sm
 }
