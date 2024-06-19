@@ -249,8 +249,8 @@ export default function SignUp() {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-2 items-center justify-center w-full border-l-2 p-4">
-                <p className=" text-nowrap text-xs text-gray-500">
+              <div className="flex flex-col gap-2 items-center justify-center w-full border-l p-4 border-gray-600">
+                <p className=" text-nowrap text-xs text-gray-400">
                   clique aqui, caso não tenha recebido
                 </p>
                 <Link href="">
