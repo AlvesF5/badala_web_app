@@ -235,12 +235,12 @@ export default function SignUp() {
         <Modal
           isOpen={isModalOpen}
           onClose={closeModal}
-          title={"Termos de uso"}
+          title={"Cadastro Realizado!"}
         >
           <div className="flex flex-col gap-4">
             <div className="flex">
               <div className="p-2">
-                <p className=" text-sm">
+                <p className=" text-sm text-gray-300">
                   Cadastro realizado com sucesso! Um link de confirmação foi
                   enviado para o e-mail{" "}
                   <span className=" text-balada_green_675 font-medium">

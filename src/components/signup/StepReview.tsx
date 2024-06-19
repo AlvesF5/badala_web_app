@@ -217,7 +217,7 @@ export default function StepReview({
               </p>
             </div>
 
-            <div className="flex items-center md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 w-full">
+            <div className="flex items-center md:p-4 border-gray-200 rounded-b dark:border-gray-600 w-full">
               <button
                 data-modal-hide="default-modal"
                 type="button"
