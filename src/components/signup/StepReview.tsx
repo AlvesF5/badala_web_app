@@ -2,13 +2,14 @@ import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
 import { useState } from "react";
+import { mask } from "remask";
 import {
   formatedDate,
   formatedCPF,
   formatedNumber,
   selectGender,
 } from "@/utils/Functions";
-import Modal, {useModal} from "@/components/modal/DefaultModal";
+import Modal, { useModal } from "@/components/modal/DefaultModal";
 
 export default function StepReview({
   data,
@@ -39,19 +40,19 @@ export default function StepReview({
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
-    setValue('agree', !isChecked, { shouldValidate: true });
+    setValue("agree", !isChecked, { shouldValidate: true });
   };
 
   const uncheckCheckbox = () => {
     setIsChecked(false);
-    setValue('agree', false, { shouldValidate: true });
-    closeModal()
+    setValue("agree", false, { shouldValidate: true });
+    closeModal();
   };
 
   const checkCheckbox = () => {
     setIsChecked(true);
-    setValue('agree', true, { shouldValidate: true });
-    closeModal()
+    setValue("agree", true, { shouldValidate: true });
+    closeModal();
   };
 
   return (
@@ -63,7 +64,7 @@ export default function StepReview({
           </div>
           <div className=" bg-balada_gray_800 overflow-hidden">
             <div className=" py-4">
-              <h3 className="text-lg leading-6 font-medium text-balada_violet_500">
+              <h3 className="text-lg leading-6 font-medium text-balada_violet_375">
                 Email e senha
               </h3>
               <div className=" py-2 sm:gap-4 flex justify-between">
@@ -99,7 +100,7 @@ export default function StepReview({
               <dl className="sm:divide-y sm:divide-gray-200">
                 <div className="py-2 sm:py-5 grid grid-cols-6">
                   <div className=" flex gap-1 md:gap-2 col-span-3">
-                    <dt className="text-sm font-medium text-balada_violet_500 col-span-2">
+                    <dt className="text-sm font-semibold text-balada_violet_375 col-span-2">
                       Nome:
                     </dt>
                     <dd className="text-sm text-white sm:mt-0 sm:col-span-2 flex justify-start">
@@ -107,7 +108,7 @@ export default function StepReview({
                     </dd>
                   </div>
                   <div className="flex gap-1 md:gap-3 col-span-3 justify-end">
-                    <dt className="text-sm font-medium text-balada_violet_500 col-span-1">
+                    <dt className="text-sm font-semibold text-balada_violet_375 col-span-1">
                       CPF:
                     </dt>
                     <dd className="text-sm text-white sm:mt-0 sm:col-span-1 flex justify-end">
@@ -119,7 +120,7 @@ export default function StepReview({
               <dl className="sm:divide-y sm:divide-gray-200">
                 <div className="py-2 grid grid-cols-6">
                   <div className=" flex gap-1 md:gap-2 md:col-span-2 col-span-3">
-                    <dt className="text-sm font-medium text-balada_violet_500">
+                    <dt className="text-sm font-semibold text-balada_violet_375">
                       Celular:
                     </dt>
                     <dd className="text-sm text-white col-span-1 flex justify-start">
@@ -127,7 +128,7 @@ export default function StepReview({
                     </dd>
                   </div>
                   <div className=" flex gap-1 md:gap-2 md:col-span-2 col-span-3">
-                    <dt className="text-sm font-medium text-balada_violet_500  flex justify-end ml-6">
+                    <dt className="text-sm font-semibold text-balada_violet_375  flex justify-end ml-6">
                       Gênero:
                     </dt>
                     <dd className="text-sm text-white flex">
@@ -135,7 +136,7 @@ export default function StepReview({
                     </dd>
                   </div>
                   <div className=" flex gap-1 md:gap-2 md:col-span-2 col-span-4 md:justify-end mt-4 md:mt-0">
-                    <dt className="text-sm font-medium text-balada_violet_500">
+                    <dt className="text-sm font-semibold text-balada_violet_375">
                       Data Nascimento:
                     </dt>
                     <dd className="text-sm text-white col-span-1 flex md:justify-end">
@@ -146,14 +147,24 @@ export default function StepReview({
               </dl>
               <dl className="sm:divide-y sm:divide-gray-200">
                 <div className="py-2 sm:py-5">
-                  <div className=" flex gap-2">
-                    <dt className="text-sm font-medium text-balada_violet_500">
+                  <div className="flex gap-2">
+                    <dt className="text-sm font-semibold text-balada_violet_375">
                       Endereço:
                     </dt>
-                    <dd className="text-sm text-white col-span-1 flex justify-end">
-                      {data.street} Nº {data.number}, Complemento:{" "}
-                      {data.complement}, Bairro: {data.neighborhood}, Cidade:{" "}
-                      {data.city}-{data.state}, CEP: {data.cep}
+                    <dd className="text-sm text-white col-span-1 flex flex-wrap gap-2">
+                      <p className=" text-balada_green_675">Logradouro: </p>
+                      {data.street} <p className=" text-balada_green_675">Nº</p>{" "}
+                      {data.number},
+                      {data.complement && (
+                        <p className=" text-balada_green_675">
+                          Complemento: <span className="text-white">{data.complement},</span>{" "}
+                        </p>
+                      )}{" "}
+                      <p className=" text-balada_green_675">Bairro:</p>{" "}
+                      {data.neighborhood},{" "}
+                      <p className=" text-balada_green_675">Cidade:</p>{" "}
+                      {data.city}-{data.state},{" "}
+                      <p className=" text-balada_green_675">CEP:</p> {mask(data?.cep, ['99999-999'])}
                     </dd>
                   </div>
                 </div>
@@ -175,12 +186,8 @@ export default function StepReview({
                 <label htmlFor="agree" className=" text-sm text-white">
                   Ao continuar você concorda com os{" "}
                 </label>
-                <label className="text-balada_green_900 cursor-pointer -mt-0.5">
-                  <span
-                    onClick={openModal}
-                  >
-                    termos de uso.
-                  </span>
+                <label className="text-balada_green_900 cursor-pointer">
+                  <p onClick={openModal}>termos de uso.</p>
                 </label>
               </div>
             </div>
@@ -210,7 +217,7 @@ export default function StepReview({
               </p>
             </div>
 
-            <div className="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+            <div className="flex items-center md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 w-full">
               <button
                 data-modal-hide="default-modal"
                 type="button"

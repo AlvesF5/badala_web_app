@@ -23,6 +23,7 @@ const config: Config = {
         balada_green_675: "#22c271",
         balada_green_800: "#0bd971",
         balada_green_900: "#0bab5a",
+        balada_violet_375: "#8484ff",
         balada_violet_500: "#3636ff",
       },
       backgroundImage: {

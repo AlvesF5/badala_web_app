@@ -243,7 +243,7 @@ export default function SignUp() {
                 <p className=" text-sm">
                   Cadastro realizado com sucesso! Um link de confirmação foi
                   enviado para o e-mail{" "}
-                  <span className=" text-balada_violet_500 font-medium">
+                  <span className=" text-balada_green_675 font-medium">
                     {data.email}
                   </span>
                 </p>
