@@ -43,16 +43,16 @@ export default function Login() {
       </div>
 
       <form className="w-[400px] flex flex-col gap-6" action={formAction}>
-        <p>Insira seu e-mail e senha para fazer login</p>
+        <p className=" text-gray-400">Insira seu e-mail e senha para fazer login</p>
         <input
-          className="h-12 rounded-md p-2 bg-transparent border border-gray-300"
+          className="h-12 rounded-md p-2 text-gray-400 bg-transparent border border-gray-300 focus:border-balada_green_675 focus:ring-balada_green_675 focus:outline-none"
           type="text"
           name="email"
           placeholder="Digite seu e-mail"
         />
 
         <input
-          className="h-12 rounded-md p-2 bg-transparent border border-gray-300"
+          className="h-12 rounded-md p-2 text-gray-400 bg-transparent border border-gray-300 focus:border-balada_green_675 focus:ring-balada_green_675 focus:outline-none"
           type="password"
           name="password"
           placeholder="Digite sua senha"
@@ -74,7 +74,7 @@ export default function Login() {
         <SubmitButton />
       </form>
       <div>
-        <Link href={""}>
+        <Link href={"/login/resetPassword"}>
           <p className="text-xs text-balada_green_675">Clique aqui para recuperar sua senha</p>
         </Link>
       </div>

@@ -242,7 +242,7 @@ export default function SignUp() {
               <div className="p-2">
                 <p className=" text-sm text-gray-300">
                   Cadastro realizado com sucesso! Um link de confirmação foi
-                  enviado para o e-mail{" "}
+                  enviado para o e-mail{" "}. Caso não tenho encontrado, verifique sua caixa de spam
                   <span className=" text-balada_green_675 font-medium">
                     {data.email}
                   </span>
