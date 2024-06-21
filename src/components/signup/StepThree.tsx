@@ -19,12 +19,12 @@ export default function StepThree({ data, updateFielHandler, register, errors, s
               
                 const address = await response.json();
                 
-                if (address.erro===true) {
+                if (address.erro) {
                     toast.error(`Por favor, verifique se o CEP digitado está correto e digite novamente!`);
                 }
 
 
-                if(address.cep===mask(cep, ['99999-999'])){
+                if(!address.erro){
                     setValue('cep', address.cep, { shouldValidate: true });
                     setValue('street', address.logradouro, { shouldValidate: true });
                     setValue('state', address.uf, { shouldValidate: true });
