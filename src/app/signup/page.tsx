@@ -33,10 +33,6 @@ export default function SignUp() {
 
   const { isModalOpen, openModal, closeModal } = useModal();
 
-  const handleModalConfirm = () => {
-    closeModal();
-  };
-
   const methods = useForm({
     mode: "all",
     reValidateMode: "onChange",
@@ -240,12 +236,9 @@ export default function SignUp() {
           <div className="flex flex-col gap-4">
             <div className="flex">
               <div className="p-2">
-                <p className=" text-sm text-gray-300">
+                <p className=" text-sm text-gray-300 flex-wrap">
                   Cadastro realizado com sucesso! Um link de confirmação foi
-                  enviado para o e-mail{" "}. Caso não tenho encontrado, verifique sua caixa de spam
-                  <span className=" text-balada_green_675 font-medium">
-                    {data.email}
-                  </span>
+                  enviado para o e-mail <span className=" text-balada_green_675 font-medium">{data.email}</span>. Caso não tenho encontrado, verifique sua caixa de spam.
                 </p>
               </div>
 
