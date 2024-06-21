@@ -44,12 +44,6 @@ export default function ResetPassword() {
     getValues,
   } = methods;
 
-  const formTemplate = {
-    email: "",
-  };
-
-  const [data] = useState(formTemplate);
-
   const resetPassword = async () => {
     if (isValid) {
       try {
@@ -77,6 +71,7 @@ export default function ResetPassword() {
 
         if (response.ok) {
           openModal()
+          return true
         }
       } catch (error: unknown) {
         if (error instanceof Error) {
@@ -87,6 +82,14 @@ export default function ResetPassword() {
           console.log("Ocorreu um erro desconhecido");
         }
       }
+    }
+    return false;
+  };
+
+  const handleResetPassword = async () => {
+    const successSendReset = await resetPassword();
+    if (successSendReset) {
+      toast.success("E-mail de redefinição de senha enviado com sucesso!");
     }
   };
 
@@ -146,6 +149,7 @@ export default function ResetPassword() {
                 <Link href="">
                   <button
                     type="button"
+                    onClick={handleResetPassword}
                     className="text-white bg-balada_violet_500 hover:bg-balada_green_900 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-balada_violet_500 dark:hover:bg-balada_green_900 dark:focus:ring-purple-900"
                   >
                     Enviar e-mail
