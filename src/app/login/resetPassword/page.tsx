@@ -146,7 +146,6 @@ export default function ResetPassword() {
                 <p className=" text-nowrap text-xs text-gray-400">
                   clique aqui, caso não tenha recebido
                 </p>
-                <Link href="">
                   <button
                     type="button"
                     onClick={handleResetPassword}
@@ -154,14 +153,15 @@ export default function ResetPassword() {
                   >
                     Enviar e-mail
                   </button>
-                </Link>
               </div>
             </div>
             <div className="flex justify-center items-center cursor-pointer gap-1">
               <span className=" text-balada_green_900">
                 <Icon icon={chevronRight} />
               </span>
-              <p className="text-xs mt-0.5 text-gray-300">Ir para página de login</p>
+              <Link href={"/login"}>
+                <p className="text-xs mt-0.5 text-gray-300">Ir para página de login</p>
+              </Link>
             </div>
           </div>
         </Modal>

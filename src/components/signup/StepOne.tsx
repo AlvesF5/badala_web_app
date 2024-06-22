@@ -3,20 +3,11 @@ import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import { useState } from "react";
+import { handleToggle } from "../../utils/togglePasswordVisibility";
 
 export default function StepOne({ data, updateFielHandler, register, errors }: { data: any; updateFielHandler: any, register: any, errors: any }) {
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState(eye);
-
-    const handleToggle = () => {
-        if (type === 'password') {
-            setIcon(eyeOff);
-            setType('text')
-        } else {
-            setIcon(eye)
-            setType('password')
-        }
-    }
 
     return (
 
@@ -74,7 +65,7 @@ export default function StepOne({ data, updateFielHandler, register, errors }: {
                                         className="input_default_one_line peer"
                                     />
                                     <label htmlFor="retryPassword" className="label_input_default_one_line">Repetir Senha</label>
-                                    <span className="flex justify-around items-center text-gray-400" onClick={handleToggle}>
+                                    <span className="flex justify-around items-center text-gray-400" onClick={() => handleToggle(type, setType, setIcon, eye, eyeOff)}>
                                         <Icon className="absolute mr-5" icon={icon} size={20} />
                                     </span>
                                 </div>

@@ -8,6 +8,11 @@ import { toast } from "sonner";
 import Link from "next/link";
 import logo from "../../images/logo.png";
 import Image from "next/image";
+import { Icon } from 'react-icons-kit';
+import { eyeOff } from "react-icons-kit/feather/eyeOff";
+import { eye } from "react-icons-kit/feather/eye";
+import { useState } from "react";
+import { handleToggle } from "../../utils/togglePasswordVisibility";
 
 const initialState = {
   message: "",
@@ -29,6 +34,8 @@ function SubmitButton() {
 
 export default function Login() {
   const token = useCookies().get("balada-user-token");
+  const [type, setType] = useState("password");
+  const [icon, setIcon] = useState(eye);
 
   if (token) {
     redirect("/");
@@ -42,21 +49,47 @@ export default function Login() {
         <Image src={logo} width={240} alt="" className=" dark:filter-none" />
       </div>
 
-      <form className="w-[400px] flex flex-col gap-6" action={formAction}>
-        <p className=" text-gray-400">Insira seu e-mail e senha para fazer login</p>
-        <input
-          className="h-12 rounded-md p-2 text-gray-400 bg-transparent border border-gray-300 focus:border-balada_green_675 focus:ring-balada_green_675 focus:outline-none"
-          type="text"
-          name="email"
-          placeholder="Digite seu e-mail"
-        />
-
-        <input
-          className="h-12 rounded-md p-2 text-gray-400 bg-transparent border border-gray-300 focus:border-balada_green_675 focus:ring-balada_green_675 focus:outline-none"
-          type="password"
-          name="password"
-          placeholder="Digite sua senha"
-        />
+      <form className="w-[400px] flex flex-col gap-6 p-6 md:p-0" action={formAction}>
+        <p className=" text-gray-400">
+          Insira seu e-mail e senha para fazer login
+        </p>
+        <div className="flex flex-col gap-1">
+          <div className="relative z-0 w-full mb-5 group">
+            <input
+              type="email"
+              name="email"
+              id="email"
+              className="input_default_one_line peer"
+            />
+            <label htmlFor="email" className="label_input_default_one_line">
+              Email
+            </label>
+          </div>
+        </div>
+        <div className="grid md:grid-cols-1 md:gap-6">
+          <div>
+            <div className="mb-4 relative z-0 w-full group flex flex-col">
+              <input
+                type={type}
+                name="password"
+                id="password"
+                className="input_default_one_line peer"
+              />
+              <label
+                htmlFor="password"
+                className="label_input_default_one_line"
+              >
+                Senha
+              </label>
+              <span
+                className="flex justify-end text-gray-400"
+                onClick={() => handleToggle(type, setType, setIcon, eye, eyeOff)}
+              >
+                <Icon className=" -mt-7" icon={icon} size={20} />
+              </span>
+            </div>
+          </div>
+        </div>
 
         {state.message ? (
           <div hidden>
@@ -75,7 +108,9 @@ export default function Login() {
       </form>
       <div>
         <Link href={"/login/resetPassword"}>
-          <p className="text-xs text-balada_green_675">Clique aqui para recuperar sua senha</p>
+          <p className="text-sm text-balada_green_675">
+            Clique aqui para recuperar sua senha
+          </p>
         </Link>
       </div>
     </div>
