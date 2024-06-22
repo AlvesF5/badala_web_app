@@ -64,7 +64,7 @@ export default function StepReview({
           </div>
           <div className=" bg-balada_gray_800 overflow-hidden">
             <div className=" py-4">
-              <h3 className="text-lg leading-6 font-medium text-balada_violet_375">
+              <h3 className="text-lg leading-6 font-medium text-balada_green_675">
                 Email e senha
               </h3>
               <div className=" py-2 sm:gap-4 flex justify-between">
@@ -100,7 +100,7 @@ export default function StepReview({
               <dl className="sm:divide-y sm:divide-gray-200">
                 <div className="py-2 sm:py-5 grid grid-cols-6">
                   <div className=" flex gap-1 md:gap-2 col-span-3">
-                    <dt className="text-sm font-semibold text-balada_violet_375 col-span-2">
+                    <dt className="text-sm font-semibold text-balada_green_675 col-span-2">
                       Nome:
                     </dt>
                     <dd className="text-sm text-white sm:mt-0 sm:col-span-2 flex justify-start">
@@ -108,7 +108,7 @@ export default function StepReview({
                     </dd>
                   </div>
                   <div className="flex gap-1 md:gap-3 col-span-3 justify-end">
-                    <dt className="text-sm font-semibold text-balada_violet_375 col-span-1">
+                    <dt className="text-sm font-semibold text-balada_green_675 col-span-1">
                       CPF:
                     </dt>
                     <dd className="text-sm text-white sm:mt-0 sm:col-span-1 flex justify-end">
@@ -120,7 +120,7 @@ export default function StepReview({
               <dl className="sm:divide-y sm:divide-gray-200">
                 <div className="py-2 grid grid-cols-6">
                   <div className=" flex gap-1 md:gap-2 md:col-span-2 col-span-3">
-                    <dt className="text-sm font-semibold text-balada_violet_375">
+                    <dt className="text-sm font-semibold text-balada_green_675">
                       Celular:
                     </dt>
                     <dd className="text-sm text-white col-span-1 flex justify-start">
@@ -128,7 +128,7 @@ export default function StepReview({
                     </dd>
                   </div>
                   <div className=" flex gap-1 md:gap-2 md:col-span-2 col-span-3">
-                    <dt className="text-sm font-semibold text-balada_violet_375  flex justify-end ml-6">
+                    <dt className="text-sm font-semibold text-balada_green_675  flex justify-end ml-6">
                       Gênero:
                     </dt>
                     <dd className="text-sm text-white flex">
@@ -136,7 +136,7 @@ export default function StepReview({
                     </dd>
                   </div>
                   <div className=" flex gap-1 md:gap-2 md:col-span-2 col-span-4 md:justify-end mt-4 md:mt-0">
-                    <dt className="text-sm font-semibold text-balada_violet_375">
+                    <dt className="text-sm font-semibold text-balada_green_675">
                       Data Nascimento:
                     </dt>
                     <dd className="text-sm text-white col-span-1 flex md:justify-end">
@@ -148,23 +148,23 @@ export default function StepReview({
               <dl className="sm:divide-y sm:divide-gray-200">
                 <div className="py-2 sm:py-5">
                   <div className="flex gap-2">
-                    <dt className="text-sm font-semibold text-balada_violet_375">
+                    <dt className="text-sm font-semibold text-balada_green_675">
                       Endereço:
                     </dt>
                     <dd className="text-sm text-white col-span-1 flex flex-wrap gap-2">
-                      <p className=" text-balada_green_675">Logradouro: </p>
-                      {data.street} <p className=" text-balada_green_675">Nº</p>{" "}
+                      <p className=" text-balada_violet_375">Logradouro: </p>
+                      {data.street} <p className=" text-balada_violet_375">Nº</p>{" "}
                       {data.number},
                       {data.complement && (
-                        <p className=" text-balada_green_675">
+                        <p className=" text-balada_violet_375">
                           Complemento: <span className="text-white">{data.complement},</span>{" "}
                         </p>
                       )}{" "}
-                      <p className=" text-balada_green_675">Bairro:</p>{" "}
+                      <p className=" text-balada_violet_375">Bairro:</p>{" "}
                       {data.neighborhood},{" "}
-                      <p className=" text-balada_green_675">Cidade:</p>{" "}
+                      <p className=" text-balada_violet_375">Cidade:</p>{" "}
                       {data.city}-{data.state},{" "}
-                      <p className=" text-balada_green_675">CEP:</p> {mask(data?.cep, ['99999-999'])}
+                      <p className=" text-balada_violet_375">CEP:</p> {mask(data?.cep, ['99999-999'])}
                     </dd>
                   </div>
                 </div>

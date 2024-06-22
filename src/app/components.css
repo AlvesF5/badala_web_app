@@ -390,11 +390,6 @@ p {
   @apply bg-balada_green_800;
 }
 
-
-.input_form_create_user{
-  @apply block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600;
-}
-
 .div_container_form_errors{
   @apply flex flex-col justify-center items-center absolute bottom-5 w-10/12 md:w-4/12
 }
@@ -409,4 +404,16 @@ p {
 
 .default_subtitle_form{
   @apply text-gray-400 text-sm
+}
+
+.input_default_one_line{
+  @apply block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 focus:border-balada_green_675 focus:ring-balada_green_675 focus:outline-none
+}
+
+.select_input_default_one_line{
+  @apply block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 dark:text-white dark:border-gray-600  focus:border-balada_green_675 focus:ring-balada_green_675 focus:outline-none focus:bg-balada_gray_800
+}
+
+.label_input_default_one_line{
+  @apply peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-balada_green_675 peer-focus:dark:text-balada_green_675 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6
 }

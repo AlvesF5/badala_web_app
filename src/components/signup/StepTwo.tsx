@@ -21,12 +21,12 @@ export default function StepTwo({ data, updateFielHandler, register, errors }: {
                                     onChange={(e) => updateFielHandler("firstName", e.target.value)}
                                     name="firstName"
                                     id="firstName"
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    className="input_default_one_line peer"
                                 />
 
                                 <label
                                     htmlFor="firstName"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Nome</label>
+                                    className="label_input_default_one_line">Nome</label>
                             </div>
                             <div className="relative z-0 w-full mb-5 group col-span-4 md:col-span-3">
                                 <input
@@ -36,12 +36,12 @@ export default function StepTwo({ data, updateFielHandler, register, errors }: {
                                     onChange={(e) => updateFielHandler("lastName", e.target.value)}
                                     name="lastName"
                                     id="lastName"
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    className="input_default_one_line peer"
                                 />
 
                                 <label
                                     htmlFor="lastName"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Sobrenome</label>
+                                    className="label_input_default_one_line">Sobrenome</label>
                             </div>
                             <div className="relative mt-[1px] z-0 w-full md:mb-5 group col-span-3 md:col-span-2">
                                 <select
@@ -50,7 +50,7 @@ export default function StepTwo({ data, updateFielHandler, register, errors }: {
                                     onChange={(e) => updateFielHandler("gender", e.target.value)}
                                     name="gender"
                                     id="gender"
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 focus:bg-balada_gray_800 peer"
+                                    className="select_input_default_one_line peer"
                                 >
                                     <option selected>Definir</option>
                                     <option value="MA">Masculino</option>
@@ -59,7 +59,7 @@ export default function StepTwo({ data, updateFielHandler, register, errors }: {
                                 </select>
                                 <label
                                     htmlFor="gender"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Gênero</label>
+                                    className="label_input_default_one_line">Gênero</label>
 
                             </div>
                             <div className="relative z-0 w-full mb-5 group md:col-span-2 col-span-4">
@@ -71,11 +71,11 @@ export default function StepTwo({ data, updateFielHandler, register, errors }: {
                                     pattern="(\d{3}\.?\d{3}\.?\d{3}-?\d{2})|(\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2})"
                                     name="documentNumber"
                                     id="documentNumber"
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    className="input_default_one_line peer"
                                 />
                                 <label
                                     htmlFor="documentNumber"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">CPF</label>
+                                    className="label_input_default_one_line">CPF</label>
                             </div>
                             <div className="relative z-0 w-full mb-5 group col-span-3">
                                 <input
@@ -86,12 +86,12 @@ export default function StepTwo({ data, updateFielHandler, register, errors }: {
                                     pattern="(\(?\d{2}\)?\s)?(\d{4,5}\-\d{4})"
                                     name="phone"
                                     id="phone"
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    className="input_default_one_line peer"
                                 />
 
                                 <label
                                     htmlFor="phone"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Celular (Whats)</label>
+                                    className="label_input_default_one_line">Celular (Whats)</label>
                             </div>
                             <div className="relative z-0 w-full mb-5 group md:col-span-2 col-span-4">
                                 <input
@@ -101,11 +101,11 @@ export default function StepTwo({ data, updateFielHandler, register, errors }: {
                                     onChange={(e) => updateFielHandler("birthDate", e.target.value)}
                                     name="birthDate"
                                     id="birthDate"
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    className="input_default_one_line peer"
                                 />
                                 <label
                                     htmlFor="birthDate"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Data de nascimento</label>
+                                    className="label_input_default_one_line">Data de nascimento</label>
                             </div>
                         </div>
                     </div>

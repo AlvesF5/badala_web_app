@@ -41,9 +41,9 @@ export default function StepOne({ data, updateFielHandler, register, errors }: {
                                         onChange={(e) => updateFielHandler("email", e.target.value)}
                                         name="email"
                                         id="email"
-                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        className="input_default_one_line peer"
                                     />
-                                    <label htmlFor="email" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email</label>
+                                    <label htmlFor="email" className="label_input_default_one_line">Email</label>
                                 </div>
                             </div>
                             <div className="grid md:grid-cols-2 md:gap-6">
@@ -56,9 +56,9 @@ export default function StepOne({ data, updateFielHandler, register, errors }: {
                                             id="password"
                                             value={data.password || ""}
                                             onChange={(e) => updateFielHandler("password", e.target.value)}
-                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            className="input_default_one_line peer"
                                         />
-                                        <label htmlFor="password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Senha</label>
+                                        <label htmlFor="password" className="label_input_default_one_line">Senha</label>
                                     </div>
                                 </div>
 
@@ -71,9 +71,9 @@ export default function StepOne({ data, updateFielHandler, register, errors }: {
                                         value={data.retryPassword || ""}
                                         onChange={(e) => updateFielHandler("retryPassword", e.target.value)}
                                         autoComplete="current-password"
-                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        className="input_default_one_line peer"
                                     />
-                                    <label htmlFor="retryPassword" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Repetir Senha</label>
+                                    <label htmlFor="retryPassword" className="label_input_default_one_line">Repetir Senha</label>
                                     <span className="flex justify-around items-center text-gray-400" onClick={handleToggle}>
                                         <Icon className="absolute mr-5" icon={icon} size={20} />
                                     </span>
