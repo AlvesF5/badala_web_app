@@ -27,6 +27,7 @@ import { unMask } from "remask";
 import { toast } from "sonner";
 import Link from "next/link";
 import Modal, { useModal } from "@/components/modal/DefaultModal";
+import TimerButton from "@/components/utils/TimerButton";
 
 export default function SignUp() {
   const [step, setStep] = useState(0);
@@ -173,6 +174,37 @@ export default function SignUp() {
     }
   };
 
+  const sendVerificationUserEmail = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/v1/user/sendVerificationEmail", {
+        method: "POST", // Método HTTP
+        headers: {
+          "Content-Type": "application/json", // Informa o tipo de conteúdo que está sendo enviado
+        },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+        }),
+      });
+  
+      if (!response.ok) {
+        const errorJson = await response.json();
+        const errorMessage = errorJson.errors.join(", ");
+        toast.error(`Erro ao enviar o email de verificação: ${errorMessage}`);
+      }
+  
+      if (response.ok) {
+        toast.success("Email de verificação enviado com sucesso!");
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(`Erro ao enviar o email de verificação: ${error.message}`);
+      } else {
+        console.log("Ocorreu um erro desconhecido");
+      }
+    }
+  };
+
   return (
     <div>
       <div className="flex flex-col h-full items-center w-full mt-44 gap-8">
@@ -246,14 +278,12 @@ export default function SignUp() {
                 <p className=" text-nowrap text-xs text-gray-400">
                   clique aqui, caso não tenha recebido
                 </p>
-                <Link href="">
-                  <button
-                    type="button"
-                    className="text-white bg-balada_violet_500 hover:bg-balada_green_900 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-balada_violet_500 dark:hover:bg-balada_green_900 dark:focus:ring-purple-900"
-                  >
-                    Enviar e-mail
-                  </button>
-                </Link>
+                  <TimerButton 
+                    label={"Enviar e-mail"} 
+                    onButtonClick={sendVerificationUserEmail} 
+                    className={"text-white hover:bg-balada_green_900 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-balada_violet_500 dark:hover:bg-balada_green_900 dark:focus:ring-purple-900 cursor-pointer"}
+                    disabledClassName={"text-white focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-gray-400"}
+                    />
               </div>
             </div>
             <div className="flex justify-center items-center cursor-pointer gap-1">

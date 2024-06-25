@@ -6,12 +6,12 @@ import logo from "../../../images/logo.png";
 import Image from "next/image";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { schemaResetPassword } from "@/utils/schemas";
 import Link from "next/link";
 import Modal, { useModal } from "@/components/modal/DefaultModal";
 import { Icon } from "react-icons-kit";
 import { chevronRight } from "react-icons-kit/fa/chevronRight";
+import TimerButton from "@/components/utils/TimerButton";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -146,13 +146,12 @@ export default function ResetPassword() {
                 <p className=" text-nowrap text-xs text-gray-400">
                   clique aqui, caso não tenha recebido
                 </p>
-                  <button
-                    type="button"
-                    onClick={handleResetPassword}
-                    className="text-white bg-balada_violet_500 hover:bg-balada_green_900 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-balada_violet_500 dark:hover:bg-balada_green_900 dark:focus:ring-purple-900"
-                  >
-                    Enviar e-mail
-                  </button>
+                <TimerButton 
+                    label={"Enviar e-mail"}
+                    onButtonClick={handleResetPassword} 
+                    className={"text-white hover:bg-balada_green_900 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-balada_violet_500 dark:hover:bg-balada_green_900 dark:focus:ring-purple-900 cursor-pointer"}
+                    disabledClassName={"text-white focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-gray-400"}
+                    />
               </div>
             </div>
             <div className="flex justify-center items-center cursor-pointer gap-1">
