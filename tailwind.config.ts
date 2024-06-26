@@ -16,6 +16,8 @@ const config: Config = {
     extend: {
       colors: {
         balada_cana: "#01B6B5",
+        balada_gray_300: "#6b6a71",
+        balada_gray_450: "#37363f",
         balada_gray_600: "#2b2a33",
         balada_gray_800: "#1c1b22",
         balada_gray_900: "#111115",
