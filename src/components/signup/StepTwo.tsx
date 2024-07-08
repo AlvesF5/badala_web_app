@@ -1,6 +1,7 @@
 import { mask } from "remask"
 
 export default function StepTwo({ data, updateFielHandler, register, errors }: { data: any; updateFielHandler: any, register: any, errors: any }) {
+   
     return (
         <div>
             <main className=" flex w-full mx-auto justify-center items-center h-full">

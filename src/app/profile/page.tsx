@@ -14,12 +14,13 @@ type User = {
   email: string;
   password: string;
   phone: string;
-  birthDate: number;
+  birthDate: string;
   documentNumber: string;
   gender: string;
-  updatedAt: number | null;
-  addressId: string;
+  createdAt: string;
+  updatedAt: string;
   active: boolean;
+  addressId: string;
 };
 
 const getUserById = async (userId: string) => {
@@ -115,28 +116,28 @@ const UserProfile = () => {
                 </li>
                 <li className="flex items-center py-3">
                   <span className="font-semibold text-balada_violet_375">Data de cadastro:</span>
-                  <span className="ml-auto text-sm">Nov 07, 2016</span>
+                  <span className="ml-auto text-sm">{user.createdAt}</span>
                 </li>
                 <li className="flex items-center py-3">
                   <span className="font-semibold text-balada_violet_375">Gênero:</span>
-                  <span className="ml-auto text-sm">Masculino</span>
+                  <span className="ml-auto text-sm">{user.gender}</span>
                 </li>
                 <li className="flex items-center py-3">
                   <span className="font-semibold text-balada_violet_375">Data de nascimento:</span>
                   <span className="ml-auto text-sm">{user.birthDate}</span>
                 </li>
                 <li className="flex items-center py-3">
-                  <span className="font-semibold text-balada_violet_375">CPF:</span>
+                  <span className="font-semibold text-balada_violet_375">{user.documentNumber}</span>
                   <span className="ml-auto text-sm">067.567.085-38</span>
                 </li>
                 <li className="flex items-center py-3">
                   <span className="font-semibold text-balada_violet_375">Celular:</span>
-                  <span className="ml-auto text-sm">(73) 98174-9834</span>
+                  <span className="ml-auto text-sm">{user.phone}</span>
                 </li>
                 <li className="flex items-center py-3 flex-wrap">
                   <span className="font-semibold text-balada_violet_375">Endereço:</span>
                   <span className="text-sm mt-2">
-                    Rua São José, Nº 47 Apto. 302, bairro São Caetano, Itabuna-Ba, CEP 45607-348
+                    {user.addressId}
                   </span>
                 </li>
               </ul>

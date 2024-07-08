@@ -137,7 +137,6 @@ export default function SignUp() {
             lastName: data.lastName,
             email: data.email,
             password: data.password,
-            retryPassword: data.retryPassword,
             phone: unMask(data.phone),
             birthDate: data.birthDate,
             documentNumber: unMask(data.documentNumber),
