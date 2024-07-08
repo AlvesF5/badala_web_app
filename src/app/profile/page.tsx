@@ -28,7 +28,7 @@ type User = {
   createdAt: string;
   updatedAt: string;
   active: boolean;
-  addressId: string;
+  address: string;
 };
 
 const getUserById = async (userId: string) => {
@@ -173,7 +173,7 @@ const UserProfile = () => {
                   <span className="font-semibold text-balada_violet_375">
                     Endereço:
                   </span>
-                  <span className="text-sm mt-2">{user.addressId}</span>
+                  <span className="text-sm mt-2">{user.address}</span>
                 </li>
               </ul>
             </div>
