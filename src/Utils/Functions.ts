@@ -45,4 +45,27 @@ export const selectGender = (value:string) => {
       }
  }
 
+
+ export const selectUserGreeting = (value:string) => {
+  switch(value) {
+      case "MA":
+        return "Bem-vindo, "
+      case "FE":
+        return "Bem-vinda, "
+      case "NB":
+        return "Olá, "
+    }
+}
+
+
+ export const selectUserStatus = (value:boolean) => {
+  switch(value) {
+      case true:
+        return "Ativo"
+      case false:
+        return "Inativo"
+    }
+}
+
+
   
