@@ -12,8 +12,11 @@ import { mask } from "remask";
 import {
   selectGender,
   selectUserStatus,
-  selectUserGreeting
+  selectUserGreeting,
 } from "@/utils/Functions";
+import brega from "../../images/sliderhome/brega.jpg"
+import safadao from "../../images/sliderhome/safadao.jpg"
+import tico from "../../images/sliderhome/tico-a.jpg"
 
 type User = {
   id: string;
@@ -102,13 +105,13 @@ const UserProfile = () => {
   }
 
   return (
-    <main className="text-center h-screen flex justify-center items-center">
-      <div className="container mx-auto w-1/3">
-        <div className="md:flex no-wrap md:-mx-2">
+    <main className="text-center h-screen flex justify-center items-center w-full mx-auto">
+      <div className="container mx-auto w-4/12 flex">
+        <div className="md:flex no-wrap md:-mx-2 w-f mx-auto justify-center">
           <div className="w-full md:w-3/12 md:mx-2">
-            <div className="bg-balada_gray_600 p-3 border-t-4 border-balada_green_675 h-full">
+            <div className="py-14 px-4">
               <h1 className="text-balada_green_800 font-bold text-xl leading-8 my-1">
-                {selectUserGreeting(user.gender ) + user.firstName+"!"}
+                {selectUserGreeting(user.gender) + user.firstName + "!"}
               </h1>
               <h3 className="text-balada_violet_375 font-lg text-semibold leading-6">
                 {user.email}
@@ -116,9 +119,9 @@ const UserProfile = () => {
                   alterar senha
                 </p>
               </h3>
-              <ul className="bg-balada_gray_450 text-gray-300 py-2 px-3 mt-3 divide-y rounded shadow-sm">
+              <ul className="bg-gray-800 text-gray-400 p-5 mt-6 divide-y rounded shadow-sm h-[439px]">
                 <li className="flex items-center py-3">
-                  <span className="font-semibold text-balada_violet_375">
+                  <span className="font-semibold text-sm text-balada_green_675">
                     Status:
                   </span>
                   <span className="ml-auto">
@@ -132,58 +135,192 @@ const UserProfile = () => {
                   </span>
                 </li>
                 <li className="flex items-center py-3">
-                  <span className="font-semibold text-balada_violet_375">
+                  <span className="font-semibold text-sm text-balada_green_675">
                     Data de cadastro:
                   </span>
-                  <span className="ml-auto text-sm">
+                  <span className="ml-auto text-xs text-gray-100">
                     <DateFormatterWithHour timestamp={user.createdAt} />
                   </span>
                 </li>
                 <li className="flex items-center py-3">
-                  <span className="font-semibold text-balada_violet_375">
+                  <span className="font-semibold text-sm text-balada_green_675">
                     Gênero:
                   </span>
-                  <span className="ml-auto text-sm">
+                  <span className="ml-auto text-xs text-gray-100">
                     {selectGender(user.gender)}
                   </span>
                 </li>
                 <li className="flex items-center py-3">
-                  <span className="font-semibold text-balada_violet_375">
+                  <span className="font-semibold text-sm text-balada_green_675">
                     Data de nascimento:
                   </span>
-                  <span className="ml-auto text-sm"><DateFormatter timestamp={user.birthDate} /></span>
+                  <span className="ml-auto text-xs text-gray-100">
+                    <DateFormatter timestamp={user.birthDate} />
+                  </span>
                 </li>
                 <li className="flex items-center py-3">
-                  <span className="font-semibold text-balada_violet_375">
+                  <span className="font-semibold text-sm text-balada_green_675">
                     CPF:
                   </span>
-                  <span className="ml-auto text-sm">
+                  <span className="ml-auto text-xs text-gray-100">
                     {mask(user.documentNumber, ["999.999.999-99"])}
                   </span>
                 </li>
                 <li className="flex items-center py-3">
-                  <span className="font-semibold text-balada_violet_375">
+                  <span className="font-semibold text-sm text-balada_green_675">
                     Celular:
                   </span>
-                  <span className="ml-auto text-sm">
+                  <span className="ml-auto text-xs text-gray-100">
                     {mask(user.phone, ["(99) 99999-9999"])}
                   </span>
                 </li>
                 <li className="flex items-center py-3 flex-wrap">
-                  <span className="font-semibold text-balada_violet_375">
+                  <span className="font-semibold text-sm text-balada_green_675">
                     Endereço:
                   </span>
-                  <span className="text-sm mt-2">{user.address}</span>
+                  <span className="text-xs mt-4 text-gray-100">{user.address}</span>
                 </li>
               </ul>
             </div>
           </div>
-          <div className="bg-balada_gray_600 w-2/3 border-t-4 border-balada_green_675">
-            <div className="mx-auto py-8 sm:px-6 sm:py-24">
-              <div className="px-2 sm:px-0">
-                <h1 className="text-2xl font-bold tracking-tight text-balada_green_675 sm:text-3xl">
+          <div className="w-8/12">
+            <div className="py-14">
+              <div className="flex justify-start item-start space-y-2 flex-col">
+                <h1 className="text-3xl lg:text-4xl font-semibold leading-7 lg:leading-9 text-balada_green_675">
                   Meus eventos
                 </h1>
+                <p className="text-base dark:text-gray-300 font-medium leading-6 text-gray-600">
+                  Confira os detalhes dos ingressos dos seus eventos
+                </p>
+              </div>
+              <div className="mt-10 flex flex-col xl:flex-row jusitfy-center items-stretch w-full xl:space-x-8 space-y-4 md:space-y-6 xl:space-y-0">
+                <div className="flex flex-col justify-start items-start w-full">
+                  <div className="flex flex-col justify-start items-start bg-gray-800 px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full">
+                    <p className="text-lg md:text-xl dark:text-white font-semibold leading-6 xl:leading-5 text-gray-800">
+                      Eventos confirmados
+                    </p>
+                    <div className="mt-4 md:mt-6 flex flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full">
+                      <div className="pb-4 md:pb-8 w-full md:w-40">
+                        <Image
+                          className="w-full hidden md:block"
+                          src={brega}
+                          alt="dress"
+                          width={100}
+                          height={50}
+                        />
+                        <Image
+                          className="w-full md:hidden"
+                          src="https://i.ibb.co/L039qbN/Rectangle-10.png"
+                          alt="dress"
+                          width={100}
+                          height={50}
+                        />
+                      </div>
+                      <div className="border-b border-gray-200 md:flex-row flex-col flex justify-between items-start w-full pb-8 space-y-4 md:space-y-0">
+                        <div className="w-full flex flex-col justify-start items-start space-y-8">
+                          <h3 className="text-xl dark:text-white xl:text-2xl font-semibold leading-6 text-gray-800">
+                            Brega Light
+                          </h3>
+                          <div className="flex justify-start items-start flex-col space-y-2">
+                            <p className="text-sm dark:text-white leading-none text-gray-800">
+                              <span className="dark:text-gray-400 text-gray-300">
+                                Style:{" "}
+                              </span>{" "}
+                              Italic Minimal Design
+                            </p>
+                            <p className="text-sm dark:text-white leading-none text-gray-800">
+                              <span className="dark:text-gray-400 text-gray-300">
+                                Size:{" "}
+                              </span>{" "}
+                              Small
+                            </p>
+                            <p className="text-sm dark:text-white leading-none text-gray-800">
+                              <span className="dark:text-gray-400 text-gray-300">
+                                Color:{" "}
+                              </span>{" "}
+                              Light Blue
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex justify-between space-x-8 items-start w-full">
+                          <p className="text-base dark:text-white xl:text-lg leading-6">
+                            $36.00{" "}
+                            <span className="text-red-300 line-through">
+                              {" "}
+                              $45.00
+                            </span>
+                          </p>
+                          <p className="text-base dark:text-white xl:text-lg leading-6 text-gray-800">
+                            01
+                          </p>
+                          <p className="text-base dark:text-white xl:text-lg font-semibold leading-6 text-gray-800">
+                            $36.00
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-6 md:mt-0 flex justify-start flex-col md:flex-row items-start md:items-center space-y-4 md:space-x-6 xl:space-x-8 w-full">
+                      <div className="w-full md:w-40">
+                        <Image
+                          className="w-full hidden md:block"
+                          src={safadao}
+                          alt="dress"
+                          width={100}
+                          height={50}
+                        />
+                        <Image
+                          className="w-full md:hidden"
+                          src="https://i.ibb.co/BwYWJbJ/Rectangle-10.png"
+                          alt="dress"
+                          width={100}
+                          height={50}
+                        />
+                      </div>
+                      <div className="flex justify-between items-start w-full flex-col md:flex-row space-y-4 md:space-y-0">
+                        <div className="w-full flex flex-col justify-start items-start space-y-8">
+                          <h3 className="text-xl dark:text-white xl:text-2xl font-semibold leading-6 text-gray-800">
+                            Reveillon Axé Moí 2025
+                          </h3>
+                          <div className="flex justify-start items-start flex-col space-y-2">
+                            <p className="text-sm dark:text-white leading-none text-gray-800">
+                              <span className="dark:text-gray-400 text-gray-300">
+                                Style:{" "}
+                              </span>{" "}
+                              Italic Minimal Design
+                            </p>
+                            <p className="text-sm dark:text-white leading-none text-gray-800">
+                              <span className="dark:text-gray-400 text-gray-300">
+                                Size:{" "}
+                              </span>{" "}
+                              Small
+                            </p>
+                            <p className="text-sm dark:text-white leading-none text-gray-800">
+                              <span className="dark:text-gray-400 text-gray-300">
+                                Color:{" "}
+                              </span>{" "}
+                              Light Blue
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex justify-between space-x-8 items-start w-full">
+                          <p className="text-base dark:text-white xl:text-lg leading-6">
+                            $20.00{" "}
+                            <span className="text-red-300 line-through">
+                              {" "}
+                              $30.00
+                            </span>
+                          </p>
+                          <p className="text-base dark:text-white xl:text-lg leading-6 text-gray-800">
+                            01
+                          </p>
+                          <p className="text-base dark:text-white xl:text-lg font-semibold leading-6 text-gray-800">
+                            $20.00
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
