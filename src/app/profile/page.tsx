@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import DateFormatterWithHour from "@/components/utils/DateFormaterWithHour";
-import FullSizeImage from "@/components/utils/FullSizeImage"
+import FullSizeImage from "@/components/utils/FullSizeImage";
 import DateFormatter from "@/components/utils/DateFormater";
 import { mask } from "remask";
 import {
@@ -15,9 +15,8 @@ import {
   selectUserStatus,
   selectUserGreeting,
 } from "@/utils/Functions";
-import brega from "../../images/sliderhome/brega.jpg"
-import safadao from "../../images/sliderhome/safadao.jpg"
-import tico from "../../images/sliderhome/tico-a.jpg"
+import brega from "../../images/sliderhome/brega.jpg";
+import safadao from "../../images/sliderhome/safadao.jpg";
 
 type User = {
   id: string;
@@ -32,7 +31,16 @@ type User = {
   createdAt: string;
   updatedAt: string;
   active: boolean;
-  address: string;
+  address: {
+    cep: string;
+    street: string;
+    number: string;
+    state: string;
+    city: string;
+    neighborhood: string;
+    complement: string | "";
+  };
+  addressString: string;
 };
 
 const getUserById = async (userId: string) => {
@@ -120,7 +128,7 @@ const UserProfile = () => {
                   alterar senha
                 </p>
               </h3>
-              <ul className="bg-gray-800 text-gray-400 p-5 mt-6 divide-y rounded shadow-sm h-[439px]">
+              <ul className="bg-gray-800 text-gray-400 p-5 mt-6 divide-y rounded shadow-sm h-auto">
                 <li className="flex items-center py-3">
                   <span className="font-semibold text-sm text-balada_green_675">
                     Status:
@@ -179,7 +187,60 @@ const UserProfile = () => {
                   <span className="font-semibold text-sm text-balada_green_675">
                     Endereço:
                   </span>
-                  <span className="text-xs mt-4 text-gray-100">{user.address}</span>
+                  <table className="text-xs mt-3 text-gray-100 w-full">
+                    <tbody className="flex flex-wrap w-full">
+                      <tr className="flex items-start mr-4 gap-1">
+                        <td className="font-semibold text-sm text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                          CEP:
+                        </td>
+                        <td className="m-0.5 text-xs">{user.address.cep}</td>
+                      </tr>
+                      <tr className="flex mr-4 gap-1 ml-3.5">
+                        <td className="font-semibold text-sm text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                          Rua:
+                        </td>
+                        <td className="m-0.5 text-right text-xs">
+                          {user.address.street}
+                        </td>
+                      </tr>
+                      <tr className="flex items-start mr-4 gap-1">
+                        <td className="font-semibold text-sm text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                          Número:
+                        </td>
+                        <td className="m-0.5 text-xs">{user.address.number}</td>
+                      </tr>
+                      <tr className="flex gap-1 ml-7">
+                        <td className="font-semibold text-sm text-gray-100 text-right relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                          Estado:
+                        </td>
+                        <td className="m-0.5 text-right text-xs">
+                          {user.address.state}
+                        </td>
+                      </tr>
+                      <tr className="flex items-start mr-4 gap-1">
+                        <td className="font-semibold text-sm text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                          Cidade:
+                        </td>
+                        <td className="m-0.5 text-xs">{user.address.city}</td>
+                      </tr>
+                      <tr className="flex gap-1 ml-3">
+                        <td className="font-semibold text-sm text-gray-100 text-right relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                          Bairro:
+                        </td>
+                        <td className="m-0.5 text-right text-xs">
+                          {user.address.neighborhood}
+                        </td>
+                      </tr>
+                      <tr className="flex items-start mr-4 gap-1">
+                        <td className="font-semibold text-sm text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                          Complemento:
+                        </td>
+                        <td className="m-0.5 text-xs">
+                          {user.address.complement}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </li>
               </ul>
             </div>
@@ -202,7 +263,7 @@ const UserProfile = () => {
                     </p>
                     <div className="mt-4 md:mt-6 flex flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full">
                       <div className=" w-64 h-32">
-                      <FullSizeImage src={brega} alt="Descrição da imagem" />
+                        <FullSizeImage src={brega} alt="Descrição da imagem" />
                       </div>
                       <div className="border-b border-gray-200 md:flex-row flex-col flex justify-between items-start w-full pb-8 space-y-4 md:space-y-0">
                         <div className="w-full flex flex-col justify-start items-start space-y-8">
@@ -233,10 +294,6 @@ const UserProfile = () => {
                         <div className="flex justify-between space-x-8 items-start w-full">
                           <p className="text-base dark:text-white xl:text-lg leading-6">
                             $36.00{" "}
-                            <span className="text-red-300 line-through">
-                              {" "}
-                              $45.00
-                            </span>
                           </p>
                           <p className="text-base dark:text-white xl:text-lg leading-6 text-gray-800">
                             01
@@ -249,7 +306,10 @@ const UserProfile = () => {
                     </div>
                     <div className="mt-6 md:mt-0 flex justify-start flex-col md:flex-row items-start md:items-center space-y-4 md:space-x-6 xl:space-x-8 w-full">
                       <div className="w-64 h-32">
-                      <FullSizeImage src={safadao} alt="Descrição da imagem" />
+                        <FullSizeImage
+                          src={safadao}
+                          alt="Descrição da imagem"
+                        />
                       </div>
                       <div className="flex justify-between items-start w-full flex-col md:flex-row space-y-4 md:space-y-0">
                         <div className="w-full flex flex-col justify-start items-start space-y-8">
@@ -280,10 +340,6 @@ const UserProfile = () => {
                         <div className="flex justify-between space-x-8 items-start w-full">
                           <p className="text-base dark:text-white xl:text-lg leading-6">
                             $20.00{" "}
-                            <span className="text-red-300 line-through">
-                              {" "}
-                              $30.00
-                            </span>
                           </p>
                           <p className="text-base dark:text-white xl:text-lg leading-6 text-gray-800">
                             01
