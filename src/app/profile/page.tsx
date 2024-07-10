@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import DateFormatterWithHour from "@/components/utils/DateFormaterWithHour";
+import FullSizeImage from "@/components/utils/FullSizeImage"
 import DateFormatter from "@/components/utils/DateFormater";
 import { mask } from "remask";
 import {
@@ -200,21 +201,8 @@ const UserProfile = () => {
                       Eventos confirmados
                     </p>
                     <div className="mt-4 md:mt-6 flex flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full">
-                      <div className="pb-4 md:pb-8 w-full md:w-40">
-                        <Image
-                          className="w-full hidden md:block"
-                          src={brega}
-                          alt="dress"
-                          width={100}
-                          height={50}
-                        />
-                        <Image
-                          className="w-full md:hidden"
-                          src="https://i.ibb.co/L039qbN/Rectangle-10.png"
-                          alt="dress"
-                          width={100}
-                          height={50}
-                        />
+                      <div className=" w-64 h-32">
+                      <FullSizeImage src={brega} alt="Descrição da imagem" />
                       </div>
                       <div className="border-b border-gray-200 md:flex-row flex-col flex justify-between items-start w-full pb-8 space-y-4 md:space-y-0">
                         <div className="w-full flex flex-col justify-start items-start space-y-8">
@@ -260,21 +248,8 @@ const UserProfile = () => {
                       </div>
                     </div>
                     <div className="mt-6 md:mt-0 flex justify-start flex-col md:flex-row items-start md:items-center space-y-4 md:space-x-6 xl:space-x-8 w-full">
-                      <div className="w-full md:w-40">
-                        <Image
-                          className="w-full hidden md:block"
-                          src={safadao}
-                          alt="dress"
-                          width={100}
-                          height={50}
-                        />
-                        <Image
-                          className="w-full md:hidden"
-                          src="https://i.ibb.co/BwYWJbJ/Rectangle-10.png"
-                          alt="dress"
-                          width={100}
-                          height={50}
-                        />
+                      <div className="w-64 h-32">
+                      <FullSizeImage src={safadao} alt="Descrição da imagem" />
                       </div>
                       <div className="flex justify-between items-start w-full flex-col md:flex-row space-y-4 md:space-y-0">
                         <div className="w-full flex flex-col justify-start items-start space-y-8">
