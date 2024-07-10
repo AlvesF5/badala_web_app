@@ -188,15 +188,15 @@ const UserProfile = () => {
                     Endereço:
                   </span>
                   <table className="text-xs mt-3 text-gray-100 w-full">
-                    <tbody className="flex flex-wrap w-full">
+                    <tbody className="flex flex-wrap w-full p-3">
                       <tr className="flex items-start mr-4 gap-1">
-                        <td className="font-semibold text-sm text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                        <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
                           CEP:
                         </td>
                         <td className="m-0.5 text-xs">{user.address.cep}</td>
                       </tr>
                       <tr className="flex mr-4 gap-1 ml-3.5">
-                        <td className="font-semibold text-sm text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                        <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
                           Rua:
                         </td>
                         <td className="m-0.5 text-right text-xs">
@@ -204,13 +204,13 @@ const UserProfile = () => {
                         </td>
                       </tr>
                       <tr className="flex items-start mr-4 gap-1">
-                        <td className="font-semibold text-sm text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                        <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
                           Número:
                         </td>
                         <td className="m-0.5 text-xs">{user.address.number}</td>
                       </tr>
-                      <tr className="flex gap-1 ml-7">
-                        <td className="font-semibold text-sm text-gray-100 text-right relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                      <tr className="flex gap-1 ml-8">
+                        <td className="font-semibold text-xs text-gray-100 text-right relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
                           Estado:
                         </td>
                         <td className="m-0.5 text-right text-xs">
@@ -218,13 +218,13 @@ const UserProfile = () => {
                         </td>
                       </tr>
                       <tr className="flex items-start mr-4 gap-1">
-                        <td className="font-semibold text-sm text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                        <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
                           Cidade:
                         </td>
                         <td className="m-0.5 text-xs">{user.address.city}</td>
                       </tr>
                       <tr className="flex gap-1 ml-3">
-                        <td className="font-semibold text-sm text-gray-100 text-right relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                        <td className="font-semibold text-xs text-gray-100 text-right relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
                           Bairro:
                         </td>
                         <td className="m-0.5 text-right text-xs">
@@ -232,7 +232,7 @@ const UserProfile = () => {
                         </td>
                       </tr>
                       <tr className="flex items-start mr-4 gap-1">
-                        <td className="font-semibold text-sm text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                        <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
                           Complemento:
                         </td>
                         <td className="m-0.5 text-xs">
