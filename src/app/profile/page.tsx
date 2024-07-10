@@ -130,7 +130,7 @@ const UserProfile = () => {
               </h3>
               <ul className="bg-gray-800 text-gray-400 p-5 mt-6 divide-y rounded shadow-sm h-auto">
                 <li className="flex items-center py-3">
-                  <span className="font-semibold text-sm text-balada_green_675">
+                  <span className="font-semibold text-xs text-balada_green_675">
                     Status:
                   </span>
                   <span className="ml-auto">
@@ -144,7 +144,7 @@ const UserProfile = () => {
                   </span>
                 </li>
                 <li className="flex items-center py-3">
-                  <span className="font-semibold text-sm text-balada_green_675">
+                  <span className="font-semibold text-xs text-balada_green_675">
                     Data de cadastro:
                   </span>
                   <span className="ml-auto text-xs text-gray-100">
@@ -152,7 +152,7 @@ const UserProfile = () => {
                   </span>
                 </li>
                 <li className="flex items-center py-3">
-                  <span className="font-semibold text-sm text-balada_green_675">
+                  <span className="font-semibold text-xs text-balada_green_675">
                     Gênero:
                   </span>
                   <span className="ml-auto text-xs text-gray-100">
@@ -160,7 +160,7 @@ const UserProfile = () => {
                   </span>
                 </li>
                 <li className="flex items-center py-3">
-                  <span className="font-semibold text-sm text-balada_green_675">
+                  <span className="font-semibold text-xs text-balada_green_675">
                     Data de nascimento:
                   </span>
                   <span className="ml-auto text-xs text-gray-100">
@@ -168,7 +168,7 @@ const UserProfile = () => {
                   </span>
                 </li>
                 <li className="flex items-center py-3">
-                  <span className="font-semibold text-sm text-balada_green_675">
+                  <span className="font-semibold text-xs text-balada_green_675">
                     CPF:
                   </span>
                   <span className="ml-auto text-xs text-gray-100">
@@ -176,7 +176,7 @@ const UserProfile = () => {
                   </span>
                 </li>
                 <li className="flex items-center py-3">
-                  <span className="font-semibold text-sm text-balada_green_675">
+                  <span className="font-semibold text-xs text-balada_green_675">
                     Celular:
                   </span>
                   <span className="ml-auto text-xs text-gray-100">
@@ -184,7 +184,7 @@ const UserProfile = () => {
                   </span>
                 </li>
                 <li className="flex items-center py-3 flex-wrap">
-                  <span className="font-semibold text-sm text-balada_green_675">
+                  <span className="font-semibold text-xs text-balada_green_675">
                     Endereço:
                   </span>
                   <table className="text-xs mt-3 text-gray-100 w-full">
