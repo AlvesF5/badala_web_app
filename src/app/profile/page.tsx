@@ -86,6 +86,8 @@ const UserProfile = () => {
   const { get } = useCookies();
   const token = get("balada-user-token");
   const [user, setUser] = useState<User | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editableUser, setEditableUser] = useState<User | null>(null);
 
   useEffect(() => {
     if (!token) {
@@ -100,6 +102,7 @@ const UserProfile = () => {
         const userData = await getUserById(userId);
         if (userData) {
           setUser(userData);
+          setEditableUser(userData);
         }
       };
       fetchUser();
@@ -108,6 +111,33 @@ const UserProfile = () => {
       redirect("/login");
     }
   }, [token]);
+
+  const handleEditClick = () => {
+    if (isEditing) {
+      // Save logic here
+      // For now, just log the updated user data
+      console.log(editableUser);
+      setUser(editableUser);
+    }
+    setIsEditing(!isEditing);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (editableUser) {
+      const { name, value } = e.target;
+      setEditableUser({ ...editableUser, [name]: value });
+    }
+  };
+
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (editableUser) {
+      const { name, value } = e.target;
+      setEditableUser({
+        ...editableUser,
+        address: { ...editableUser.address, [name]: value },
+      });
+    }
+  };
 
   if (!user) {
     return <div>Carregando...</div>;
@@ -122,133 +152,259 @@ const UserProfile = () => {
               <h1 className="text-balada_green_800 font-bold text-xl leading-8 my-1">
                 {selectUserGreeting(user.gender) + user.firstName + "!"}
               </h1>
-              <h3 className="text-balada_violet_375 font-lg text-semibold leading-6">
+              <h3 className=" text-gray-200 text-sm text-semibold leading-6">
                 {user.email}
                 <p className="text-sm text-balada_green_675 cursor-pointer">
                   alterar senha
                 </p>
               </h3>
-              <ul className="bg-gray-800 text-gray-400 p-5 mt-6 divide-y rounded shadow-sm h-auto">
-                <li className="flex items-center py-3">
-                  <span className="font-semibold text-xs text-balada_green_675">
-                    Status:
-                  </span>
-                  <span className="ml-auto">
-                    <span
-                      className={`py-1 px-2 rounded text-white text-sm ${
-                        user.active ? "bg-green-500" : "bg-red-500"
-                      }`}
-                    >
-                      {selectUserStatus(user.active)}
+              <div className="bg-gray-800">
+                <ul className="text-gray-400 p-5 mt-6 divide-y rounded shadow-sm h-auto">
+                  <li className="flex items-center py-3">
+                    <span className="font-semibold text-xs text-balada_green_675">
+                      Status:
                     </span>
-                  </span>
-                </li>
-                <li className="flex items-center py-3">
-                  <span className="font-semibold text-xs text-balada_green_675">
-                    Data de cadastro:
-                  </span>
-                  <span className="ml-auto text-xs text-gray-100">
-                    <DateFormatterWithHour timestamp={user.createdAt} />
-                  </span>
-                </li>
-                <li className="flex items-center py-3">
-                  <span className="font-semibold text-xs text-balada_green_675">
-                    Gênero:
-                  </span>
-                  <span className="ml-auto text-xs text-gray-100">
-                    {selectGender(user.gender)}
-                  </span>
-                </li>
-                <li className="flex items-center py-3">
-                  <span className="font-semibold text-xs text-balada_green_675">
-                    Data de nascimento:
-                  </span>
-                  <span className="ml-auto text-xs text-gray-100">
-                    <DateFormatter timestamp={user.birthDate} />
-                  </span>
-                </li>
-                <li className="flex items-center py-3">
-                  <span className="font-semibold text-xs text-balada_green_675">
-                    CPF:
-                  </span>
-                  <span className="ml-auto text-xs text-gray-100">
-                    {mask(user.documentNumber, ["999.999.999-99"])}
-                  </span>
-                </li>
-                <li className="flex items-center py-3">
-                  <span className="font-semibold text-xs text-balada_green_675">
-                    Celular:
-                  </span>
-                  <span className="ml-auto text-xs text-gray-100">
-                    {mask(user.phone, ["(99) 99999-9999"])}
-                  </span>
-                </li>
-                <li className="flex items-center py-3 flex-wrap">
-                  <span className="font-semibold text-xs text-balada_green_675">
-                    Endereço:
-                  </span>
-                  <table className="text-xs mt-3 text-gray-100 w-full">
-                    <tbody className="flex flex-wrap w-full p-3">
-                      <tr className="flex items-start mr-4 gap-1">
-                        <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
-                          CEP:
-                        </td>
-                        <td className="m-0.5 text-xs">{user.address.cep}</td>
-                      </tr>
-                      <tr className="flex mr-4 gap-1 ml-3.5">
-                        <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
-                          Rua:
-                        </td>
-                        <td className="m-0.5 text-right text-xs">
-                          {user.address.street}
-                        </td>
-                      </tr>
-                      <tr className="flex items-start mr-4 gap-1">
-                        <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
-                          Número:
-                        </td>
-                        <td className="m-0.5 text-xs">{user.address.number}</td>
-                      </tr>
-                      <tr className="flex gap-1 ml-8">
-                        <td className="font-semibold text-xs text-gray-100 text-right relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
-                          Estado:
-                        </td>
-                        <td className="m-0.5 text-right text-xs">
-                          {user.address.state}
-                        </td>
-                      </tr>
-                      <tr className="flex items-start mr-4 gap-1">
-                        <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
-                          Cidade:
-                        </td>
-                        <td className="m-0.5 text-xs">{user.address.city}</td>
-                      </tr>
-                      <tr className="flex gap-1 ml-3">
-                        <td className="font-semibold text-xs text-gray-100 text-right relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
-                          Bairro:
-                        </td>
-                        <td className="m-0.5 text-right text-xs">
-                          {user.address.neighborhood}
-                        </td>
-                      </tr>
-                      <tr className="flex items-start mr-4 gap-1">
-                        <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
-                          Complemento:
-                        </td>
-                        <td className="m-0.5 text-xs">
-                          {user.address.complement}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </li>
-              </ul>
+                    <span className="ml-auto">
+                      <span
+                        className={`py-1 px-2 rounded text-white text-sm ${
+                          user.active ? "bg-green-500" : "bg-red-500"
+                        }`}
+                      >
+                        {selectUserStatus(user.active)}
+                      </span>
+                    </span>
+                  </li>
+                  <li className="flex items-center py-3">
+                    <span className="font-semibold text-xs text-balada_green_675">
+                      Data de cadastro:
+                    </span>
+                    <span className="ml-auto text-xs text-gray-100">
+                      <DateFormatterWithHour timestamp={user.createdAt} />
+                    </span>
+                  </li>
+                  <li className="flex items-center py-3">
+                    <span className="font-semibold text-xs text-balada_green_675">
+                      Gênero:
+                    </span>
+                    <span className="ml-auto text-xs text-gray-100">
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          name="gender"
+                          value={editableUser?.gender || ""}
+                          onChange={handleChange}
+                          className="bg-gray-700 text-white p-1 rounded"
+                        />
+                      ) : (
+                        selectGender(user.gender)
+                      )}
+                    </span>
+                  </li>
+                  <li className="flex items-center py-3">
+                    <span className="font-semibold text-xs text-balada_green_675">
+                      Data de nascimento:
+                    </span>
+                    <span className="ml-auto text-xs text-gray-100">
+                      {isEditing ? (
+                        <input
+                          type="date"
+                          name="birthDate"
+                          value={editableUser?.birthDate || ""}
+                          onChange={handleChange}
+                          className="bg-gray-700 text-white p-1 rounded"
+                        />
+                      ) : (
+                        <DateFormatter timestamp={user.birthDate} />
+                      )}
+                    </span>
+                  </li>
+                  <li className="flex items-center py-3">
+                    <span className="font-semibold text-xs text-balada_green_675">
+                      CPF:
+                    </span>
+                    <span className="ml-auto text-xs text-gray-100">
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          name="documentNumber"
+                          value={editableUser?.documentNumber || ""}
+                          onChange={handleChange}
+                          className="bg-gray-700 text-white p-1 rounded"
+                        />
+                      ) : (
+                        mask(user.documentNumber, ["999.999.999-99"])
+                      )}
+                    </span>
+                  </li>
+                  <li className="flex items-center py-3">
+                    <span className="font-semibold text-xs text-balada_green_675">
+                      Celular:
+                    </span>
+                    <span className="ml-auto text-xs text-gray-100">
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          name="phone"
+                          value={editableUser?.phone || ""}
+                          onChange={handleChange}
+                          className="bg-gray-700 text-white p-1 rounded"
+                        />
+                      ) : (
+                        mask(user.phone, ["(99) 99999-9999"])
+                      )}
+                    </span>
+                  </li>
+                  <li className="flex items-center py-3 flex-wrap">
+                    <span className="font-semibold text-xs text-balada_green_675">
+                      Endereço:
+                    </span>
+                    <table className="text-xs mt-3 text-gray-100 w-full">
+                      <tbody className="flex flex-wrap w-full px-3">
+                        <tr className="flex items-start mr-4 gap-1">
+                          <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                            CEP:
+                          </td>
+                          <td className="m-0.5 text-xs">
+                            {isEditing ? (
+                              <input
+                                type="text"
+                                name="cep"
+                                value={editableUser?.address.cep || ""}
+                                onChange={handleAddressChange}
+                                className="bg-gray-700 text-white p-1 rounded"
+                              />
+                            ) : (
+                              user.address.cep
+                            )}
+                          </td>
+                        </tr>
+                        <tr className="flex mr-4 gap-1 ml-3.5">
+                          <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                            Rua:
+                          </td>
+                          <td className="m-0.5 text-right text-xs">
+                            {isEditing ? (
+                              <input
+                                type="text"
+                                name="street"
+                                value={editableUser?.address.street || ""}
+                                onChange={handleAddressChange}
+                                className="bg-gray-700 text-white p-1 rounded"
+                              />
+                            ) : (
+                              user.address.street
+                            )}
+                          </td>
+                        </tr>
+                        <tr className="flex items-start mr-4 gap-1">
+                          <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                            Número:
+                          </td>
+                          <td className="m-0.5 text-xs">
+                            {isEditing ? (
+                              <input
+                                type="text"
+                                name="number"
+                                value={editableUser?.address.number || ""}
+                                onChange={handleAddressChange}
+                                className="bg-gray-700 text-white p-1 rounded"
+                              />
+                            ) : (
+                              user.address.number
+                            )}
+                          </td>
+                        </tr>
+                        <tr className="flex gap-1 ml-8">
+                          <td className="font-semibold text-xs text-gray-100 text-right relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                            Estado:
+                          </td>
+                          <td className="m-0.5 text-right text-xs">
+                            {isEditing ? (
+                              <input
+                                type="text"
+                                name="state"
+                                value={editableUser?.address.state || ""}
+                                onChange={handleAddressChange}
+                                className="bg-gray-700 text-white p-1 rounded"
+                              />
+                            ) : (
+                              user.address.state
+                            )}
+                          </td>
+                        </tr>
+                        <tr className="flex items-start mr-4 gap-1">
+                          <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                            Cidade:
+                          </td>
+                          <td className="m-0.5 text-xs">
+                            {isEditing ? (
+                              <input
+                                type="text"
+                                name="city"
+                                value={editableUser?.address.city || ""}
+                                onChange={handleAddressChange}
+                                className="bg-gray-700 text-white p-1 rounded"
+                              />
+                            ) : (
+                              user.address.city
+                            )}
+                          </td>
+                        </tr>
+                        <tr className="flex gap-1 ml-3">
+                          <td className="font-semibold text-xs text-gray-100 text-right relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                            Bairro:
+                          </td>
+                          <td className="m-0.5 text-right text-xs">
+                            {isEditing ? (
+                              <input
+                                type="text"
+                                name="neighborhood"
+                                value={editableUser?.address.neighborhood || ""}
+                                onChange={handleAddressChange}
+                                className="bg-gray-700 text-white p-1 rounded"
+                              />
+                            ) : (
+                              user.address.neighborhood
+                            )}
+                          </td>
+                        </tr>
+                        <tr className="flex items-start mr-4 gap-1">
+                          <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                            Complemento:
+                          </td>
+                          <td className="m-0.5 text-xs">
+                            {isEditing ? (
+                              <input
+                                type="text"
+                                name="complement"
+                                value={editableUser?.address.complement || ""}
+                                onChange={handleAddressChange}
+                                className="bg-gray-700 text-white p-1 rounded"
+                              />
+                            ) : (
+                              user.address.complement
+                            )}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </li>
+                </ul>
+                <div className="pb-6 pr-5 -mt-4 flex justify-end bg-gray-800 w-full">
+                  <button
+                    onClick={handleEditClick}
+                    className=" bg-balada_green_675 text-white py-2 px-4 rounded"
+                  >
+                    {isEditing ? "Salvar" : "Editar"}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
           <div className="w-8/12">
             <div className="py-14">
               <div className="flex justify-start item-start space-y-2 flex-col">
-                <h1 className="text-3xl lg:text-4xl font-semibold leading-7 lg:leading-9 text-balada_green_675">
+                <h1 className="text-2xl font-semibold leading-7 lg:leading-9 text-balada_green_675">
                   Meus eventos
                 </h1>
                 <p className="text-base dark:text-gray-300 font-medium leading-6 text-gray-600">
