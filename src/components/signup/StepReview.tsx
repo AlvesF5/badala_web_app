@@ -184,10 +184,7 @@ export default function StepReview({
               />
               <div className="flex gap-1">
                 <label htmlFor="agree" className=" text-sm text-white">
-                  Ao continuar você concorda com os{" "}
-                </label>
-                <label className="text-balada_green_900 cursor-pointer">
-                  <p onClick={openModal}>termos de uso.</p>
+                  Ao continuar você concorda com os <span className="text-balada_green_900 cursor-pointer" onClick={openModal}>termos de uso.</span>
                 </label>
               </div>
             </div>
