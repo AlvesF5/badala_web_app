@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { useCookies } from "next-client-cookies";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
@@ -9,24 +9,26 @@ import DateFormatterWithHour from "@/components/utils/DateFormaterWithHour";
 import FullSizeImage from "@/components/utils/FullSizeImage";
 import DateFormatter from "@/components/utils/DateFormater";
 import { mask, unMask } from "remask";
-import { selectGender, selectUserStatus, selectUserGreeting } from "@/utils/Functions";
+import {
+  selectGender,
+  selectUserStatus,
+  selectUserGreeting,
+} from "@/utils/Functions";
 import brega from "../../images/sliderhome/brega.jpg";
 import safadao from "../../images/sliderhome/safadao.jpg";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {schemaUserPersonalInfo} from "@/utils/schemas";
-import { parse, format, isValid } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { schemaUserPersonalInfo } from "@/utils/schemas";
+import { parse, format, isValid, parseISO } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 const minimumAge = new Date();
 minimumAge.setFullYear(minimumAge.getFullYear() - 14);
 
-
-
 type User = z.infer<typeof schemaUserPersonalInfo> & {
-  id: string;
   email: string;
+  birthDate: string;
   password: string;
   createdAt: string;
   updatedAt: string;
@@ -51,7 +53,9 @@ const getUserById = async (userId: string) => {
     console.log(`Status da resposta: ${response.status}`);
     if (!response.ok) {
       const errorJson = await response.json();
-      const errorMessage = errorJson.errors ? errorJson.errors.join(", ") : "Erro desconhecido";
+      const errorMessage = errorJson.errors
+        ? errorJson.errors.join(", ")
+        : "Erro desconhecido";
       toast.error(`Erro ao obter o usuário: ${errorMessage}`);
       return null;
     }
@@ -100,7 +104,9 @@ const updateUser = async (user: User) => {
     });
     if (!response.ok) {
       const errorJson = await response.json();
-      const errorMessage = errorJson.errors ? errorJson.errors.join(", ") : "Erro desconhecido";
+      const errorMessage = errorJson.errors
+        ? errorJson.errors.join(", ")
+        : "Erro desconhecido";
       toast.error(`Erro ao atualizar o usuário: ${errorMessage}`);
       return false;
     }
@@ -116,8 +122,6 @@ const updateUser = async (user: User) => {
   }
 };
 
-
-
 const UserProfile = () => {
   const { get } = useCookies();
   const token = get("balada-user-token");
@@ -125,7 +129,11 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableUser, setEditableUser] = useState<User | null>(null);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<User>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<User>({
     resolver: zodResolver(schemaUserPersonalInfo),
   });
 
@@ -137,48 +145,36 @@ const UserProfile = () => {
     setIsEditing(!isEditing);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (editableUser) {
-      const { name, value } = e.target;
-      setEditableUser({ ...editableUser, [name]: value });
+  const convertDateToInputFormat = (dateString: string): string => {
+    if (!dateString) {
+      throw new RangeError("Invalid time value");
     }
-  };
-
-  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (editableUser) {
-      const { name, value } = e.target;
-      setEditableUser({
-        ...editableUser,
-        address: { ...editableUser.address, [name]: value },
-      });
+    const date = parseISO(dateString);
+    if (!isValid(date)) {
+      throw new RangeError("Invalid time value");
     }
+    return format(date, "yyyy-MM-dd");
   };
 
   const convertDate = (dateString: string): string => {
     // Parse the date string using the format and locale
-    const parsedDate = parse(dateString, "d 'de' MMMM 'de' yyyy", new Date(), { locale: ptBR });
-  
+    const parsedDate = parse(
+      dateString,
+      "d 'de' MMMM 'de' yyyy 'às' HH:mm:ss 'UTC'XXX",
+      new Date(),
+      { locale: ptBR }
+    );
+    console.log(parsedDate);
     // Check if the parsed date is valid
     if (!isValid(parsedDate)) {
-      throw new RangeError('Invalid time value');
+      throw new RangeError("Invalid time value");
     }
-  
-    // Format the parsed date to the desired format with time and timezone
-    const formattedDate = format(parsedDate, "d 'de' MMMM 'de' yyyy 'às' HH:mm:ss 'UTC'XXX", { locale: ptBR });
+
+    // Format the parsed date to the desired format
+    const formattedDate = format(parsedDate, "yyyy/MM/dd");
+    console.log("Data formatada: " + formattedDate);
     return formattedDate;
   };
-  
-  // Exemplo de uso
-  const originalDate = "30 de setembro de 1995";
-  try {
-    const convertedDate = convertDate(originalDate);
-    console.log(convertedDate); // Output: 1995/09/30
-    console.log(editableUser?.birthDate.toString())
-  } catch (error: unknown) {
-    if(error instanceof Error){
-      console.error(error.message); // Handle the error appropriately
-    } 
-  }
 
   useEffect(() => {
     if (!token) {
@@ -226,27 +222,43 @@ const UserProfile = () => {
               </h1>
               <h3 className=" text-gray-200 text-sm text-semibold leading-6">
                 {user.email}
-                <p className="text-sm text-balada_green_675 cursor-pointer"> alterar senha </p>
+                <p className="text-sm text-balada_green_675 cursor-pointer">
+                  {" "}
+                  alterar senha{" "}
+                </p>
               </h3>
               <div className="bg-gray-800">
                 <ul className="text-gray-400 p-5 mt-6 divide-y rounded shadow-sm h-auto">
                   <li className="flex items-center py-3">
-                    <span className="font-semibold text-xs text-balada_green_675"> Status: </span>
+                    <span className="font-semibold text-xs text-balada_green_675">
+                      {" "}
+                      Status:{" "}
+                    </span>
                     <span className="ml-auto">
-                      <span className={`py-1 px-2 rounded text-white text-sm ${user.active ? "bg-green-500" : "bg-red-500"}`}>
+                      <span
+                        className={`py-1 px-2 rounded text-white text-sm ${
+                          user.active ? "bg-green-500" : "bg-red-500"
+                        }`}
+                      >
                         {selectUserStatus(user.active)}
                       </span>
                     </span>
                   </li>
                   <li className="flex items-center py-3">
-                    <span className="font-semibold text-xs text-balada_green_675"> Data de cadastro: </span>
+                    <span className="font-semibold text-xs text-balada_green_675">
+                      {" "}
+                      Data de cadastro:{" "}
+                    </span>
                     <span className="ml-auto text-xs text-gray-100">
                       <DateFormatterWithHour timestamp={user.createdAt} />
                     </span>
                   </li>
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <li className="flex items-center py-3">
-                      <span className="font-semibold text-xs text-balada_green_675"> Gênero: </span>
+                      <span className="font-semibold text-xs text-balada_green_675">
+                        {" "}
+                        Gênero:{" "}
+                      </span>
                       <span className="ml-auto text-xs text-gray-100">
                         {isEditing ? (
                           <input
@@ -262,13 +274,15 @@ const UserProfile = () => {
                       </span>
                     </li>
                     <li className="flex items-center py-3">
-                      <span className="font-semibold text-xs text-balada_green_675"> Data de nascimento: </span>
+                      <span className="font-semibold text-xs text-balada_green_675">
+                        {" "}
+                        Data de nascimento:{" "}
+                      </span>
                       <span className="ml-auto text-xs text-gray-100">
                         {isEditing ? (
                           <input
-                            type="text"
-                            {...register("birthDate")}
-                            defaultValue={editableUser?.birthDate ? editableUser?.birthDate?.toString() : ""}
+                            type="date"
+                            defaultValue={editableUser?.birthDate ? convertDate(user.birthDate) : ""}
                             className="bg-gray-700 text-white p-1 rounded"
                           />
                         ) : (
@@ -278,7 +292,10 @@ const UserProfile = () => {
                       </span>
                     </li>
                     <li className="flex items-center py-3">
-                      <span className="font-semibold text-xs text-balada_green_675"> CPF: </span>
+                      <span className="font-semibold text-xs text-balada_green_675">
+                        {" "}
+                        CPF:{" "}
+                      </span>
                       <span className="ml-auto text-xs text-gray-100">
                         {isEditing ? (
                           <input
@@ -290,11 +307,16 @@ const UserProfile = () => {
                         ) : (
                           mask(user.documentNumber, ["999.999.999-99"])
                         )}
-                        {errors.documentNumber && <p>{errors.documentNumber.message}</p>}
+                        {errors.documentNumber && (
+                          <p>{errors.documentNumber.message}</p>
+                        )}
                       </span>
                     </li>
                     <li className="flex items-center py-3">
-                      <span className="font-semibold text-xs text-balada_green_675"> Celular: </span>
+                      <span className="font-semibold text-xs text-balada_green_675">
+                        {" "}
+                        Celular:{" "}
+                      </span>
                       <span className="ml-auto text-xs text-gray-100">
                         {isEditing ? (
                           <input
@@ -310,7 +332,10 @@ const UserProfile = () => {
                       </span>
                     </li>
                     <li className="flex items-center py-3 flex-wrap">
-                      <span className="font-semibold text-xs text-balada_green_675"> Endereço: </span>
+                      <span className="font-semibold text-xs text-balada_green_675">
+                        {" "}
+                        Endereço:{" "}
+                      </span>
                       <table className="text-xs mt-3 text-gray-100 w-full">
                         <tbody className="flex flex-wrap w-full px-3">
                           <tr className="flex items-start mr-4 gap-1">
@@ -328,7 +353,9 @@ const UserProfile = () => {
                               ) : (
                                 user.address.cep
                               )}
-                              {errors.address?.cep && <p>{errors.address.cep.message}</p>}
+                              {errors.address?.cep && (
+                                <p>{errors.address.cep.message}</p>
+                              )}
                             </td>
                           </tr>
                           <tr className="flex mr-4 gap-1 ml-3.5">
@@ -340,13 +367,17 @@ const UserProfile = () => {
                                 <input
                                   type="text"
                                   {...register("address.street")}
-                                  defaultValue={editableUser?.address.street || ""}
+                                  defaultValue={
+                                    editableUser?.address.street || ""
+                                  }
                                   className="bg-gray-700 text-white p-1 rounded"
                                 />
                               ) : (
                                 user.address.street
                               )}
-                              {errors.address?.street && <p>{errors.address.street.message}</p>}
+                              {errors.address?.street && (
+                                <p>{errors.address.street.message}</p>
+                              )}
                             </td>
                           </tr>
                           <tr className="flex items-start mr-4 gap-1">
@@ -358,13 +389,17 @@ const UserProfile = () => {
                                 <input
                                   type="text"
                                   {...register("address.number")}
-                                  defaultValue={editableUser?.address.number || ""}
+                                  defaultValue={
+                                    editableUser?.address.number || ""
+                                  }
                                   className="bg-gray-700 text-white p-1 rounded"
                                 />
                               ) : (
                                 user.address.number
                               )}
-                              {errors.address?.number && <p>{errors.address.number.message}</p>}
+                              {errors.address?.number && (
+                                <p>{errors.address.number.message}</p>
+                              )}
                             </td>
                           </tr>
                           <tr className="flex gap-1 ml-8">
@@ -376,13 +411,17 @@ const UserProfile = () => {
                                 <input
                                   type="text"
                                   {...register("address.state")}
-                                  defaultValue={editableUser?.address.state || ""}
+                                  defaultValue={
+                                    editableUser?.address.state || ""
+                                  }
                                   className="bg-gray-700 text-white p-1 rounded"
                                 />
                               ) : (
                                 user.address.state
                               )}
-                              {errors.address?.state && <p>{errors.address.state.message}</p>}
+                              {errors.address?.state && (
+                                <p>{errors.address.state.message}</p>
+                              )}
                             </td>
                           </tr>
                           <tr className="flex items-start mr-4 gap-1">
@@ -394,13 +433,17 @@ const UserProfile = () => {
                                 <input
                                   type="text"
                                   {...register("address.city")}
-                                  defaultValue={editableUser?.address.city || ""}
+                                  defaultValue={
+                                    editableUser?.address.city || ""
+                                  }
                                   className="bg-gray-700 text-white p-1 rounded"
                                 />
                               ) : (
                                 user.address.city
                               )}
-                              {errors.address?.city && <p>{errors.address.city.message}</p>}
+                              {errors.address?.city && (
+                                <p>{errors.address.city.message}</p>
+                              )}
                             </td>
                           </tr>
                           <tr className="flex gap-1 ml-3">
@@ -412,13 +455,17 @@ const UserProfile = () => {
                                 <input
                                   type="text"
                                   {...register("address.neighborhood")}
-                                  defaultValue={editableUser?.address.neighborhood || ""}
+                                  defaultValue={
+                                    editableUser?.address.neighborhood || ""
+                                  }
                                   className="bg-gray-700 text-white p-1 rounded"
                                 />
                               ) : (
                                 user.address.neighborhood
                               )}
-                              {errors.address?.neighborhood && <p>{errors.address.neighborhood.message}</p>}
+                              {errors.address?.neighborhood && (
+                                <p>{errors.address.neighborhood.message}</p>
+                              )}
                             </td>
                           </tr>
                           <tr className="flex items-start mr-4 gap-1">
@@ -430,20 +477,27 @@ const UserProfile = () => {
                                 <input
                                   type="text"
                                   {...register("address.complement")}
-                                  defaultValue={editableUser?.address.complement || ""}
+                                  defaultValue={
+                                    editableUser?.address.complement || ""
+                                  }
                                   className="bg-gray-700 text-white p-1 rounded"
                                 />
                               ) : (
                                 user.address.complement
                               )}
-                              {errors.address?.complement && <p>{errors.address.complement.message}</p>}
+                              {errors.address?.complement && (
+                                <p>{errors.address.complement.message}</p>
+                              )}
                             </td>
                           </tr>
                         </tbody>
                       </table>
                     </li>
                     <div className="pb-6 pr-5 -mt-4 flex justify-end bg-gray-800 w-full">
-                      <button  onClick={handleEditClick} className="bg-balada_green_675 text-white py-2 px-4 rounded">
+                      <button
+                        onClick={handleEditClick}
+                        className="bg-balada_green_675 text-white py-2 px-4 rounded"
+                      >
                         {isEditing ? "Salvar" : "Editar"}
                       </button>
                     </div>
