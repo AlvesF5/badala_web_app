@@ -20,7 +20,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { schemaUserPersonalInfo } from "@/utils/schemas";
-import { parse, format, isValid, parseISO } from "date-fns";
+import { parse, format, isValid } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 const minimumAge = new Date();
@@ -145,37 +145,23 @@ const UserProfile = () => {
     setIsEditing(!isEditing);
   };
 
-  const convertDateToInputFormat = (dateString: string): string => {
-    if (!dateString) {
-      throw new RangeError("Invalid time value");
-    }
-    const date = parseISO(dateString);
-    if (!isValid(date)) {
-      throw new RangeError("Invalid time value");
-    }
-    return format(date, "yyyy-MM-dd");
-  };
-
   const convertDate = (dateString: string): string => {
     // Parse the date string using the format and locale
-    const parsedDate = parse(
-      dateString,
-      "d 'de' MMMM 'de' yyyy 'às' HH:mm:ss 'UTC'XXX",
-      new Date(),
-      { locale: ptBR }
-    );
-    console.log(parsedDate);
+    const parsedDate = parse(dateString, "d 'de' MMMM 'de' yyyy 'às' HH:mm:ss 'UTC'XXX", new Date(), { locale: ptBR });
+  
     // Check if the parsed date is valid
     if (!isValid(parsedDate)) {
-      throw new RangeError("Invalid time value");
+      throw new RangeError('Invalid time value');
     }
-
+  
     // Format the parsed date to the desired format
-    const formattedDate = format(parsedDate, "yyyy/MM/dd");
-    console.log("Data formatada: " + formattedDate);
-    return formattedDate;
+    return format(parsedDate, 'yyyy-MM-dd');
   };
 
+
+  
+  const formattedDate = user && user.birthDate ? convertDate(user.birthDate) : '';
+  
   useEffect(() => {
     if (!token) {
       redirect("/login");
@@ -282,7 +268,8 @@ const UserProfile = () => {
                         {isEditing ? (
                           <input
                             type="date"
-                            defaultValue={editableUser?.birthDate ? convertDate(user.birthDate) : ""}
+                            {...register("birthDate")}
+                            defaultValue={formattedDate}
                             className="bg-gray-700 text-white p-1 rounded"
                           />
                         ) : (
