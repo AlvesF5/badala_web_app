@@ -247,12 +247,17 @@ const UserProfile = () => {
                       </span>
                       <span className="ml-auto text-xs text-gray-100">
                         {isEditing ? (
-                          <input
-                            type="text"
-                            {...register("gender")}
-                            defaultValue={editableUser?.gender || ""}
-                            className="bg-gray-700 text-white p-1 rounded"
-                          />
+                              <select
+                              {...register('gender')}
+                              name="gender"
+                              id="gender"
+                              className="select_input_default_one_line peer"
+                          >
+                              <option selected value={editableUser?.gender}>{selectGender(editableUser?.gender || "")}</option>
+                              {editableUser?.gender !== "MA" && <option value="MA">Masculino</option>}
+                              {editableUser?.gender !== "FE" && <option value="FE">Feminino</option>}
+                              {editableUser?.gender !== "NB" && <option value="NB">Não Binário</option>}
+                          </select>
                         ) : (
                           selectGender(user.gender)
                         )}
@@ -288,7 +293,7 @@ const UserProfile = () => {
                           <input
                             type="text"
                             {...register("documentNumber")}
-                            defaultValue={editableUser?.documentNumber || ""}
+                            defaultValue={ mask(editableUser?.documentNumber || "", ['999.999.999-99']) || ""}
                             className="bg-gray-700 text-white p-1 rounded"
                           />
                         ) : (
@@ -309,7 +314,7 @@ const UserProfile = () => {
                           <input
                             type="text"
                             {...register("phone")}
-                            defaultValue={editableUser?.phone || ""}
+                            defaultValue={mask(editableUser?.phone || "", ['(99) 99999-9999']) || ""}
                             className="bg-gray-700 text-white p-1 rounded"
                           />
                         ) : (
@@ -334,7 +339,7 @@ const UserProfile = () => {
                                 <input
                                   type="text"
                                   {...register("address.cep")}
-                                  defaultValue={editableUser?.address.cep || ""}
+                                  defaultValue={mask(editableUser?.address.cep || "", ['99999-999']) || ""}
                                   className="bg-gray-700 text-white p-1 rounded"
                                 />
                               ) : (
