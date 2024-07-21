@@ -20,7 +20,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { schemaUserPersonalInfo } from "@/utils/schemas";
-import { parse, format, isValid } from "date-fns";
+import { parse, format, isValid as isValidDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 const minimumAge = new Date();
@@ -77,54 +77,9 @@ const getUserById = async (userId: string) => {
   }
 };
 
-const updateUser = async (user: User) => {
-  try {
-    const response = await fetch(`http://localhost:8080/v1/user/update`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        phone: unMask(user.phone),
-        birthDate: user.birthDate,
-        documentNumber: unMask(user.documentNumber),
-        gender: user.gender,
-        address: {
-          cep: unMask(user.address.cep),
-          street: user.address.street,
-          number: user.address.number,
-          state: user.address.state,
-          city: user.address.city,
-          neighborhood: user.address.neighborhood,
-          complement: user.address.complement,
-        },
-      }),
-    });
-    if (!response.ok) {
-      const errorJson = await response.json();
-      const errorMessage = errorJson.errors
-        ? errorJson.errors.join(", ")
-        : "Erro desconhecido";
-      toast.error(`Erro ao atualizar o usuário: ${errorMessage}`);
-      return false;
-    }
-    toast.success("Usuário atualizado com sucesso!");
-    return true;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      toast.error(`Erro ao atualizar o usuário: ${error.message}`);
-    } else {
-      console.log("Ocorreu um erro desconhecido");
-    }
-    return false;
-  }
-};
-
 const UserProfile = () => {
   const { get } = useCookies();
-  const token = get("balada-user-token");
+  const token = get("balada-user-token") || "";
   const [user, setUser] = useState<User | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editableUser, setEditableUser] = useState<User | null>(null);
@@ -132,10 +87,59 @@ const UserProfile = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<User>({
     resolver: zodResolver(schemaUserPersonalInfo),
   });
+
+  const updateUser = async () => {
+    if(isValid){
+      try {
+        console.log("Formulário está válido?" + isValid);
+          const response = await fetch(`http://localhost:8080/v1/user/update`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              firstName: user?.firstName,
+              lastName: user?.lastName,
+              phone: unMask(user?.phone || ""),
+              birthDate: user?.birthDate,
+              documentNumber: unMask(user?.documentNumber || ""),
+              gender: user?.gender,
+              address: {
+                cep: unMask(user?.address.cep || ""),
+                street: user?.address.street,
+                number: user?.address.number,
+                state: user?.address.state,
+                city: user?.address.city,
+                neighborhood: user?.address.neighborhood,
+                complement: user?.address.complement,
+              },
+            }),
+          });
+          if (!response.ok) {
+            const errorJson = await response.json();
+            const errorMessage = errorJson.errors
+              ? errorJson.errors.join(", ")
+              : "Erro desconhecido";
+            toast.error(`Erro ao atualizar o usuário: ${errorMessage}`);
+            return false;
+          }
+          toast.success("Usuário atualizado com sucesso!");
+          return true;
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          toast.error(`Erro ao atualizar o usuário: ${error.message}`);
+        } else {
+          console.log("Ocorreu um erro desconhecido");
+        }
+        return false;
+      }
+    }
+
+  };
 
   const handleEditClick = () => {
     if (isEditing) {
@@ -147,21 +151,55 @@ const UserProfile = () => {
 
   const convertDate = (dateString: string): string => {
     // Parse the date string using the format and locale
-    const parsedDate = parse(dateString, "d 'de' MMMM 'de' yyyy 'às' HH:mm:ss 'UTC'XXX", new Date(), { locale: ptBR });
-  
+    const parsedDate = parse(
+      dateString,
+      "d 'de' MMMM 'de' yyyy 'às' HH:mm:ss 'UTC'XXX",
+      new Date(),
+      { locale: ptBR }
+    );
+
     // Check if the parsed date is valid
-    if (!isValid(parsedDate)) {
-      throw new RangeError('Invalid time value');
+    if (!isValidDate(parsedDate)) {
+      throw new RangeError("Invalid time value");
     }
-  
+
     // Format the parsed date to the desired format
-    return format(parsedDate, 'yyyy-MM-dd');
+    return format(parsedDate, "yyyy-MM-dd");
   };
 
+  const formattedDate =
+    user && user.birthDate ? convertDate(user.birthDate) : "";
 
-  
-  const formattedDate = user && user.birthDate ? convertDate(user.birthDate) : '';
-  
+  const states = [
+    { value: "AL", label: "Alagoas" },
+    { value: "AP", label: "Amapá" },
+    { value: "AM", label: "Amazonas" },
+    { value: "BA", label: "Bahia" },
+    { value: "CE", label: "Ceará" },
+    { value: "DF", label: "Distrito Federal" },
+    { value: "ES", label: "Espírito Santo" },
+    { value: "GO", label: "Goiás" },
+    { value: "MA", label: "Maranhão" },
+    { value: "MT", label: "Mato Grosso" },
+    { value: "MS", label: "Mato Grosso do Sul" },
+    { value: "MG", label: "Minas Gerais" },
+    { value: "PA", label: "Pará" },
+    { value: "PB", label: "Paraíba" },
+    { value: "PR", label: "Paraná" },
+    { value: "PE", label: "Pernambuco" },
+    { value: "PI", label: "Piauí" },
+    { value: "RJ", label: "Rio de Janeiro" },
+    { value: "RN", label: "Rio Grande do Norte" },
+    { value: "RS", label: "Rio Grande do Sul" },
+    { value: "RO", label: "Rondônia" },
+    { value: "RR", label: "Roraima" },
+    { value: "SC", label: "Santa Catarina" },
+    { value: "SP", label: "São Paulo" },
+    { value: "SE", label: "Sergipe" },
+    { value: "TO", label: "Tocantins" },
+    { value: "EX", label: "Estrangeiro" },
+  ];
+
   useEffect(() => {
     if (!token) {
       redirect("/login");
@@ -184,14 +222,6 @@ const UserProfile = () => {
       redirect("/login");
     }
   }, [token]);
-
-  const onSubmit = async (data: User) => {
-    const success = await updateUser(data);
-    if (success) {
-      setUser(data);
-      setIsEditing(false);
-    }
-  };
 
   if (!user) {
     return <div>Carregando...</div>;
@@ -239,7 +269,7 @@ const UserProfile = () => {
                       <DateFormatterWithHour timestamp={user.createdAt} />
                     </span>
                   </li>
-                  <form onSubmit={handleSubmit(onSubmit)}>
+                  <form >
                     <li className="flex items-center py-3">
                       <span className="font-semibold text-xs text-balada_green_675">
                         {" "}
@@ -247,16 +277,25 @@ const UserProfile = () => {
                       </span>
                       <span className="ml-auto text-xs text-gray-100">
                         {isEditing ? (
-                              <select
-                              {...register('gender')}
-                              name="gender"
-                              id="gender"
-                              className="select_input_default_one_line peer"
+                          <select
+                            {...register("gender")}
+                            name="gender"
+                            id="gender"
+                            className="select_input_default_one_line peer"
+                            defaultValue={editableUser?.gender}
                           >
-                              <option selected value={editableUser?.gender}>{selectGender(editableUser?.gender || "")}</option>
-                              {editableUser?.gender !== "MA" && <option value="MA">Masculino</option>}
-                              {editableUser?.gender !== "FE" && <option value="FE">Feminino</option>}
-                              {editableUser?.gender !== "NB" && <option value="NB">Não Binário</option>}
+                            <option selected value={editableUser?.gender}>
+                              {selectGender(editableUser?.gender || "")}
+                            </option>
+                            {editableUser?.gender !== "MA" && (
+                              <option value="MA">Masculino</option>
+                            )}
+                            {editableUser?.gender !== "FE" && (
+                              <option value="FE">Feminino</option>
+                            )}
+                            {editableUser?.gender !== "NB" && (
+                              <option value="NB">Não Binário</option>
+                            )}
                           </select>
                         ) : (
                           selectGender(user.gender)
@@ -293,7 +332,11 @@ const UserProfile = () => {
                           <input
                             type="text"
                             {...register("documentNumber")}
-                            defaultValue={ mask(editableUser?.documentNumber || "", ['999.999.999-99']) || ""}
+                            defaultValue={
+                              mask(editableUser?.documentNumber || "", [
+                                "999.999.999-99",
+                              ]) || ""
+                            }
                             className="bg-gray-700 text-white p-1 rounded"
                           />
                         ) : (
@@ -314,7 +357,11 @@ const UserProfile = () => {
                           <input
                             type="text"
                             {...register("phone")}
-                            defaultValue={mask(editableUser?.phone || "", ['(99) 99999-9999']) || ""}
+                            defaultValue={
+                              mask(editableUser?.phone || "", [
+                                "(99) 99999-9999",
+                              ]) || ""
+                            }
                             className="bg-gray-700 text-white p-1 rounded"
                           />
                         ) : (
@@ -331,7 +378,13 @@ const UserProfile = () => {
                       <table className="text-xs mt-3 text-gray-100 w-full">
                         <tbody className="flex flex-wrap w-full px-3">
                           <tr className="flex items-start mr-4 gap-1">
-                            <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                            <td
+                              className={`font-semibold text-xs text-gray-100 relative ${
+                                isEditing
+                                  ? "before:content-none"
+                                  : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"
+                              }`}
+                            >
                               CEP:
                             </td>
                             <td className="m-0.5 text-xs">
@@ -339,7 +392,11 @@ const UserProfile = () => {
                                 <input
                                   type="text"
                                   {...register("address.cep")}
-                                  defaultValue={mask(editableUser?.address.cep || "", ['99999-999']) || ""}
+                                  defaultValue={
+                                    mask(editableUser?.address.cep || "", [
+                                      "99999-999",
+                                    ]) || ""
+                                  }
                                   className="bg-gray-700 text-white p-1 rounded"
                                 />
                               ) : (
@@ -350,8 +407,18 @@ const UserProfile = () => {
                               )}
                             </td>
                           </tr>
-                          <tr className="flex mr-4 gap-1 ml-3.5">
-                            <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                          <tr
+                            className={`flex mr-4 gap-1 ${
+                              isEditing ? "ml-0" : " ml-3.5"
+                            }`}
+                          >
+                            <td
+                              className={`font-semibold text-xs text-gray-100 relative ${
+                                isEditing
+                                  ? "before:content-none"
+                                  : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"
+                              }`}
+                            >
                               Rua:
                             </td>
                             <td className="m-0.5 text-right text-xs">
@@ -373,7 +440,13 @@ const UserProfile = () => {
                             </td>
                           </tr>
                           <tr className="flex items-start mr-4 gap-1">
-                            <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                            <td
+                              className={`font-semibold text-xs text-gray-100 relative ${
+                                isEditing
+                                  ? "before:content-none"
+                                  : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"
+                              }`}
+                            >
                               Número:
                             </td>
                             <td className="m-0.5 text-xs">
@@ -394,22 +467,43 @@ const UserProfile = () => {
                               )}
                             </td>
                           </tr>
-                          <tr className="flex gap-1 ml-8">
-                            <td className="font-semibold text-xs text-gray-100 text-right relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
-                              Estado:
+                          <tr
+                            className={`flex mr-4 gap-1 ${
+                              isEditing ? "ml-0" : " ml-8"
+                            }`}
+                          >
+                            <td
+                              className={`font-semibold text-xs text-gray-100 relative ${
+                                isEditing
+                                  ? "before:content-none"
+                                  : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"
+                              }`}
+                            >
+                              Estato:
                             </td>
                             <td className="m-0.5 text-right text-xs">
                               {isEditing ? (
-                                <input
-                                  type="text"
+                                <select
                                   {...register("address.state")}
-                                  defaultValue={
-                                    editableUser?.address.state || ""
-                                  }
+                                  name="state"
+                                  id="state"
                                   className="bg-gray-700 text-white p-1 rounded"
-                                />
+                                  defaultValue={editableUser?.address.state}
+                                >
+                                  {states.map((state) => (
+                                    <option
+                                      key={state.value}
+                                      value={state.value}
+                                    >
+                                      {state.label}
+                                    </option>
+                                  ))}
+                                </select>
                               ) : (
-                                user.address.state
+                                states.find(
+                                  (state) =>
+                                    state.value === editableUser?.address.state
+                                )?.label
                               )}
                               {errors.address?.state && (
                                 <p>{errors.address.state.message}</p>
@@ -417,7 +511,13 @@ const UserProfile = () => {
                             </td>
                           </tr>
                           <tr className="flex items-start mr-4 gap-1">
-                            <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                            <td
+                              className={`font-semibold text-xs text-gray-100 relative ${
+                                isEditing
+                                  ? "before:content-none"
+                                  : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"
+                              }`}
+                            >
                               Cidade:
                             </td>
                             <td className="m-0.5 text-xs">
@@ -438,8 +538,18 @@ const UserProfile = () => {
                               )}
                             </td>
                           </tr>
-                          <tr className="flex gap-1 ml-3">
-                            <td className="font-semibold text-xs text-gray-100 text-right relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                          <tr
+                            className={`flex mr-4 gap-1 ${
+                              isEditing ? "ml-0" : " ml-3.5"
+                            }`}
+                          >
+                            <td
+                              className={`font-semibold text-xs text-gray-100 relative ${
+                                isEditing
+                                  ? "before:content-none"
+                                  : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"
+                              }`}
+                            >
                               Bairro:
                             </td>
                             <td className="m-0.5 text-right text-xs">
@@ -461,7 +571,13 @@ const UserProfile = () => {
                             </td>
                           </tr>
                           <tr className="flex items-start mr-4 gap-1">
-                            <td className="font-semibold text-xs text-gray-100 relative before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2">
+                            <td
+                              className={`font-semibold text-xs text-gray-100 relative ${
+                                isEditing
+                                  ? "before:content-none"
+                                  : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"
+                              }`}
+                            >
                               Complemento:
                             </td>
                             <td className="m-0.5 text-xs">
@@ -486,12 +602,23 @@ const UserProfile = () => {
                       </table>
                     </li>
                     <div className="pb-6 pr-5 -mt-4 flex justify-end bg-gray-800 w-full">
-                      <button
-                        onClick={handleEditClick}
-                        className="bg-balada_green_675 text-white py-2 px-4 rounded"
-                      >
-                        {isEditing ? "Salvar" : "Editar"}
-                      </button>
+                      {isEditing && (
+                        <button
+                          type="submit"
+                          onClick={updateUser}
+                          className="bg-balada_green_675 text-white py-2 px-4 rounded"
+                        >
+                          Salvar
+                        </button>
+                      )}
+                      {!isEditing && (
+                        <button
+                          onClick={handleEditClick}
+                          className="bg-balada_green_675 text-white py-2 px-4 rounded"
+                        >
+                          Editar
+                        </button>
+                      )}
                     </div>
                   </form>
                 </ul>
