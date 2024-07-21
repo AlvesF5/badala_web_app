@@ -83,6 +83,8 @@ const UserProfile = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editableUser, setEditableUser] = useState<User | null>(null);
+  const decodedToken: { user_id: string } = jwtDecode(token);
+  const userId = decodedToken.user_id;
 
   const {
     register,
@@ -92,30 +94,31 @@ const UserProfile = () => {
     resolver: zodResolver(schemaUserPersonalInfo),
   });
 
-  const updateUser = async () => {
+  const updateUser = async (data: User) => {
+    console.log(isValid)
     if(isValid){
       try {
         console.log("Formulário está válido?" + isValid);
-          const response = await fetch(`http://localhost:8080/v1/user/update`, {
+          const response = await fetch(`http://localhost:8080/v1/user/update/${userId}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              firstName: user?.firstName,
-              lastName: user?.lastName,
-              phone: unMask(user?.phone || ""),
-              birthDate: user?.birthDate,
-              documentNumber: unMask(user?.documentNumber || ""),
-              gender: user?.gender,
+              firstName: data.firstName,
+              lastName: data.lastName,
+              phone: unMask(data.phone),
+              birthDate: data.birthDate,
+              documentNumber: unMask(data.documentNumber),
+              gender: data.gender,
               address: {
-                cep: unMask(user?.address.cep || ""),
-                street: user?.address.street,
-                number: user?.address.number,
-                state: user?.address.state,
-                city: user?.address.city,
-                neighborhood: user?.address.neighborhood,
-                complement: user?.address.complement,
+                cep: unMask(data.address.cep),
+                street: data.address.street,
+                number: data.address.number,
+                state: data.address.state,
+                city: data.address.city,
+                neighborhood: data.address.neighborhood,
+                complement: data.address.complement,
               },
             }),
           });
@@ -206,8 +209,7 @@ const UserProfile = () => {
       return;
     }
     try {
-      const decodedToken: { user_id: string } = jwtDecode(token);
-      const userId = decodedToken.user_id;
+  
       console.log(userId);
       const fetchUser = async () => {
         const userData = await getUserById(userId);
@@ -269,7 +271,7 @@ const UserProfile = () => {
                       <DateFormatterWithHour timestamp={user.createdAt} />
                     </span>
                   </li>
-                  <form >
+                  <form onSubmit={handleSubmit(updateUser)}>
                     <li className="flex items-center py-3">
                       <span className="font-semibold text-xs text-balada_green_675">
                         {" "}
@@ -605,7 +607,6 @@ const UserProfile = () => {
                       {isEditing && (
                         <button
                           type="submit"
-                          onClick={updateUser}
                           className="bg-balada_green_675 text-white py-2 px-4 rounded"
                         >
                           Salvar
