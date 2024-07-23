@@ -4,8 +4,8 @@ import { jwtDecode } from "jwt-decode";
 import { useCookies } from "next-client-cookies";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
-import brega from "../../images/sliderhome/brega.jpg"
-import safadao from "../../images/sliderhome/safadao.jpg"
+import brega from "../../images/sliderhome/brega.jpg";
+import safadao from "../../images/sliderhome/safadao.jpg";
 import DateFormatterWithHour from "@/components/utils/DateFormaterWithHour";
 import FullSizeImage from "@/components/utils/FullSizeImage";
 import DateFormatter from "@/components/utils/DateFormater";
@@ -43,8 +43,6 @@ const convertDate = (dateString: string): string => {
   return format(parsedDate, "yyyy-MM-dd");
 };
 
-
-
 const states = [
   { value: "AL", label: "Alagoas" },
   { value: "AP", label: "Amapá" },
@@ -76,39 +74,50 @@ const states = [
 ];
 
 type Address = z.infer<typeof schemaUserAddress> & {
-  cep: string,
-  street: string,
-  number: string,
-  state: string,
-  city: string,
-  neighborhood: string,
-  complement: string,
-}
-
+  cep: string;
+  street: string;
+  number: string;
+  state: string;
+  city: string;
+  neighborhood: string;
+  complement: string;
+};
 
 type User = z.infer<typeof schemaUserUpdate> & {
-  email: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
   birthDate: string;
-  password: string;
+  documentNumber: string;
+  gender: string;
+  address: Address;
+};
+
+type UserDetails = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  birthDate: string;
+  documentNumber: string;
+  gender: string;
   createdAt: string;
   updatedAt: string;
   active: boolean;
-  address: Address;
   addressString: string;
+  address: Address;
 };
 
 type UserUpdate = z.infer<typeof schemaUserUpdate>;
 
-
 const UserProfile = () => {
-  var userId = ""
+  var userId = "";
   const { get } = useCookies();
   const token = get("balada-user-token") || "";
   const [user, setUser] = useState<UserUpdate | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [editableUser, setEditableUser] = useState<User | null>(null);
- 
- 
+  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
 
   const methods = useForm<UserUpdate>({
     mode: "all",
@@ -123,14 +132,14 @@ const UserProfile = () => {
   } = methods;
 
   useEffect(() => {
-    if (!token || token.split('.').length !== 3) {
+    if (!token || token.split(".").length !== 3) {
       console.error("Token inválido ou malformado");
       redirect("/login");
       return;
     }
 
-    if(token===""){
-      redirect("/login")
+    if (token === "") {
+      redirect("/login");
     }
 
     const decodedToken: { user_id: string } = jwtDecode(token);
@@ -139,16 +148,14 @@ const UserProfile = () => {
     const fetchUser = async () => {
       const userData = await getUserById(userId);
       if (userData) {
-        
         setUser(userData);
-        setEditableUser(userData);
+        setUserDetails(userData);
       }
     };
 
     fetchUser();
   }, [token]);
 
-  
   const getUserById = async (userId: string) => {
     try {
       const response = await fetch(`http://localhost:8080/v1/user/${userId}`, {
@@ -156,7 +163,9 @@ const UserProfile = () => {
       });
       if (!response.ok) {
         const errorJson = await response.json();
-        const errorMessage = errorJson.errors ? errorJson.errors.join(", ") : "Erro desconhecido";
+        const errorMessage = errorJson.errors
+          ? errorJson.errors.join(", ")
+          : "Erro desconhecido";
         toast.error(`Erro ao obter o usuário: ${errorMessage}`);
         return null;
       }
@@ -175,33 +184,38 @@ const UserProfile = () => {
   const updateUser = async (user: UserUpdate) => {
     try {
       if (isValid) {
-        const response = await fetch(`http://localhost:8080/v1/user/update/${userId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            firstName: user.firstName,
-            lastName: user.lastName,
-            phone: unMask(user.phone),
-            birthDate: user.birthDate,
-            documentNumber: unMask(user.documentNumber),
-            gender: user.gender,
-            address: {
-              cep: unMask(user.address.cep),
-              street: user.address.street,
-              number: user.address.number,
-              state: user.address.state,
-              city: user.address.city,
-              neighborhood: user.address.neighborhood,
-              complement: user.address.complement,
+        const response = await fetch(
+          `http://localhost:8080/v1/user/update/${userId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
             },
-          }),
-        });
+            body: JSON.stringify({
+              firstName: user.firstName,
+              lastName: user.lastName,
+              phone: unMask(user.phone),
+              birthDate: user.birthDate,
+              documentNumber: unMask(user.documentNumber),
+              gender: user.gender,
+              address: {
+                cep: unMask(user.address.cep),
+                street: user.address.street,
+                number: user.address.number,
+                state: user.address.state,
+                city: user.address.city,
+                neighborhood: user.address.neighborhood,
+                complement: user.address.complement,
+              },
+            }),
+          }
+        );
 
         if (!response.ok) {
           const errorJson = await response.json();
-          const errorMessage = errorJson.errors ? errorJson.errors.join(", ") : "Erro desconhecido";
+          const errorMessage = errorJson.errors
+            ? errorJson.errors.join(", ")
+            : "Erro desconhecido";
           toast.error(`Erro ao atualizar o usuário: ${errorMessage}`);
           return false;
         }
@@ -221,25 +235,31 @@ const UserProfile = () => {
 
   const handleEditClick = () => {
     if (isEditing) {
-      setEditableUser(editableUser);
+      setUserDetails(userDetails);
     }
     setIsEditing(!isEditing);
   };
 
-  const onSubmit = async (data: UserUpdate) => {
-    console.log("Chamou o onSubmit!")
-    const success = await updateUser(data);
-    if (success) {
-      setUser(data);
-      setIsEditing(false);
-    }
+  // const onSubmit = async (data: UserUpdate) => {
+  //   console.log("Chamou o onSubmit!")
+  //   const success = await updateUser(data);
+  //   if (success) {
+  //     setUser(data);
+  //     setIsEditing(false);
+  //   }
+  // };
+
+  const onSubmit = (data: UserUpdate) => {
+    console.log(isValid);
+    console.log(data);
   };
 
   if (!user) {
     return <div>Carregando...</div>;
   }
 
-  const formattedDate = user && user.birthDate ? convertDate(user.birthDate.toString()) : "";
+  const formattedDate =
+    user && user.birthDate ? convertDate(user.birthDate.toString()) : "";
 
   return (
     <main className="text-center h-screen flex justify-center items-center w-full mx-auto">
@@ -251,211 +271,422 @@ const UserProfile = () => {
                 {selectUserGreeting(user.gender) + user.firstName + "!"}
               </h1>
               <h3 className=" text-gray-200 text-sm text-semibold leading-6">
-                {user.email}
+                {userDetails?.email}
                 <p className="text-sm text-balada_green_675 cursor-pointer">
-                  {" "}alterar senha{" "}
+                  {" "}
+                  alterar senha{" "}
                 </p>
               </h3>
               <div className="bg-gray-800">
                 <ul className="text-gray-400 p-5 mt-6 divide-y rounded shadow-sm h-auto">
                   <li className="flex items-center py-3">
                     <span className="font-semibold text-xs text-balada_green_675">
-                      {" "}Status:{" "}
+                      {" "}
+                      Status:{" "}
                     </span>
                     <span className="ml-auto">
-                      <span className={`py-1 px-2 rounded text-white text-sm ${user.active ? "bg-green-500" : "bg-red-500"}`}>
-                        {selectUserStatus(user.active)}
+                      <span
+                        className={`py-1 px-2 rounded text-white text-sm ${
+                          userDetails?.active ? "bg-green-500" : "bg-red-500"
+                        }`}
+                      >
+                        {selectUserStatus(userDetails?.active!!)}
                       </span>
                     </span>
                   </li>
                   <li className="flex items-center py-3">
                     <span className="font-semibold text-xs text-balada_green_675">
-                      {" "}Data de cadastro:{" "}
+                      {" "}
+                      Data de cadastro:{" "}
                     </span>
                     <span className="ml-auto text-xs text-gray-100">
-                      <DateFormatterWithHour timestamp={user.createdAt} />
+                      <DateFormatterWithHour
+                        timestamp={userDetails?.createdAt}
+                      />
                     </span>
                   </li>
                   <FormProvider {...methods}>
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <li className="flex items-center py-3">
-                      <span className="font-semibold text-xs text-balada_green_675">
-                        {" "}Gênero:{" "}
-                      </span>
-                      <span className="ml-auto text-xs text-gray-100">
-                        {isEditing ? (
-                          <select {...register("gender")} name="gender" id="gender" className="select_input_default_one_line peer" defaultValue={editableUser?.gender}>
-                            <option value={editableUser?.gender}>{selectGender(editableUser?.gender || "")}</option>
-                            {editableUser?.gender !== "MA" && (<option value="MA">Masculino</option>)}
-                            {editableUser?.gender !== "FE" && (<option value="FE">Feminino</option>)}
-                            {editableUser?.gender !== "NB" && (<option value="NB">Não Binário</option>)}
-                          </select>
-                        ) : (
-                          selectGender(user.gender)
-                        )}
-                        {errors?.gender && <p>{(errors.gender as FieldError).message}</p>}
-                      </span>
-                    </li>
-                    <li className="flex items-center py-3">
-                      <span className="font-semibold text-xs text-balada_green_675">
-                        {" "}Data de nascimento:{" "}
-                      </span>
-                      <span className="ml-auto text-xs text-gray-100">
-                        {isEditing ? (
-                          <input type="date" {...register("birthDate")} name="birthDate" id="birthDate" defaultValue={formattedDate} className="bg-gray-700 text-white p-1 rounded" />
-                        ) : (
-                          <DateFormatter timestamp={user.birthDate} />
-                        )}
-                        {errors.birthDate && <p>{(errors.birthDate as FieldError).message}</p>}
-                      </span>
-                    </li>
-                    <li className="flex items-center py-3">
-                      <span className="font-semibold text-xs text-balada_green_675">
-                        {" "}CPF:{" "}
-                      </span>
-                      <span className="ml-auto text-xs text-gray-100">
-                        {isEditing ? (
-                          <input type="text" {...register("documentNumber")} name="documentNumber" id="documentNumber" defaultValue={mask(editableUser?.documentNumber || "", ["999.999.999-99"]) || ""} className="bg-gray-700 text-white p-1 rounded" />
-                        ) : (
-                          mask(user.documentNumber, ["999.999.999-99"])
-                        )}
-                        {errors.documentNumber && <p>{(errors.documentNumber as FieldError).message}</p>}
-                      </span>
-                    </li>
-                    <li className="flex items-center py-3">
-                      <span className="font-semibold text-xs text-balada_green_675">
-                        {" "}Celular:{" "}
-                      </span>
-                      <span className="ml-auto text-xs text-gray-100">
-                        {isEditing ? (
-                          <input type="text" {...register("phone")} name="phone" id="phone" defaultValue={mask(editableUser?.phone || "", ["(99) 99999-9999"]) || ""} className="bg-gray-700 text-white p-1 rounded" />
-                        ) : (
-                          mask(user.phone, ["(99) 99999-9999"])
-                        )}
-                        {errors.phone && <p>{(errors.phone as FieldError).message}</p>}
-                      </span>
-                    </li>
-                    <li className="flex items-center py-3 flex-wrap">
-                      <span className="font-semibold text-xs text-balada_green_675">
-                        {" "}Endereço:{" "}
-                      </span>
-                      <table className="text-xs mt-3 text-gray-100 w-full">
-                        <tbody className="flex flex-wrap w-full px-3">
-                          <tr className="flex items-start mr-4 gap-1">
-                            <td className={`font-semibold text-xs text-gray-100 relative ${isEditing ? "before:content-none" : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"}`}>
-                              CEP:
-                            </td>
-                            <td className="m-0.5 text-xs">
-                              {isEditing ? (
-                                <input type="text" {...register("address.cep")} name="address.cep" id="address.cep" defaultValue={mask(editableUser?.address.cep || "", ["99999-999"]) || ""} className="bg-gray-700 text-white p-1 rounded" />
-                              ) : (
-                                user.address.cep
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                      <li className="flex items-center py-3">
+                        <span className="font-semibold text-xs text-balada_green_675">
+                          {" "}
+                          Gênero:{" "}
+                        </span>
+                        <span className="ml-auto text-xs text-gray-100">
+                          {isEditing ? (
+                            <select
+                              {...register("gender")}
+                              name="gender"
+                              id="gender"
+                              className="select_input_default_one_line peer"
+                              defaultValue={userDetails?.gender}
+                            >
+                              <option value={userDetails?.gender}>
+                                {selectGender(userDetails?.gender || "")}
+                              </option>
+                              {userDetails?.gender !== "MA" && (
+                                <option value="MA">Masculino</option>
                               )}
-                              {errors.address?.cep && <p>{(errors.address.cep as FieldError).message}</p>}
-                            </td>
-                          </tr>
-                          <tr className={`flex mr-4 gap-1 ${isEditing ? "ml-0" : " ml-3.5"}`}>
-                            <td className={`font-semibold text-xs text-gray-100 relative ${isEditing ? "before:content-none" : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"}`}>
-                              Rua:
-                            </td>
-                            <td className="m-0.5 text-right text-xs">
-                              {isEditing ? (
-                                <input type="text" {...register("address.street")} name="address.street" id="address.street" defaultValue={editableUser?.address.street || ""} className="bg-gray-700 text-white p-1 rounded" />
-                              ) : (
-                                user.address.street
+                              {userDetails?.gender !== "FE" && (
+                                <option value="FE">Feminino</option>
                               )}
-                              {errors.address?.street && <p>{errors.address.street.message}</p>}
-                            </td>
-                          </tr>
-                          <tr className="flex items-start mr-4 gap-1">
-                            <td className={`font-semibold text-xs text-gray-100 relative ${isEditing ? "before:content-none" : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"}`}>
-                              Número:
-                            </td>
-                            <td className="m-0.5 text-xs">
-                              {isEditing ? (
-                                <input type="text" {...register("address.number")} name="address.number" id="address.number" defaultValue={editableUser?.address.number || ""} className="bg-gray-700 text-white p-1 rounded" />
-                              ) : (
-                                user.address.number
+                              {userDetails?.gender !== "NB" && (
+                                <option value="NB">Não Binário</option>
                               )}
-                              {errors.address?.number && <p>{errors.address.number.message}</p>}
-                            </td>
-                          </tr>
-                          <tr className={`flex mr-4 gap-1 ${isEditing ? "ml-0" : " ml-8"}`}>
-                            <td className={`font-semibold text-xs text-gray-100 relative ${isEditing ? "before:content-none" : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"}`}>
-                              Estado:
-                            </td>
-                            <td className="m-0.5 text-right text-xs">
-                              {isEditing ? (
-                                <select {...register("address.state")} name="address.state" id="address.state" className="bg-gray-700 text-white p-1 rounded" defaultValue={editableUser?.address.state}>
-                                  {states.map((state) => (
-                                    <option key={state.value} value={state.value}>
-                                      {state.label}
-                                    </option>
-                                  ))}
-                                </select>
-                              ) : (
-                                states.find((state) => state.value === editableUser?.address.state)?.label
-                              )}
-                              {errors.address?.state && <p>{errors.address.state.message}</p>}
-                            </td>
-                          </tr>
-                          <tr className="flex items-start mr-4 gap-1">
-                            <td className={`font-semibold text-xs text-gray-100 relative ${isEditing ? "before:content-none" : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"}`}>
-                              Cidade:
-                            </td>
-                            <td className="m-0.5 text-xs">
-                              {isEditing ? (
-                                <input type="text" {...register("address.city")} name="address.city" id="address.city" defaultValue={editableUser?.address.city || ""} className="bg-gray-700 text-white p-1 rounded" />
-                              ) : (
-                                user.address.city
-                              )}
-                              {errors.address?.city && <p>{errors.address.city.message}</p>}
-                            </td>
-                          </tr>
-                          <tr className={`flex mr-4 gap-1 ${isEditing ? "ml-0" : " ml-3.5"}`}>
-                            <td className={`font-semibold text-xs text-gray-100 relative ${isEditing ? "before:content-none" : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"}`}>
-                              Bairro:
-                            </td>
-                            <td className="m-0.5 text-right text-xs">
-                              {isEditing ? (
-                                <input type="text" {...register("address.neighborhood")} name="address.neighborhood" id="address.neighborhood" defaultValue={editableUser?.address.neighborhood || ""} className="bg-gray-700 text-white p-1 rounded" />
-                              ) : (
-                                user.address.neighborhood
-                              )}
-                              {errors.address?.neighborhood && <p>{errors.address.neighborhood.message}</p>}
-                            </td>
-                          </tr>
-                          <tr className="flex items-start mr-4 gap-1">
-                            <td className={`font-semibold text-xs text-gray-100 relative ${isEditing ? "before:content-none" : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"}`}>
-                              Complemento:
-                            </td>
-                            <td className="m-0.5 text-xs">
-                              {isEditing ? (
-                                <input type="text" {...register("address.complement")} name="address.complement" id="address.complement" defaultValue={editableUser?.address.complement || ""} className="bg-gray-700 text-white p-1 rounded" />
-                              ) : (
-                                user.address.complement
-                              )}
-                              {errors.address?.complement && <p>{errors.address.complement.message}</p>}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </li>
-                    
+                            </select>
+                          ) : (
+                            selectGender(user.gender)
+                          )}
+                          {errors?.gender && (
+                            <p>{(errors.gender as FieldError).message}</p>
+                          )}
+                        </span>
+                      </li>
+                      <li className="flex items-center py-3">
+                        <span className="font-semibold text-xs text-balada_green_675">
+                          {" "}
+                          Data de nascimento:{" "}
+                        </span>
+                        <span className="ml-auto text-xs text-gray-100">
+                          {isEditing ? (
+                            <input
+                              type="date"
+                              {...register("birthDate")}
+                              name="birthDate"
+                              id="birthDate"
+                              defaultValue={formattedDate}
+                              className="bg-gray-700 text-white p-1 rounded"
+                            />
+                          ) : (
+                            <DateFormatter timestamp={user.birthDate} />
+                          )}
+                          {errors.birthDate && (
+                            <p>{(errors.birthDate as FieldError).message}</p>
+                          )}
+                        </span>
+                      </li>
+                      <li className="flex items-center py-3">
+                        <span className="font-semibold text-xs text-balada_green_675">
+                          {" "}
+                          CPF:{" "}
+                        </span>
+                        <span className="ml-auto text-xs text-gray-100">
+                          {isEditing ? (
+                            <input
+                              type="text"
+                              {...register("documentNumber")}
+                              name="documentNumber"
+                              id="documentNumber"
+                              defaultValue={
+                                mask(userDetails?.documentNumber || "", [
+                                  "999.999.999-99",
+                                ]) || ""
+                              }
+                              className="bg-gray-700 text-white p-1 rounded"
+                            />
+                          ) : (
+                            mask(user.documentNumber, ["999.999.999-99"])
+                          )}
+                          {errors.documentNumber && (
+                            <p>
+                              {(errors.documentNumber as FieldError).message}
+                            </p>
+                          )}
+                        </span>
+                      </li>
+                      <li className="flex items-center py-3">
+                        <span className="font-semibold text-xs text-balada_green_675">
+                          {" "}
+                          Celular:{" "}
+                        </span>
+                        <span className="ml-auto text-xs text-gray-100">
+                          {isEditing ? (
+                            <input
+                              type="text"
+                              {...register("phone")}
+                              name="phone"
+                              id="phone"
+                              defaultValue={
+                                mask(userDetails?.phone || "", [
+                                  "(99) 99999-9999",
+                                ]) || ""
+                              }
+                              className="bg-gray-700 text-white p-1 rounded"
+                            />
+                          ) : (
+                            mask(user.phone, ["(99) 99999-9999"])
+                          )}
+                          {errors.phone && (
+                            <p>{(errors.phone as FieldError).message}</p>
+                          )}
+                        </span>
+                      </li>
+                      <li className="flex items-center py-3 flex-wrap">
+                        <span className="font-semibold text-xs text-balada_green_675">
+                          {" "}
+                          Endereço:{" "}
+                        </span>
+                        <table className="text-xs mt-3 text-gray-100 w-full">
+                          <tbody className="flex flex-wrap w-full px-3">
+                            <tr className="flex items-start mr-4 gap-1">
+                              <td
+                                className={`font-semibold text-xs text-gray-100 relative ${
+                                  isEditing
+                                    ? "before:content-none"
+                                    : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"
+                                }`}
+                              >
+                                CEP:
+                              </td>
+                              <td className="m-0.5 text-xs">
+                                {isEditing ? (
+                                  <input
+                                    type="text"
+                                    {...register("address.cep")}
+                                    name="address.cep"
+                                    id="address.cep"
+                                    defaultValue={
+                                      mask(userDetails?.address.cep || "", [
+                                        "99999-999",
+                                      ]) || ""
+                                    }
+                                    className="bg-gray-700 text-white p-1 rounded"
+                                  />
+                                ) : (
+                                  user.address.cep
+                                )}
+                                {errors.address?.cep && (
+                                  <p>
+                                    {(errors.address.cep as FieldError).message}
+                                  </p>
+                                )}
+                              </td>
+                            </tr>
+                            <tr
+                              className={`flex mr-4 gap-1 ${
+                                isEditing ? "ml-0" : " ml-3.5"
+                              }`}
+                            >
+                              <td
+                                className={`font-semibold text-xs text-gray-100 relative ${
+                                  isEditing
+                                    ? "before:content-none"
+                                    : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"
+                                }`}
+                              >
+                                Rua:
+                              </td>
+                              <td className="m-0.5 text-right text-xs">
+                                {isEditing ? (
+                                  <input
+                                    type="text"
+                                    {...register("address.street")}
+                                    name="address.street"
+                                    id="address.street"
+                                    defaultValue={
+                                      userDetails?.address.street || ""
+                                    }
+                                    className="bg-gray-700 text-white p-1 rounded"
+                                  />
+                                ) : (
+                                  user.address.street
+                                )}
+                                {errors.address?.street && (
+                                  <p>{errors.address.street.message}</p>
+                                )}
+                              </td>
+                            </tr>
+                            <tr className="flex items-start mr-4 gap-1">
+                              <td
+                                className={`font-semibold text-xs text-gray-100 relative ${
+                                  isEditing
+                                    ? "before:content-none"
+                                    : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"
+                                }`}
+                              >
+                                Número:
+                              </td>
+                              <td className="m-0.5 text-xs">
+                                {isEditing ? (
+                                  <input
+                                    type="text"
+                                    {...register("address.number")}
+                                    name="address.number"
+                                    id="address.number"
+                                    defaultValue={
+                                      userDetails?.address.number || ""
+                                    }
+                                    className="bg-gray-700 text-white p-1 rounded"
+                                  />
+                                ) : (
+                                  user.address.number
+                                )}
+                                {errors.address?.number && (
+                                  <p>{errors.address.number.message}</p>
+                                )}
+                              </td>
+                            </tr>
+                            <tr
+                              className={`flex mr-4 gap-1 ${
+                                isEditing ? "ml-0" : " ml-8"
+                              }`}
+                            >
+                              <td
+                                className={`font-semibold text-xs text-gray-100 relative ${
+                                  isEditing
+                                    ? "before:content-none"
+                                    : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"
+                                }`}
+                              >
+                                Estado:
+                              </td>
+                              <td className="m-0.5 text-right text-xs">
+                                {isEditing ? (
+                                  <select
+                                    {...register("address.state")}
+                                    name="address.state"
+                                    id="address.state"
+                                    className="bg-gray-700 text-white p-1 rounded"
+                                    defaultValue={userDetails?.address.state}
+                                  >
+                                    {states.map((state) => (
+                                      <option
+                                        key={state.value}
+                                        value={state.value}
+                                      >
+                                        {state.label}
+                                      </option>
+                                    ))}
+                                  </select>
+                                ) : (
+                                  states.find(
+                                    (state) =>
+                                      state.value ===
+                                    userDetails?.address.state
+                                  )?.label
+                                )}
+                                {errors.address?.state && (
+                                  <p>{errors.address.state.message}</p>
+                                )}
+                              </td>
+                            </tr>
+                            <tr className="flex items-start mr-4 gap-1">
+                              <td
+                                className={`font-semibold text-xs text-gray-100 relative ${
+                                  isEditing
+                                    ? "before:content-none"
+                                    : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"
+                                }`}
+                              >
+                                Cidade:
+                              </td>
+                              <td className="m-0.5 text-xs">
+                                {isEditing ? (
+                                  <input
+                                    type="text"
+                                    {...register("address.city")}
+                                    name="address.city"
+                                    id="address.city"
+                                    defaultValue={
+                                      userDetails?.address.city || ""
+                                    }
+                                    className="bg-gray-700 text-white p-1 rounded"
+                                  />
+                                ) : (
+                                  user.address.city
+                                )}
+                                {errors.address?.city && (
+                                  <p>{errors.address.city.message}</p>
+                                )}
+                              </td>
+                            </tr>
+                            <tr
+                              className={`flex mr-4 gap-1 ${
+                                isEditing ? "ml-0" : " ml-3.5"
+                              }`}
+                            >
+                              <td
+                                className={`font-semibold text-xs text-gray-100 relative ${
+                                  isEditing
+                                    ? "before:content-none"
+                                    : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"
+                                }`}
+                              >
+                                Bairro:
+                              </td>
+                              <td className="m-0.5 text-right text-xs">
+                                {isEditing ? (
+                                  <input
+                                    type="text"
+                                    {...register("address.neighborhood")}
+                                    name="address.neighborhood"
+                                    id="address.neighborhood"
+                                    defaultValue={
+                                      userDetails?.address.neighborhood || ""
+                                    }
+                                    className="bg-gray-700 text-white p-1 rounded"
+                                  />
+                                ) : (
+                                  user.address.neighborhood
+                                )}
+                                {errors.address?.neighborhood && (
+                                  <p>{errors.address.neighborhood.message}</p>
+                                )}
+                              </td>
+                            </tr>
+                            <tr className="flex items-start mr-4 gap-1">
+                              <td
+                                className={`font-semibold text-xs text-gray-100 relative ${
+                                  isEditing
+                                    ? "before:content-none"
+                                    : "before:content-['•'] before:mr-2 before:text-balada_green_675 before:absolute before:-left-2 before:top-1/2 before:transform before:-translate-y-1/2"
+                                }`}
+                              >
+                                Complemento:
+                              </td>
+                              <td className="m-0.5 text-xs">
+                                {isEditing ? (
+                                  <input
+                                    type="text"
+                                    {...register("address.complement")}
+                                    name="address.complement"
+                                    id="address.complement"
+                                    defaultValue={
+                                      userDetails?.address.complement || ""
+                                    }
+                                    className="bg-gray-700 text-white p-1 rounded"
+                                  />
+                                ) : (
+                                  user.address.complement
+                                )}
+                                {errors.address?.complement && (
+                                  <p>{errors.address.complement.message}</p>
+                                )}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </li>
+
                       {isEditing && (
-                        <button type="submit" className="bg-balada_green_675 text-white py-2 px-4 rounded">
+                        <button
+                          type="submit"
+                          onClick={() => onSubmit(user)}
+                          className="bg-balada_green_675 text-white py-2 px-4 rounded"
+                        >
                           Salvar
                         </button>
                       )}
                       {!isEditing && (
-                        <button onClick={handleEditClick} className="bg-balada_green_675 text-white py-2 px-4 rounded">
+                        <button
+                          onClick={handleEditClick}
+                          className="bg-balada_green_675 text-white py-2 px-4 rounded"
+                        >
                           Editar
                         </button>
                       )}
-                  
-                  </form>
+                    </form>
                   </FormProvider>
-
                 </ul>
               </div>
             </div>

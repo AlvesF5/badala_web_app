@@ -49,7 +49,6 @@ export const schemaUserAddress = z.object({
 });
 
 export const schemaUserUpdate = z.object({
-  email: z.string().email("Insira um e-mail com formato válido!"),
   firstName: z.string().min(3, "Nome precisa ter pelo menos 3 caracteres"),
   lastName: z.string().min(5, "Sobrenome precisa ter pelo menos 5 caracteres"),
   phone: z.string().min(11, "Número precisa ter pelo menos 11 caracteres"),
