@@ -15,7 +15,7 @@ import {
   selectUserStatus,
   selectUserGreeting,
 } from "@/utils/Functions";
-import { FieldError, FormProvider, useForm } from "react-hook-form";
+import { FieldError, FormProvider, useForm, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { schemaUserUpdate, schemaUserAddress } from "@/utils/schemas";
@@ -129,6 +129,8 @@ const UserProfile = () => {
     handleSubmit,
     register,
     formState: { errors, isValid },
+    setValue,
+    getValues
   } = methods;
 
   useEffect(() => {
@@ -182,11 +184,10 @@ const UserProfile = () => {
   };
 
   const updateUser = async (user: UserUpdate) => {
+    console.log("Id do usuário:"+userId)
     try {
-      if (isValid) {
         const response = await fetch(
-          `http://localhost:8080/v1/user/update/${userId}`,
-          {
+          `http://localhost:8080/v1/user/update/KSijaRywM6VqfBBYYPGHvsI7zdf1`,{
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -222,10 +223,11 @@ const UserProfile = () => {
 
         toast.success("Usuário atualizado com sucesso!");
         return true;
-      }
+      
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(`Erro ao atualizar o usuário: ${error.message}`);
+        console.log(userId)
       } else {
         console.log("Ocorreu um erro desconhecido");
       }
@@ -240,18 +242,38 @@ const UserProfile = () => {
     setIsEditing(!isEditing);
   };
 
-  // const onSubmit = async (data: UserUpdate) => {
-  //   console.log("Chamou o onSubmit!")
-  //   const success = await updateUser(data);
-  //   if (success) {
-  //     setUser(data);
-  //     setIsEditing(false);
-  //   }
-  // };
+  const onSubmit = async (data: UserUpdate) => {
+    setValue('firstName', data.firstName)
+    setValue('lastName', data.lastName)
+    setValue('phone', data.phone)
+    setValue('birthDate', data.birthDate)
+    setValue('documentNumber', data.documentNumber)
+    setValue('gender', data.gender)
+    setValue('address', data.address)
+    console.log("Chamou o onSubmit!")
+    const success = await updateUser(data);
+    if (success) {
+      setUser(data);
+      setIsEditing(false);
+    }
+  };
 
-  const onSubmit = (data: UserUpdate) => {
-    console.log(isValid);
-    console.log(data);
+
+  const renderErrors = (errors: FieldErrors) => {
+    return Object.keys(errors).map((field) => {
+      const error = errors[field];
+      if (error && 'message' in error) {
+        return <p key={field}>{(error as FieldError).message}</p>;
+      }
+      if (error && typeof error === 'object') {
+        return (
+          <div key={field}>
+            <strong>{field}:</strong> {renderErrors(error as FieldErrors)}
+          </div>
+        );
+      }
+      return null;
+    });
   };
 
   if (!user) {
@@ -316,6 +338,7 @@ const UserProfile = () => {
                           {isEditing ? (
                             <select
                               {...register("gender")}
+                              onChange={(e) => e.target.value}
                               name="gender"
                               id="gender"
                               className="select_input_default_one_line peer"
@@ -352,6 +375,7 @@ const UserProfile = () => {
                             <input
                               type="date"
                               {...register("birthDate")}
+                              onChange={(e) => e.target.value}
                               name="birthDate"
                               id="birthDate"
                               defaultValue={formattedDate}
@@ -375,6 +399,7 @@ const UserProfile = () => {
                             <input
                               type="text"
                               {...register("documentNumber")}
+                              onChange={(e) => e.target.value}
                               name="documentNumber"
                               id="documentNumber"
                               defaultValue={
@@ -404,6 +429,7 @@ const UserProfile = () => {
                             <input
                               type="text"
                               {...register("phone")}
+                              onChange={(e) => e.target.value}
                               name="phone"
                               id="phone"
                               defaultValue={
@@ -443,6 +469,7 @@ const UserProfile = () => {
                                   <input
                                     type="text"
                                     {...register("address.cep")}
+                                    onChange={(e) => e.target.value}
                                     name="address.cep"
                                     id="address.cep"
                                     defaultValue={
@@ -481,6 +508,7 @@ const UserProfile = () => {
                                   <input
                                     type="text"
                                     {...register("address.street")}
+                                    onChange={(e) => e.target.value}
                                     name="address.street"
                                     id="address.street"
                                     defaultValue={
@@ -511,6 +539,7 @@ const UserProfile = () => {
                                   <input
                                     type="text"
                                     {...register("address.number")}
+                                    onChange={(e) => e.target.value}
                                     name="address.number"
                                     id="address.number"
                                     defaultValue={
@@ -544,6 +573,7 @@ const UserProfile = () => {
                                 {isEditing ? (
                                   <select
                                     {...register("address.state")}
+                                    onChange={(e) => e.target.value}
                                     name="address.state"
                                     id="address.state"
                                     className="bg-gray-700 text-white p-1 rounded"
@@ -585,6 +615,7 @@ const UserProfile = () => {
                                   <input
                                     type="text"
                                     {...register("address.city")}
+                                    onChange={(e) => e.target.value}
                                     name="address.city"
                                     id="address.city"
                                     defaultValue={
@@ -619,6 +650,7 @@ const UserProfile = () => {
                                   <input
                                     type="text"
                                     {...register("address.neighborhood")}
+                                    onChange={(e) => e.target.value}
                                     name="address.neighborhood"
                                     id="address.neighborhood"
                                     defaultValue={
@@ -649,6 +681,7 @@ const UserProfile = () => {
                                   <input
                                     type="text"
                                     {...register("address.complement")}
+                                    onChange={(e) => e.target.value}
                                     name="address.complement"
                                     id="address.complement"
                                     defaultValue={
@@ -687,6 +720,11 @@ const UserProfile = () => {
                       )}
                     </form>
                   </FormProvider>
+                  <div className=" h-20 w-full bg-red-500">
+                        {errors?.firstName && <span className=' text-blue-400'>{errors.firstName.message}</span>}
+                        {errors?.lastName && <span className='text-blue-400'>{errors.lastName.message}</span>}
+                    </div>
+
                 </ul>
               </div>
             </div>
