@@ -15,10 +15,10 @@ import {
   selectUserStatus,
   selectUserGreeting,
 } from "@/utils/Functions";
-import { useForm } from "react-hook-form";
+import { FieldError, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { schemaUserPersonalInfo } from "@/utils/schemas";
+import { schemaUserUpdate, schemaUserAddress } from "@/utils/schemas";
 import { parse, format, isValid as isValidDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -75,37 +75,52 @@ const states = [
   { value: "EX", label: "Estrangeiro" },
 ];
 
+type Address = z.infer<typeof schemaUserAddress> & {
+  cep: string,
+  street: string,
+  number: string,
+  state: string,
+  city: string,
+  neighborhood: string,
+  complement: string,
+}
 
-type User = z.infer<typeof schemaUserPersonalInfo> & {
+
+type User = z.infer<typeof schemaUserUpdate> & {
   email: string;
   birthDate: string;
   password: string;
   createdAt: string;
   updatedAt: string;
   active: boolean;
-  address: {
-    cep: string;
-    street: string;
-    number: string;
-    state: string;
-    city: string;
-    neighborhood: string;
-    complement: string | "";
-  };
+  address: Address;
   addressString: string;
 };
 
+type UserUpdate = z.infer<typeof schemaUserUpdate>;
 
 
 const UserProfile = () => {
+  var userId = ""
   const { get } = useCookies();
   const token = get("balada-user-token") || "";
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserUpdate | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editableUser, setEditableUser] = useState<User | null>(null);
-  const { register, handleSubmit, formState: { errors, isValid } } = useForm<User>({
-    resolver: zodResolver(schemaUserPersonalInfo),
+ 
+ 
+
+  const methods = useForm<UserUpdate>({
+    mode: "all",
+    reValidateMode: "onChange",
+    resolver: zodResolver(schemaUserUpdate),
   });
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isValid },
+  } = methods;
 
   useEffect(() => {
     if (!token || token.split('.').length !== 3) {
@@ -114,9 +129,17 @@ const UserProfile = () => {
       return;
     }
 
+    if(token===""){
+      redirect("/login")
+    }
+
+    const decodedToken: { user_id: string } = jwtDecode(token);
+    userId = decodedToken.user_id;
+
     const fetchUser = async () => {
       const userData = await getUserById(userId);
       if (userData) {
+        
         setUser(userData);
         setEditableUser(userData);
       }
@@ -125,9 +148,7 @@ const UserProfile = () => {
     fetchUser();
   }, [token]);
 
-  const decodedToken: { user_id: string } = jwtDecode(token);
-  const userId = decodedToken.user_id;
-
+  
   const getUserById = async (userId: string) => {
     try {
       const response = await fetch(`http://localhost:8080/v1/user/${userId}`, {
@@ -151,7 +172,7 @@ const UserProfile = () => {
     }
   };
 
-  const updateUser = async (user: User) => {
+  const updateUser = async (user: UserUpdate) => {
     try {
       if (isValid) {
         const response = await fetch(`http://localhost:8080/v1/user/update/${userId}`, {
@@ -205,7 +226,7 @@ const UserProfile = () => {
     setIsEditing(!isEditing);
   };
 
-  const onSubmit = async (data: User) => {
+  const onSubmit = async (data: UserUpdate) => {
     console.log("Chamou o onSubmit!")
     const success = await updateUser(data);
     if (success) {
@@ -218,7 +239,7 @@ const UserProfile = () => {
     return <div>Carregando...</div>;
   }
 
-  const formattedDate = user && user.birthDate ? convertDate(user.birthDate) : "";
+  const formattedDate = user && user.birthDate ? convertDate(user.birthDate.toString()) : "";
 
   return (
     <main className="text-center h-screen flex justify-center items-center w-full mx-auto">
@@ -255,6 +276,7 @@ const UserProfile = () => {
                       <DateFormatterWithHour timestamp={user.createdAt} />
                     </span>
                   </li>
+                  <FormProvider {...methods}>
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <li className="flex items-center py-3">
                       <span className="font-semibold text-xs text-balada_green_675">
@@ -271,7 +293,7 @@ const UserProfile = () => {
                         ) : (
                           selectGender(user.gender)
                         )}
-                        {errors.gender && <p>{errors.gender.message}</p>}
+                        {errors?.gender && <p>{(errors.gender as FieldError).message}</p>}
                       </span>
                     </li>
                     <li className="flex items-center py-3">
@@ -280,11 +302,11 @@ const UserProfile = () => {
                       </span>
                       <span className="ml-auto text-xs text-gray-100">
                         {isEditing ? (
-                          <input type="date" {...register("birthDate")} defaultValue={formattedDate} className="bg-gray-700 text-white p-1 rounded" />
+                          <input type="date" {...register("birthDate")} name="birthDate" id="birthDate" defaultValue={formattedDate} className="bg-gray-700 text-white p-1 rounded" />
                         ) : (
                           <DateFormatter timestamp={user.birthDate} />
                         )}
-                        {errors.birthDate && <p>{errors.birthDate.message}</p>}
+                        {errors.birthDate && <p>{(errors.birthDate as FieldError).message}</p>}
                       </span>
                     </li>
                     <li className="flex items-center py-3">
@@ -293,11 +315,11 @@ const UserProfile = () => {
                       </span>
                       <span className="ml-auto text-xs text-gray-100">
                         {isEditing ? (
-                          <input type="text" {...register("documentNumber")} defaultValue={mask(editableUser?.documentNumber || "", ["999.999.999-99"]) || ""} className="bg-gray-700 text-white p-1 rounded" />
+                          <input type="text" {...register("documentNumber")} name="documentNumber" id="documentNumber" defaultValue={mask(editableUser?.documentNumber || "", ["999.999.999-99"]) || ""} className="bg-gray-700 text-white p-1 rounded" />
                         ) : (
                           mask(user.documentNumber, ["999.999.999-99"])
                         )}
-                        {errors.documentNumber && <p>{errors.documentNumber.message}</p>}
+                        {errors.documentNumber && <p>{(errors.documentNumber as FieldError).message}</p>}
                       </span>
                     </li>
                     <li className="flex items-center py-3">
@@ -306,11 +328,11 @@ const UserProfile = () => {
                       </span>
                       <span className="ml-auto text-xs text-gray-100">
                         {isEditing ? (
-                          <input type="text" {...register("phone")} defaultValue={mask(editableUser?.phone || "", ["(99) 99999-9999"]) || ""} className="bg-gray-700 text-white p-1 rounded" />
+                          <input type="text" {...register("phone")} name="phone" id="phone" defaultValue={mask(editableUser?.phone || "", ["(99) 99999-9999"]) || ""} className="bg-gray-700 text-white p-1 rounded" />
                         ) : (
                           mask(user.phone, ["(99) 99999-9999"])
                         )}
-                        {errors.phone && <p>{errors.phone.message}</p>}
+                        {errors.phone && <p>{(errors.phone as FieldError).message}</p>}
                       </span>
                     </li>
                     <li className="flex items-center py-3 flex-wrap">
@@ -325,11 +347,11 @@ const UserProfile = () => {
                             </td>
                             <td className="m-0.5 text-xs">
                               {isEditing ? (
-                                <input type="text" {...register("address.cep")} defaultValue={mask(editableUser?.address.cep || "", ["99999-999"]) || ""} className="bg-gray-700 text-white p-1 rounded" />
+                                <input type="text" {...register("address.cep")} name="address.cep" id="address.cep" defaultValue={mask(editableUser?.address.cep || "", ["99999-999"]) || ""} className="bg-gray-700 text-white p-1 rounded" />
                               ) : (
                                 user.address.cep
                               )}
-                              {errors.address?.cep && <p>{errors.address.cep.message}</p>}
+                              {errors.address?.cep && <p>{(errors.address.cep as FieldError).message}</p>}
                             </td>
                           </tr>
                           <tr className={`flex mr-4 gap-1 ${isEditing ? "ml-0" : " ml-3.5"}`}>
@@ -338,7 +360,7 @@ const UserProfile = () => {
                             </td>
                             <td className="m-0.5 text-right text-xs">
                               {isEditing ? (
-                                <input type="text" {...register("address.street")} defaultValue={editableUser?.address.street || ""} className="bg-gray-700 text-white p-1 rounded" />
+                                <input type="text" {...register("address.street")} name="address.street" id="address.street" defaultValue={editableUser?.address.street || ""} className="bg-gray-700 text-white p-1 rounded" />
                               ) : (
                                 user.address.street
                               )}
@@ -351,7 +373,7 @@ const UserProfile = () => {
                             </td>
                             <td className="m-0.5 text-xs">
                               {isEditing ? (
-                                <input type="text" {...register("address.number")} defaultValue={editableUser?.address.number || ""} className="bg-gray-700 text-white p-1 rounded" />
+                                <input type="text" {...register("address.number")} name="address.number" id="address.number" defaultValue={editableUser?.address.number || ""} className="bg-gray-700 text-white p-1 rounded" />
                               ) : (
                                 user.address.number
                               )}
@@ -364,7 +386,7 @@ const UserProfile = () => {
                             </td>
                             <td className="m-0.5 text-right text-xs">
                               {isEditing ? (
-                                <select {...register("address.state")} name="state" id="state" className="bg-gray-700 text-white p-1 rounded" defaultValue={editableUser?.address.state}>
+                                <select {...register("address.state")} name="address.state" id="address.state" className="bg-gray-700 text-white p-1 rounded" defaultValue={editableUser?.address.state}>
                                   {states.map((state) => (
                                     <option key={state.value} value={state.value}>
                                       {state.label}
@@ -383,7 +405,7 @@ const UserProfile = () => {
                             </td>
                             <td className="m-0.5 text-xs">
                               {isEditing ? (
-                                <input type="text" {...register("address.city")} defaultValue={editableUser?.address.city || ""} className="bg-gray-700 text-white p-1 rounded" />
+                                <input type="text" {...register("address.city")} name="address.city" id="address.city" defaultValue={editableUser?.address.city || ""} className="bg-gray-700 text-white p-1 rounded" />
                               ) : (
                                 user.address.city
                               )}
@@ -396,7 +418,7 @@ const UserProfile = () => {
                             </td>
                             <td className="m-0.5 text-right text-xs">
                               {isEditing ? (
-                                <input type="text" {...register("address.neighborhood")} defaultValue={editableUser?.address.neighborhood || ""} className="bg-gray-700 text-white p-1 rounded" />
+                                <input type="text" {...register("address.neighborhood")} name="address.neighborhood" id="address.neighborhood" defaultValue={editableUser?.address.neighborhood || ""} className="bg-gray-700 text-white p-1 rounded" />
                               ) : (
                                 user.address.neighborhood
                               )}
@@ -409,7 +431,7 @@ const UserProfile = () => {
                             </td>
                             <td className="m-0.5 text-xs">
                               {isEditing ? (
-                                <input type="text" {...register("address.complement")} defaultValue={editableUser?.address.complement || ""} className="bg-gray-700 text-white p-1 rounded" />
+                                <input type="text" {...register("address.complement")} name="address.complement" id="address.complement" defaultValue={editableUser?.address.complement || ""} className="bg-gray-700 text-white p-1 rounded" />
                               ) : (
                                 user.address.complement
                               )}
@@ -432,6 +454,8 @@ const UserProfile = () => {
                       )}
                   
                   </form>
+                  </FormProvider>
+
                 </ul>
               </div>
             </div>

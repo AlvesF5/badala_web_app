@@ -48,6 +48,26 @@ export const schemaUserAddress = z.object({
   complement: z.string(),
 });
 
+export const schemaUserUpdate = z.object({
+  email: z.string().email("Insira um e-mail com formato válido!"),
+  firstName: z.string().min(3, "Nome precisa ter pelo menos 3 caracteres"),
+  lastName: z.string().min(5, "Sobrenome precisa ter pelo menos 5 caracteres"),
+  phone: z.string().min(11, "Número precisa ter pelo menos 11 caracteres"),
+  birthDate: z
+    .string()
+    .transform((date) => new Date(date))
+    .refine((date) => date <= minimumAge, {
+      message: "Idade deve ser maior que 14",
+    }),
+  documentNumber: z.string().min(1, "CPF não pode ser vazio"),
+  gender: z.enum(["MA", "FE", "NB"], {
+    errorMap: () => {
+      return { message: "Selecione uma opção válida para o gênero!" };
+    },
+  }),
+  address: schemaUserAddress
+})
+
 export const schemaUserTerms = z
   .object({
     agree: z.boolean(),
