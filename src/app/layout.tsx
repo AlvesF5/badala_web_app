@@ -5,6 +5,7 @@ import './components.css'
 import { Toaster } from 'sonner';
 import { FaRegFaceFrown, FaRegFaceGrinWide } from "react-icons/fa6";
 
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -37,6 +38,7 @@ export default function RootLayout({
             error: <div className="text-xl"><FaRegFaceFrown /></div>,
           }}
         />
+        
         {children}
       </body>
     </html>
