@@ -39,12 +39,13 @@ export const schemaUserPersonalInfo = z.object({
 });
 
 export const schemaUserAddress = z.object({
-  cep: z.string().min(8, "CEP não pode ser vazio"),
-  street: z.string().min(4, "Rua não pode ser vazio"),
-  number: z.string().min(1, "Número não pode ser vazio"),
-  state: z.string().min(2, "Estado não pode ser vazio"),
-  city: z.string().min(3, "Cidade não pode ser vazio"),
-  neighborhood: z.string().min(3, "Bairro não pode ser vazio"),
+  id: z.string().min(36, "ID do endereço é inválido!"),
+  cep: z.string().min(8, "CEP não pode ser vazio!"),
+  street: z.string().min(4, "Rua não pode ser vazio!"),
+  number: z.string().min(1, "Número não pode ser vazio!"),
+  state: z.string().min(2, "Estado não pode ser vazio!"),
+  city: z.string().min(3, "Cidade não pode ser vazio!"),
+  neighborhood: z.string().min(3, "Bairro não pode ser vazio!"),
   complement: z.string(),
 });
 

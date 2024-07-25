@@ -15,17 +15,25 @@ import {
   selectUserStatus,
   selectUserGreeting,
 } from "@/utils/Functions";
-import { FieldError, FormProvider, useForm, FieldErrors } from "react-hook-form";
+import {
+  FieldError,
+  FormProvider,
+  useForm,
+  FieldErrors,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { schemaUserUpdate, schemaUserAddress } from "@/utils/schemas";
 import { parse, format, isValid as isValidDate } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { ptBR } from "date-fns/locale/pt-BR";
+import { toZonedTime, formatInTimeZone } from 'date-fns-tz';
 
 const minimumAge = new Date();
 minimumAge.setFullYear(minimumAge.getFullYear() - 14);
 
 const convertDate = (dateString: string): string => {
+  console.log("Data que está sendo passada: " + dateString);
+  
   // Parse the date string using the format and locale
   const parsedDate = parse(
     dateString,
@@ -33,14 +41,17 @@ const convertDate = (dateString: string): string => {
     new Date(),
     { locale: ptBR }
   );
-
+  
+  // Convert the parsed date to the desired time zone
+  const zonedDate = toZonedTime(parsedDate, 'America/Sao_Paulo');
+  
   // Check if the parsed date is valid
-  if (!isValidDate(parsedDate)) {
+  if (isNaN(zonedDate.getTime())) {
     throw new RangeError("Invalid time value");
   }
-
-  // Format the parsed date to the desired format
-  return format(parsedDate, "yyyy-MM-dd");
+  
+  // Format the parsed date to the desired format using formatInTimeZone
+  return formatInTimeZone(zonedDate, 'America/Sao_Paulo', "yyyy-MM-dd");
 };
 
 const states = [
@@ -74,6 +85,7 @@ const states = [
 ];
 
 type Address = z.infer<typeof schemaUserAddress> & {
+  id: string;
   cep: string;
   street: string;
   number: string;
@@ -112,7 +124,8 @@ type UserDetails = {
 type UserUpdate = z.infer<typeof schemaUserUpdate>;
 
 const UserProfile = () => {
-  var userId = "";
+  const [userId, setUserId] = useState<string>("");
+  const [addressId, setAddressId] = useState<string>("");
   const { get } = useCookies();
   const token = get("balada-user-token") || "";
   const [user, setUser] = useState<UserUpdate | null>(null);
@@ -129,8 +142,6 @@ const UserProfile = () => {
     handleSubmit,
     register,
     formState: { errors, isValid },
-    setValue,
-    getValues
   } = methods;
 
   useEffect(() => {
@@ -145,12 +156,13 @@ const UserProfile = () => {
     }
 
     const decodedToken: { user_id: string } = jwtDecode(token);
-    userId = decodedToken.user_id;
+    setUserId(decodedToken.user_id);
 
     const fetchUser = async () => {
-      const userData = await getUserById(userId);
+      const userData = await getUserById(decodedToken.user_id);
       if (userData) {
         setUser(userData);
+        setAddressId(userData.address.id)
         setUserDetails(userData);
       }
     };
@@ -184,50 +196,50 @@ const UserProfile = () => {
   };
 
   const updateUser = async (user: UserUpdate) => {
-    console.log("Id do usuário:"+userId)
     try {
-        const response = await fetch(
-          `http://localhost:8080/v1/user/update/KSijaRywM6VqfBBYYPGHvsI7zdf1`,{
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
+      const response = await fetch(
+        `http://localhost:8080/v1/user/update/${userId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            firstName: user.firstName,
+            lastName: user.lastName,
+            phone: unMask(user.phone),
+            birthDate: formattedDate,
+            documentNumber: unMask(user.documentNumber),
+            gender: user.gender,
+            address: {
+              id: user.address.id,
+              cep: unMask(user.address.cep),
+              street: user.address.street,
+              number: user.address.number,
+              state: user.address.state,
+              city: user.address.city,
+              neighborhood: user.address.neighborhood,
+              complement: user.address.complement,
             },
-            body: JSON.stringify({
-              firstName: user.firstName,
-              lastName: user.lastName,
-              phone: unMask(user.phone),
-              birthDate: user.birthDate,
-              documentNumber: unMask(user.documentNumber),
-              gender: user.gender,
-              address: {
-                cep: unMask(user.address.cep),
-                street: user.address.street,
-                number: user.address.number,
-                state: user.address.state,
-                city: user.address.city,
-                neighborhood: user.address.neighborhood,
-                complement: user.address.complement,
-              },
-            }),
-          }
-        );
-
-        if (!response.ok) {
-          const errorJson = await response.json();
-          const errorMessage = errorJson.errors
-            ? errorJson.errors.join(", ")
-            : "Erro desconhecido";
-          toast.error(`Erro ao atualizar o usuário: ${errorMessage}`);
-          return false;
+          }),
         }
+      );
 
-        toast.success("Usuário atualizado com sucesso!");
-        return true;
-      
+      if (!response.ok) {
+        const errorJson = await response.json();
+        const errorMessage = errorJson.errors
+          ? errorJson.errors.join(", ")
+          : "Erro desconhecido";
+        toast.error(`Erro ao atualizar o usuário: ${errorMessage}`);
+        return false;
+      }
+
+      toast.success("Usuário atualizado com sucesso!");
+      return true;
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(`Erro ao atualizar o usuário: ${error.message}`);
-        console.log(userId)
+        console.log(userId);
       } else {
         console.log("Ocorreu um erro desconhecido");
       }
@@ -242,30 +254,38 @@ const UserProfile = () => {
     setIsEditing(!isEditing);
   };
 
-  const onSubmit = async (data: UserUpdate) => {
-    setValue('firstName', data.firstName)
-    setValue('lastName', data.lastName)
-    setValue('phone', data.phone)
-    setValue('birthDate', data.birthDate)
-    setValue('documentNumber', data.documentNumber)
-    setValue('gender', data.gender)
-    setValue('address', data.address)
-    console.log("Chamou o onSubmit!")
-    const success = await updateUser(data);
-    if (success) {
-      setUser(data);
-      setIsEditing(false);
-    }
-  };
+  // const onSubmit = async (data: UserUpdate) => {
+  //   console.log("Chamou o onSubmit!");
+  //   const success = await updateUser(data);
+  //   if (success) {
+  //     setUser(data);
+  //     setIsEditing(false);
+  //   }
+  // };
 
+  const onSubmit = async (data: UserUpdate) => {
+    console.log("Chamou o onSubmit!");
+    console.log(data);
+
+    // Converte a data de nascimento para o tipo Date
+    const formattedDate = new Date(convertDate(data.birthDate.toString()));
+
+    // Atualiza o usuário com a data de nascimento no formato correto
+    const success = await updateUser({ ...data, birthDate: formattedDate });
+
+    if (success) {
+        setUser({ ...data, birthDate: formattedDate });
+        setIsEditing(false);
+    }
+};
 
   const renderErrors = (errors: FieldErrors) => {
     return Object.keys(errors).map((field) => {
       const error = errors[field];
-      if (error && 'message' in error) {
+      if (error && "message" in error) {
         return <p key={field}>{(error as FieldError).message}</p>;
       }
-      if (error && typeof error === 'object') {
+      if (error && typeof error === "object") {
         return (
           <div key={field}>
             <strong>{field}:</strong> {renderErrors(error as FieldErrors)}
@@ -332,6 +352,54 @@ const UserProfile = () => {
                       <li className="flex items-center py-3">
                         <span className="font-semibold text-xs text-balada_green_675">
                           {" "}
+                          Nome:{" "}
+                        </span>
+                        <span className="ml-auto text-xs text-gray-100">
+                          {isEditing ? (
+                            <input
+                              type="text"
+                              {...register("firstName")}
+                              onChange={(e) => e.target.value}
+                              name="firstName"
+                              id="firstName"
+                              defaultValue={user.firstName}
+                              className="bg-gray-700 text-white p-1 rounded"
+                            />
+                          ) : (
+                            user.firstName
+                          )}
+                          {errors.firstName && (
+                            <p>{(errors.firstName as FieldError).message}</p>
+                          )}
+                        </span>
+                      </li>
+                      <li className="flex items-center py-3">
+                        <span className="font-semibold text-xs text-balada_green_675">
+                          {" "}
+                          Sobrenome:{" "}
+                        </span>
+                        <span className="ml-auto text-xs text-gray-100">
+                          {isEditing ? (
+                            <input
+                              type="text"
+                              {...register("lastName")}
+                              onChange={(e) => e.target.value}
+                              name="lastName"
+                              id="lastName"
+                              defaultValue={user.lastName}
+                              className="bg-gray-700 text-white p-1 rounded"
+                            />
+                          ) : (
+                            user.lastName
+                          )}
+                          {errors.lastName && (
+                            <p>{(errors.lastName as FieldError).message}</p>
+                          )}
+                        </span>
+                      </li>
+                      <li className="flex items-center py-3">
+                        <span className="font-semibold text-xs text-balada_green_675">
+                          {" "}
                           Gênero:{" "}
                         </span>
                         <span className="ml-auto text-xs text-gray-100">
@@ -375,7 +443,6 @@ const UserProfile = () => {
                             <input
                               type="date"
                               {...register("birthDate")}
-                              onChange={(e) => e.target.value}
                               name="birthDate"
                               id="birthDate"
                               defaultValue={formattedDate}
@@ -591,8 +658,7 @@ const UserProfile = () => {
                                 ) : (
                                   states.find(
                                     (state) =>
-                                      state.value ===
-                                    userDetails?.address.state
+                                      state.value === userDetails?.address.state
                                   )?.label
                                 )}
                                 {errors.address?.state && (
@@ -704,7 +770,6 @@ const UserProfile = () => {
                       {isEditing && (
                         <button
                           type="submit"
-                          onClick={() => onSubmit(user)}
                           className="bg-balada_green_675 text-white py-2 px-4 rounded"
                         >
                           Salvar
@@ -718,13 +783,29 @@ const UserProfile = () => {
                           Editar
                         </button>
                       )}
+                      <input
+                        type="text"
+                        hidden
+                        {...register("address.id")}
+                        name="address.id"
+                        id="address.id"
+                        defaultValue={addressId || ""}
+                        className="bg-gray-700 text-white p-1 rounded"
+                      />
                     </form>
                   </FormProvider>
                   <div className=" h-20 w-full bg-red-500">
-                        {errors?.firstName && <span className=' text-blue-400'>{errors.firstName.message}</span>}
-                        {errors?.lastName && <span className='text-blue-400'>{errors.lastName.message}</span>}
-                    </div>
-
+                    {errors?.firstName && (
+                      <span className=" text-blue-400">
+                        {errors.firstName.message}
+                      </span>
+                    )}
+                    {errors?.lastName && (
+                      <span className="text-blue-400">
+                        {errors.lastName.message}
+                      </span>
+                    )}
+                  </div>
                 </ul>
               </div>
             </div>
