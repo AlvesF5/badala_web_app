@@ -258,17 +258,20 @@ const UserProfile = () => {
   const onSubmit = async (data: UserUpdate) => {
     console.log("Chamou o onSubmit!");
     console.log(data);
-    console.log("Data passada no onSubmit: "+data.birthDate)
-  
+    console.log("Data passada no onSubmit: " + data.birthDate);
+
     // Atualiza o usuário com a data de nascimento no formato correto
     const success = await updateUser(data);
-  
+
     if (success) {
       const userData = await getUserById(userId);
+      if (userData) {
+        setUser(userData);
+        setUserDetails(userData); // Atualiza o estado userDetails com os novos dados
+      }
       setIsEditing(false);
     }
   };
-
 
   const renderErrors = (errors: FieldErrors) => {
     return Object.keys(errors).map((field) => {
