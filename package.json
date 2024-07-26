@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.3.3",
+    "@hookform/resolvers": "^3.9.0",
     "@material-tailwind/react": "^2.1.9",
     "cookies-next": "^4.1.0",
     "date-fns": "^3.6.0",
@@ -21,13 +21,13 @@
     "next-safe-action": "^6.0.2",
     "react": "^18",
     "react-dom": "^18",
-    "react-hook-form": "^7.49.2",
+    "react-hook-form": "^7.52.1",
     "react-hot-toast": "^2.4.1",
     "react-icons-kit": "^2.0.0",
     "react-modal": "^3.16.1",
     "remask": "^1.2.2",
     "sonner": "^1.4.41",
-    "zod": "^3.22.4"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20",

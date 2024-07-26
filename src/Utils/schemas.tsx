@@ -53,12 +53,9 @@ export const schemaUserUpdate = z.object({
   firstName: z.string().min(3, "Nome precisa ter pelo menos 3 caracteres"),
   lastName: z.string().min(5, "Sobrenome precisa ter pelo menos 5 caracteres"),
   phone: z.string().min(11, "Número precisa ter pelo menos 11 caracteres"),
-  birthDate: z
-    .string()
-    .transform((date) => new Date(date))
-    .refine((date) => date <= minimumAge, {
-      message: "Idade deve ser maior que 14",
-    }),
+  birthDate: z.string().refine((val) => !isNaN(Date.parse(val)), {
+    message: "Invalid date format",
+  }),
   documentNumber: z.string().min(1, "CPF não pode ser vazio"),
   gender: z.enum(["MA", "FE", "NB"], {
     errorMap: () => {

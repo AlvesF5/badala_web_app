@@ -26,10 +26,11 @@ import { z } from "zod";
 import { schemaUserUpdate, schemaUserAddress } from "@/utils/schemas";
 import { parse, format, isValid as isValidDate } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
-import { toZonedTime, formatInTimeZone } from 'date-fns-tz';
+import { toDate, formatInTimeZone } from 'date-fns-tz';
 
 const minimumAge = new Date();
 minimumAge.setFullYear(minimumAge.getFullYear() - 14);
+
 
 const convertDate = (dateString: string): string => {
   console.log("Data que está sendo passada: " + dateString);
@@ -41,15 +42,15 @@ const convertDate = (dateString: string): string => {
     new Date(),
     { locale: ptBR }
   );
-  
+
   // Convert the parsed date to the desired time zone
-  const zonedDate = toZonedTime(parsedDate, 'America/Sao_Paulo');
-  
+  const zonedDate = toDate(parsedDate, { timeZone: 'America/Sao_Paulo' });
+
   // Check if the parsed date is valid
   if (isNaN(zonedDate.getTime())) {
     throw new RangeError("Invalid time value");
   }
-  
+
   // Format the parsed date to the desired format using formatInTimeZone
   return formatInTimeZone(zonedDate, 'America/Sao_Paulo', "yyyy-MM-dd");
 };
@@ -208,7 +209,7 @@ const UserProfile = () => {
             firstName: user.firstName,
             lastName: user.lastName,
             phone: unMask(user.phone),
-            birthDate: formattedDate,
+            birthDate: user.birthDate,
             documentNumber: unMask(user.documentNumber),
             gender: user.gender,
             address: {
@@ -254,30 +255,20 @@ const UserProfile = () => {
     setIsEditing(!isEditing);
   };
 
-  // const onSubmit = async (data: UserUpdate) => {
-  //   console.log("Chamou o onSubmit!");
-  //   const success = await updateUser(data);
-  //   if (success) {
-  //     setUser(data);
-  //     setIsEditing(false);
-  //   }
-  // };
-
   const onSubmit = async (data: UserUpdate) => {
     console.log("Chamou o onSubmit!");
     console.log(data);
-
-    // Converte a data de nascimento para o tipo Date
-    const formattedDate = new Date(convertDate(data.birthDate.toString()));
-
+    console.log("Data passada no onSubmit: "+data.birthDate)
+  
     // Atualiza o usuário com a data de nascimento no formato correto
-    const success = await updateUser({ ...data, birthDate: formattedDate });
-
+    const success = await updateUser(data);
+  
     if (success) {
-        setUser({ ...data, birthDate: formattedDate });
-        setIsEditing(false);
+      const userData = await getUserById(userId);
+      setIsEditing(false);
     }
-};
+  };
+
 
   const renderErrors = (errors: FieldErrors) => {
     return Object.keys(errors).map((field) => {
@@ -300,8 +291,6 @@ const UserProfile = () => {
     return <div>Carregando...</div>;
   }
 
-  const formattedDate =
-    user && user.birthDate ? convertDate(user.birthDate.toString()) : "";
 
   return (
     <main className="text-center h-screen flex justify-center items-center w-full mx-auto">
@@ -445,7 +434,7 @@ const UserProfile = () => {
                               {...register("birthDate")}
                               name="birthDate"
                               id="birthDate"
-                              defaultValue={formattedDate}
+                              defaultValue={convertDate(user.birthDate)}
                               className="bg-gray-700 text-white p-1 rounded"
                             />
                           ) : (
@@ -794,18 +783,6 @@ const UserProfile = () => {
                       />
                     </form>
                   </FormProvider>
-                  <div className=" h-20 w-full bg-red-500">
-                    {errors?.firstName && (
-                      <span className=" text-blue-400">
-                        {errors.firstName.message}
-                      </span>
-                    )}
-                    {errors?.lastName && (
-                      <span className="text-blue-400">
-                        {errors.lastName.message}
-                      </span>
-                    )}
-                  </div>
                 </ul>
               </div>
             </div>
