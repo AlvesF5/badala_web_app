@@ -19,7 +19,7 @@ import StepReview from "@/components/signup/StepReview";
 import {
   schemaUserLogin,
   schemaUserPersonalInfo,
-  schemaUserAddress,
+  schemaUserAddressCreate,
   schemaUserTerms,
 } from "@/utils/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,7 +42,7 @@ export default function SignUp() {
         : step === 1
         ? schemaUserPersonalInfo
         : step === 2
-        ? schemaUserAddress
+        ? schemaUserAddressCreate
         : schemaUserTerms
     ),
   });

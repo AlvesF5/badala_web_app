@@ -23,18 +23,26 @@ import {
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { schemaUserUpdate, schemaUserAddress } from "@/utils/schemas";
+import {
+  schemaUserUpdate,
+  schemaUserAddress,
+  schemaUserUpdatePassword,
+} from "@/utils/schemas";
 import { parse, format, isValid as isValidDate } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
-import { toDate, formatInTimeZone } from 'date-fns-tz';
+import { toDate, formatInTimeZone } from "date-fns-tz";
+import Modal, { useModal } from "@/components/modal/DefaultModal";
+import { Icon } from "react-icons-kit";
+import { eyeOff } from "react-icons-kit/feather/eyeOff";
+import { eye } from "react-icons-kit/feather/eye";
+import { handleToggle } from "../../utils/togglePasswordVisibility";
 
 const minimumAge = new Date();
 minimumAge.setFullYear(minimumAge.getFullYear() - 14);
 
-
 const convertDate = (dateString: string): string => {
   console.log("Data que está sendo passada: " + dateString);
-  
+
   // Parse the date string using the format and locale
   const parsedDate = parse(
     dateString,
@@ -44,7 +52,7 @@ const convertDate = (dateString: string): string => {
   );
 
   // Convert the parsed date to the desired time zone
-  const zonedDate = toDate(parsedDate, { timeZone: 'America/Sao_Paulo' });
+  const zonedDate = toDate(parsedDate, { timeZone: "America/Sao_Paulo" });
 
   // Check if the parsed date is valid
   if (isNaN(zonedDate.getTime())) {
@@ -52,7 +60,7 @@ const convertDate = (dateString: string): string => {
   }
 
   // Format the parsed date to the desired format using formatInTimeZone
-  return formatInTimeZone(zonedDate, 'America/Sao_Paulo', "yyyy-MM-dd");
+  return formatInTimeZone(zonedDate, "America/Sao_Paulo", "yyyy-MM-dd");
 };
 
 const states = [
@@ -124,6 +132,8 @@ type UserDetails = {
 
 type UserUpdate = z.infer<typeof schemaUserUpdate>;
 
+type UpdateUserPassword = z.infer<typeof schemaUserUpdatePassword>;
+
 const UserProfile = () => {
   const [userId, setUserId] = useState<string>("");
   const [addressId, setAddressId] = useState<string>("");
@@ -132,6 +142,9 @@ const UserProfile = () => {
   const [user, setUser] = useState<UserUpdate | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
+  const { isModalOpen, openModal, closeModal } = useModal();
+  const [type, setType] = useState("password");
+  const [icon, setIcon] = useState(eye);
 
   const methods = useForm<UserUpdate>({
     mode: "all",
@@ -142,8 +155,20 @@ const UserProfile = () => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isValid },
+    formState: { errors },
   } = methods;
+
+  const methodsUpdatePassword = useForm<UpdateUserPassword>({
+    mode: "all",
+    reValidateMode: "onChange",
+    resolver: zodResolver(schemaUserUpdatePassword),
+  });
+
+  const {
+    handleSubmit: handleSubmitUpdatePassword,
+    register: registerUpdatePassword,
+    formState: { errors: errorsUpdatePassword },
+  } = methodsUpdatePassword;
 
   useEffect(() => {
     if (!token || token.split(".").length !== 3) {
@@ -163,7 +188,7 @@ const UserProfile = () => {
       const userData = await getUserById(decodedToken.user_id);
       if (userData) {
         setUser(userData);
-        setAddressId(userData.address.id)
+        setAddressId(userData.address.id);
         setUserDetails(userData);
       }
     };
@@ -248,6 +273,33 @@ const UserProfile = () => {
     }
   };
 
+  const updateUserPassword = async (data: UserUpdatePassword) => {
+    try {
+      const response = await fetch("http://localhost:8080/v1/user/update-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (!response.ok) {
+        const errorJson = await response.json();
+        const errorMessage = errorJson.errors.join(", ");
+        toast.error(`Erro ao atualizar a senha: ${errorMessage}`);
+        return;
+      }
+  
+      toast.success("Senha atualizada com sucesso!");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(`Erro ao atualizar a senha: ${error.message}`);
+      } else {
+        console.log("Ocorreu um erro desconhecido");
+      }
+    }
+  };
+
   const handleEditClick = () => {
     if (isEditing) {
       setUserDetails(userDetails);
@@ -273,6 +325,10 @@ const UserProfile = () => {
     }
   };
 
+  const onSubmitUpdateUserPassword: SubmitHandler<UpdateUserPassword> = (data) => {
+    updateUserPassword(data);
+  };
+
   const renderErrors = (errors: FieldErrors) => {
     return Object.keys(errors).map((field) => {
       const error = errors[field];
@@ -294,7 +350,6 @@ const UserProfile = () => {
     return <div>Carregando...</div>;
   }
 
-
   return (
     <main className="text-center h-screen flex justify-center items-center w-full mx-auto">
       <div className="container mx-auto w-4/12 flex">
@@ -306,11 +361,120 @@ const UserProfile = () => {
               </h1>
               <h3 className=" text-gray-200 text-sm text-semibold leading-6">
                 {userDetails?.email}
-                <p className="text-sm text-balada_green_675 cursor-pointer">
+                <p
+                  className="text-sm text-balada_green_675 cursor-pointer"
+                  onClick={openModal}
+                >
                   {" "}
                   alterar senha{" "}
                 </p>
               </h3>
+              <Modal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                title={"Alteração de senha"}
+              >
+                <div className="p-2 md:p-5 space-y-2">
+                  <FormProvider {...methodsUpdatePassword}>
+                    <form onSubmit={handleSubmitUpdatePassword(onSubmitUpdateUserPassword)}>
+                      <div className="flex flex-col gap-1">
+                        <div className="relative z-0 w-full mb-5 group">
+                          <input
+                            {...registerUpdatePassword("email")}
+                            type="email"
+                            onChange={(e) => e.target.value}
+                            name="email"
+                            id="email"
+                            className="input_default_one_line peer"
+                          />
+                          <label
+                            htmlFor="email"
+                            className="label_input_default_one_line left-0"
+                          >
+                            Email
+                          </label>
+                        </div>
+                      </div>
+                      <div className="grid md:grid-cols-2 md:gap-6">
+                        <div>
+                          <div className="mb-4 relative z-0 w-full group flex flex-col">
+                            <input
+                              {...registerUpdatePassword("password")}
+                              type={type}
+                              name="password"
+                              id="password"
+                              onChange={(e) => e.target.value}
+                              className="input_default_one_line peer"
+                            />
+                            <label
+                              htmlFor="password"
+                              className="label_input_default_one_line"
+                            >
+                              Senha
+                            </label>
+                          </div>
+                        </div>
+
+                        <div className="mb-4 relative z-0 w-full group flex">
+                          <input
+                            type={type}
+                            {...registerUpdatePassword("newPassword")}
+                            name="newPassword"
+                            id="newPassword"
+                            onChange={(e) => e.target.value}
+                            autoComplete="current-password"
+                            className="input_default_one_line peer"
+                          />
+                          <label
+                            htmlFor="newPassword"
+                            className="label_input_default_one_line"
+                          >
+                            Nova Senha
+                          </label>
+                          <span
+                            className="flex justify-around items-center text-gray-400"
+                            onClick={() =>
+                              handleToggle(type, setType, setIcon, eye, eyeOff)
+                            }
+                          >
+                            <Icon
+                              className="absolute mr-5"
+                              icon={icon}
+                              size={20}
+                            />
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center md:p-4 border-gray-200 rounded-b dark:border-gray-600 w-full">
+                        <button
+                          type="submit"
+                          // aria-disabled={pending}
+                          className=" bg-balada_green_900 py-1 px-2 text-white rounded-md h-12 hover:bg-balada_violet_500 uppercase w-full"
+                        >
+                          Alterar senha
+                        </button>
+                      </div>
+                      <div className="div_container_form_errors">
+                        {errorsUpdatePassword?.email && (
+                          <span className="label_error_input_forms">
+                            {errorsUpdatePassword.email.message}
+                          </span>
+                        )}
+                        {errorsUpdatePassword?.password && (
+                          <span className="label_error_input_forms">
+                            {errorsUpdatePassword.password.message}
+                          </span>
+                        )}
+                        {errorsUpdatePassword?.newPassword && (
+                          <span className="label_error_input_forms">
+                            {errorsUpdatePassword.newPassword.message}
+                          </span>
+                        )}
+                      </div>
+                    </form>
+                  </FormProvider>
+                </div>
+              </Modal>
               <div className="bg-gray-800">
                 <ul className="text-gray-400 p-5 mt-6 divide-y rounded shadow-sm h-auto">
                   <li className="flex items-center py-3">

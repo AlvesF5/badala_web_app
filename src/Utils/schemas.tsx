@@ -20,6 +20,14 @@ export const schemaUserLogin = z
     message: "Repetição de senha diferente de senha!",
   });
 
+export const schemaUserUpdatePassword = z.object({
+  email: z.string().email("Insira um e-mail com formato válido!"),
+  password: z.string().min(8, "Senha precisa ter pelo menos 8 caracteres."),
+  newPassword: z
+    .string()
+    .min(8, "Nova senha precisa ter pelo menos 8 caracteres."),
+});
+
 export const schemaUserPersonalInfo = z.object({
   firstName: z.string().min(3, "Nome precisa ter pelo menos 3 caracteres"),
   lastName: z.string().min(5, "Sobrenome precisa ter pelo menos 5 caracteres"),
@@ -38,8 +46,18 @@ export const schemaUserPersonalInfo = z.object({
   }),
 });
 
-export const schemaUserAddress = z.object({
+export const schemaUserAddressUpdate = z.object({
   id: z.string().min(36, "ID do endereço é inválido!"),
+  cep: z.string().min(8, "CEP não pode ser vazio!"),
+  street: z.string().min(4, "Rua não pode ser vazio!"),
+  number: z.string().min(1, "Número não pode ser vazio!"),
+  state: z.string().min(2, "Estado não pode ser vazio!"),
+  city: z.string().min(3, "Cidade não pode ser vazio!"),
+  neighborhood: z.string().min(3, "Bairro não pode ser vazio!"),
+  complement: z.string(),
+});
+
+export const schemaUserAddressCreate = z.object({
   cep: z.string().min(8, "CEP não pode ser vazio!"),
   street: z.string().min(4, "Rua não pode ser vazio!"),
   number: z.string().min(1, "Número não pode ser vazio!"),
@@ -62,8 +80,8 @@ export const schemaUserUpdate = z.object({
       return { message: "Selecione uma opção válida para o gênero!" };
     },
   }),
-  address: schemaUserAddress
-})
+  address: schemaUserAddressUpdate,
+});
 
 export const schemaUserTerms = z
   .object({
@@ -74,8 +92,6 @@ export const schemaUserTerms = z
     message: "Para continuar é preciso aceitar os termos de uso!",
   });
 
-export const schemaResetPassword = z
-  .object({
-    email: z.string().email("Insira um e-mail com formato válido!"),
-  })
- 
+export const schemaResetPassword = z.object({
+  email: z.string().email("Insira um e-mail com formato válido!"),
+});
