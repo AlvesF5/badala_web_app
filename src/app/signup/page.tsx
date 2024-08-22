@@ -17,7 +17,7 @@ import { chevronRight } from "react-icons-kit/fa/chevronRight";
 import useMyForms from "@/hooks/useMyForms";
 import StepReview from "@/components/signup/StepReview";
 import {
-  schemaUserLogin,
+  schemaCreateUserLogin,
   schemaUserPersonalInfo,
   schemaUserAddressCreate,
   schemaUserTerms,
@@ -38,7 +38,7 @@ export default function SignUp() {
     reValidateMode: "onChange",
     resolver: zodResolver(
       step === 0
-        ? schemaUserLogin
+        ? schemaCreateUserLogin
         : step === 1
         ? schemaUserPersonalInfo
         : step === 2

@@ -15,6 +15,6 @@ export async function getCepAddress(cep: any) {
 
     } catch (e: any) {
         console.log(e)
-        return { message: 'Falha ao realizar login!' }
+        return { message: 'Falha ao recuperar endereço do CEP!' }
     }
 }

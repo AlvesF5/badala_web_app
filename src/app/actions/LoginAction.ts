@@ -31,6 +31,8 @@ export async function userLogin(prevState: any, formData: FormData) {
 
     const userResp = await resp.json();
 
+    console.log(userResp)
+
     setCookie('balada-user-token', userResp.user.token, { cookies });
     return redirect('/');
 

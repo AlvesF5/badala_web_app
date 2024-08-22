@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useCookies } from "next-client-cookies";
@@ -25,7 +26,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
   schemaUserUpdate,
-  schemaUserAddress,
+  schemaUserAddressUpdate,
   schemaUserUpdatePassword,
 } from "@/utils/schemas";
 import { parse, format, isValid as isValidDate } from "date-fns";
@@ -36,6 +37,7 @@ import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
 import { handleToggle } from "../../utils/togglePasswordVisibility";
+import { deleteCookie } from 'cookies-next';
 
 const minimumAge = new Date();
 minimumAge.setFullYear(minimumAge.getFullYear() - 14);
@@ -93,7 +95,7 @@ const states = [
   { value: "EX", label: "Estrangeiro" },
 ];
 
-type Address = z.infer<typeof schemaUserAddress> & {
+type Address = z.infer<typeof schemaUserAddressUpdate> & {
   id: string;
   cep: string;
   street: string;
@@ -182,6 +184,7 @@ const UserProfile = () => {
     }
 
     const decodedToken: { user_id: string } = jwtDecode(token);
+    console.log(decodedToken)
     setUserId(decodedToken.user_id);
 
     const fetchUser = async () => {
@@ -273,7 +276,7 @@ const UserProfile = () => {
     }
   };
 
-  const updateUserPassword = async (data: UserUpdatePassword) => {
+  const updateUserPassword = async (data: UpdateUserPassword) => {
     try {
       const response = await fetch("http://localhost:8080/v1/user/update-password", {
         method: "POST",
@@ -289,7 +292,7 @@ const UserProfile = () => {
         toast.error(`Erro ao atualizar a senha: ${errorMessage}`);
         return;
       }
-  
+      deleteCookie("balada-user-token");
       toast.success("Senha atualizada com sucesso!");
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -325,7 +328,7 @@ const UserProfile = () => {
     }
   };
 
-  const onSubmitUpdateUserPassword: SubmitHandler<UpdateUserPassword> = (data) => {
+  const onSubmitUpdateUserPassword = async (data: UpdateUserPassword) => {
     updateUserPassword(data);
   };
 
@@ -445,7 +448,7 @@ const UserProfile = () => {
                           </span>
                         </div>
                       </div>
-                      <div className="flex items-center md:p-4 border-gray-200 rounded-b dark:border-gray-600 w-full">
+                      <div className="flex items-center border-gray-200 rounded-b dark:border-gray-600 w-full">
                         <button
                           type="submit"
                           // aria-disabled={pending}

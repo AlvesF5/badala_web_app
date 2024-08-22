@@ -7,7 +7,7 @@ const minimumAge = new Date(
   currentDate.getDate()
 );
 
-export const schemaUserLogin = z
+export const schemaCreateUserLogin = z
   .object({
     email: z.string().email("Insira um e-mail com formato válido!"),
     password: z.string().min(8, "Senha precisa ter pelo menos 8 caracteres."),
@@ -94,4 +94,9 @@ export const schemaUserTerms = z
 
 export const schemaResetPassword = z.object({
   email: z.string().email("Insira um e-mail com formato válido!"),
+});
+
+export const loginUserSchema = z.object({
+  email: z.string().email({ message: 'Email inválido' }),
+  password: z.string().min(8, { message: 'A senha deve ter no mínimo 8 caracteres' }),
 });
