@@ -36,7 +36,7 @@ import Modal, { useModal } from "@/components/modal/DefaultModal";
 import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
-import { handleToggle } from "../../utils/togglePasswordVisibility";
+import { handleToggle } from "../../../utils/togglePasswordVisibility";
 import { deleteCookie } from 'cookies-next';
 
 const minimumAge = new Date();
@@ -173,15 +173,11 @@ const UserProfile = () => {
   } = methodsUpdatePassword;
 
   useEffect(() => {
-    if (!token || token.split(".").length !== 3) {
-      console.error("Token inválido ou malformado");
-      redirect("/login");
-      return;
-    }
-
-    if (token === "") {
-      redirect("/login");
-    }
+    // if (!token || token.split(".").length !== 3) {
+    //   console.error("Token inválido ou malformado");
+    //   redirect("/login");
+    //   return;
+    // }
 
     const decodedToken: { user_id: string } = jwtDecode(token);
     console.log(decodedToken)
