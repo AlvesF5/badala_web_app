@@ -15,7 +15,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { useCookies } from 'react-cookie';
+import { useCookies } from 'next-client-cookies';
+import { useAuth } from '@/utils/AuthClient';
 
 type LoginFormInputs = z.infer<typeof loginUserSchema>;
 
@@ -28,14 +29,12 @@ const LoginForm: React.FC = () => {
     resolver: zodResolver(loginUserSchema),
   });
 
-  
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(eye);
-  const [cookies, setCookie, removeCookie] = useCookies(['balada-user-token']);
+  const cookies = useCookies();
+  const { isAuthenticated } = useAuth();
 
-  const token = cookies['balada-user-token'];
-
-  if (token) {
+  if (isAuthenticated()) {
     redirect("/");
   }
 
@@ -62,7 +61,7 @@ const LoginForm: React.FC = () => {
 
       toast.success("Login realizado com sucesso!");
 
-      setCookie('balada-user-token', result.user.token, { maxAge: 60 * 60 * 24, path: '/' });
+      cookies.set('balada-user-token', result.user.token);
 
       console.log("Login result:", result);
 

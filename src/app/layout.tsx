@@ -4,7 +4,7 @@ import './globals.css'
 import './components.css'
 import { Toaster } from 'sonner';
 import { FaRegFaceFrown, FaRegFaceGrinWide } from "react-icons/fa6";
-
+import { CookiesProvider } from 'next-client-cookies/server';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -39,7 +39,7 @@ export default function RootLayout({
           }}
         />
         
-        {children}
+        <CookiesProvider>{children}</CookiesProvider>;
       </body>
     </html>
   )
