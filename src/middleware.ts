@@ -7,6 +7,7 @@ export default async function middleware(req: NextRequest) {
 
   if (!isAuthenticated()) {
     const absoluteURL = new URL("/login", req.nextUrl.origin);
+    console.log("Não está autenticado!");
     return NextResponse.redirect(absoluteURL.toString());
   }
 }

@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useCookies } from "next-client-cookies";
 import { toast } from "sonner";
-import { redirect } from "next/navigation";
-import brega from "../../images/sliderhome/brega.jpg";
-import safadao from "../../images/sliderhome/safadao.jpg";
+import {JwtPayload} from '@/utils/AuthServer'
+import brega from "../../../images/sliderhome/brega.jpg";
+import safadao from "../../../images/sliderhome/safadao.jpg";
 import DateFormatterWithHour from "@/components/utils/DateFormaterWithHour";
 import FullSizeImage from "@/components/utils/FullSizeImage";
 import DateFormatter from "@/components/utils/DateFormater";
@@ -173,13 +173,7 @@ const UserProfile = () => {
   } = methodsUpdatePassword;
 
   useEffect(() => {
-    // if (!token || token.split(".").length !== 3) {
-    //   console.error("Token inválido ou malformado");
-    //   redirect("/login");
-    //   return;
-    // }
-
-    const decodedToken: { user_id: string } = jwtDecode(token);
+    const decodedToken = jwtDecode<JwtPayload>(token);
     console.log(decodedToken)
     setUserId(decodedToken.user_id);
 
