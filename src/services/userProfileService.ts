@@ -110,3 +110,33 @@ export const updateUserPassword = async (data: UpdateUserPassword) => {
     }
   }
 };
+
+export const sendEmailVerification = async (idToken: string) => {
+    try {
+      const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          requestType: 'VERIFY_EMAIL',
+          idToken: idToken,
+        }),
+      });
+  
+      if (!response.ok) {
+        const errorJson = await response.json();
+        const errorMessage = errorJson.error.message;
+        toast.error(`Erro ao enviar e-mail de verificação: ${errorMessage}`);
+        return;
+      }
+  
+      toast.success('E-mail de verificação enviado com sucesso!');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(`Erro ao enviar e-mail de verificação: ${error.message}`);
+      } else {
+        console.log('Ocorreu um erro desconhecido');
+      }
+    }
+  };

@@ -3,13 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useCookies } from "next-client-cookies";
-import {JwtPayload} from '@/utils/AuthServer'
+import { JwtPayload } from "@/utils/AuthServer";
 import brega from "../../../images/sliderhome/brega.jpg";
 import safadao from "../../../images/sliderhome/safadao.jpg";
 import DateFormatterWithHour from "@/components/utils/DateFormaterWithHour";
 import FullSizeImage from "@/components/utils/FullSizeImage";
 import DateFormatter from "@/components/utils/DateFormater";
-import { mask, unMask } from "remask";
+import { mask } from "remask";
 import {
   selectGender,
   selectUserStatus,
@@ -19,24 +19,29 @@ import {
   FieldError,
   FormProvider,
   useForm,
-  FieldErrors,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  schemaUserUpdate,
-  schemaUserUpdatePassword,
-} from "@/utils/schemas";
+import { schemaUserUpdate, schemaUserUpdatePassword } from "@/utils/schemas";
 import Modal, { useModal } from "@/components/modal/DefaultModal";
 import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
 import { handleToggle } from "../../../utils/togglePasswordVisibility";
-import { useAuth } from '@/utils/AuthClient';
+import { useAuth } from "@/utils/AuthClient";
 import { useRouter } from "next/navigation";
-import { UserDetails, UserUpdate, UpdateUserPassword } from "@/components/utils/Types";
+import {
+  UserDetails,
+  UserUpdate,
+  UpdateUserPassword,
+} from "@/components/utils/Types";
 import { states, minimumAge } from "@/components/utils/Variables";
 import { convertDate } from "@/components/utils/Functions";
-import { getUserById, updateUser, updateUserPassword } from "@/services/userProfileService"
+import {
+  getUserById,
+  updateUser,
+  updateUserPassword,
+  sendEmailVerification
+} from "@/services/userProfileService";
 
 minimumAge.setFullYear(minimumAge.getFullYear() - 14);
 
@@ -109,7 +114,6 @@ const UserProfile = () => {
     }
   }, [token, isAuthenticated, router]);
 
-
   const handleEditClick = () => {
     if (isEditing) {
       setUserDetails(userDetails);
@@ -169,7 +173,11 @@ const UserProfile = () => {
               >
                 <div className="p-2 md:p-5 space-y-2">
                   <FormProvider {...methodsUpdatePassword}>
-                    <form onSubmit={handleSubmitUpdatePassword(onSubmitUpdateUserPassword)}>
+                    <form
+                      onSubmit={handleSubmitUpdatePassword(
+                        onSubmitUpdateUserPassword
+                      )}
+                    >
                       <div className="flex flex-col gap-1">
                         <div className="relative z-0 w-full mb-5 group">
                           <input
@@ -269,7 +277,7 @@ const UserProfile = () => {
                 </div>
               </Modal>
               <div className="bg-gray-800">
-                <ul className="text-gray-400 p-5 mt-6 divide-y rounded shadow-sm h-auto">
+                <ul className="text-gray-400 p-5 mt-6 h-auto">
                   <li className="flex items-center py-3">
                     <span className="font-semibold text-xs text-balada_green_675">
                       {" "}
@@ -284,6 +292,11 @@ const UserProfile = () => {
                         {selectUserStatus(userDetails?.active!!)}
                       </span>
                     </span>
+                  </li>
+                  <li className="flex mb-4 w-full justify-end cursor-pointer hover:text-balada_green_675">
+                    {!userDetails?.active && (
+                      <div className=" flex float-end text-xs" onClick={ () => sendEmailVerification(token)}>enviar link de ativação por e-mail</div>
+                    )}
                   </li>
                   <li className="flex items-center py-3">
                     <span className="font-semibold text-xs text-balada_green_675">
