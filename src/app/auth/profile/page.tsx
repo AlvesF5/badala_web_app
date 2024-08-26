@@ -40,6 +40,7 @@ import { handleToggle } from "../../../utils/togglePasswordVisibility";
 import { deleteCookie } from 'cookies-next';
 import { useAuth } from '@/utils/AuthClient';
 import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const minimumAge = new Date();
 minimumAge.setFullYear(minimumAge.getFullYear() - 14);
@@ -149,6 +150,7 @@ const UserProfile = () => {
   const { isModalOpen, openModal, closeModal } = useModal();
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(eye);
+  const router = useRouter();
 
   const methods = useForm<UserUpdate>({
     mode: "all",
@@ -185,7 +187,7 @@ const UserProfile = () => {
       const checkAuth = async () => {
         const authStatus = await isAuthenticated();
         if (!authStatus) {
-          redirect("/login");
+          router.push("/login");
         }
       };
       checkAuth();
@@ -202,9 +204,9 @@ const UserProfile = () => {
       fetchUser();
     } catch (error) {
       console.error("Invalid token:", error);
-      redirect("/login");
+      router.push("/login");
     }
-  }, [token, isAuthenticated]);
+  }, [token, isAuthenticated, router]);
 
   const getUserById = async (userId: string) => {
     try {
