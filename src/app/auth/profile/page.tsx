@@ -38,6 +38,8 @@ import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
 import { handleToggle } from "../../../utils/togglePasswordVisibility";
 import { deleteCookie } from 'cookies-next';
+import { useAuth } from '@/utils/AuthClient';
+import { redirect } from "next/navigation";
 
 const minimumAge = new Date();
 minimumAge.setFullYear(minimumAge.getFullYear() - 14);
@@ -172,22 +174,37 @@ const UserProfile = () => {
     formState: { errors: errorsUpdatePassword },
   } = methodsUpdatePassword;
 
+  const { isAuthenticated } = useAuth();
+
   useEffect(() => {
-    const decodedToken = jwtDecode<JwtPayload>(token);
-    console.log(decodedToken)
-    setUserId(decodedToken.user_id);
+    try {
+      const decodedToken = jwtDecode<JwtPayload>(token);
+      console.log(decodedToken);
+      setUserId(decodedToken.user_id);
 
-    const fetchUser = async () => {
-      const userData = await getUserById(decodedToken.user_id);
-      if (userData) {
-        setUser(userData);
-        setAddressId(userData.address.id);
-        setUserDetails(userData);
-      }
-    };
+      const checkAuth = async () => {
+        const authStatus = await isAuthenticated();
+        if (!authStatus) {
+          redirect("/login");
+        }
+      };
+      checkAuth();
 
-    fetchUser();
-  }, [token]);
+      const fetchUser = async () => {
+        const userData = await getUserById(decodedToken.user_id);
+        if (userData) {
+          setUser(userData);
+          setAddressId(userData.address.id);
+          setUserDetails(userData);
+        }
+      };
+
+      fetchUser();
+    } catch (error) {
+      console.error("Invalid token:", error);
+      redirect("/login");
+    }
+  }, [token, isAuthenticated]);
 
   const getUserById = async (userId: string) => {
     try {

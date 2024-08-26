@@ -1,13 +1,13 @@
 "use client";
 
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import logo from "../../images/logo.png";
 import Image from "next/image";
 import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { handleToggle } from "../../utils/togglePasswordVisibility";
 import { loginUserSchema } from "@/utils/schemas";
 import React from "react";
@@ -33,10 +33,17 @@ const LoginForm: React.FC = () => {
   const [icon, setIcon] = useState(eye);
   const cookies = useCookies();
   const { isAuthenticated } = useAuth();
+  const router = useRouter();
 
-  if (isAuthenticated()) {
-    redirect("/");
-  }
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authStatus = await isAuthenticated();
+      if (authStatus) {
+        router.push("/");
+      }
+    };
+    checkAuth();
+  }, [isAuthenticated, router]);
 
   const onSubmit = async (data: LoginFormInputs) => {
     try {
