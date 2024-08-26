@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useCookies } from "next-client-cookies";
-import { toast } from "sonner";
 import {JwtPayload} from '@/utils/AuthServer'
 import brega from "../../../images/sliderhome/brega.jpg";
 import safadao from "../../../images/sliderhome/safadao.jpg";
@@ -23,121 +22,23 @@ import {
   FieldErrors,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import {
   schemaUserUpdate,
-  schemaUserAddressUpdate,
   schemaUserUpdatePassword,
 } from "@/utils/schemas";
-import { parse, format, isValid as isValidDate } from "date-fns";
-import { ptBR } from "date-fns/locale/pt-BR";
-import { toDate, formatInTimeZone } from "date-fns-tz";
 import Modal, { useModal } from "@/components/modal/DefaultModal";
 import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
 import { handleToggle } from "../../../utils/togglePasswordVisibility";
-import { deleteCookie } from 'cookies-next';
 import { useAuth } from '@/utils/AuthClient';
-import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { UserDetails, UserUpdate, UpdateUserPassword } from "@/components/utils/Types";
+import { states, minimumAge } from "@/components/utils/Variables";
+import { convertDate } from "@/components/utils/Functions";
+import { getUserById, updateUser, updateUserPassword } from "@/services/userProfileService"
 
-const minimumAge = new Date();
 minimumAge.setFullYear(minimumAge.getFullYear() - 14);
-
-const convertDate = (dateString: string): string => {
-  console.log("Data que está sendo passada: " + dateString);
-
-  // Parse the date string using the format and locale
-  const parsedDate = parse(
-    dateString,
-    "d 'de' MMMM 'de' yyyy 'às' HH:mm:ss 'UTC'XXX",
-    new Date(),
-    { locale: ptBR }
-  );
-
-  // Convert the parsed date to the desired time zone
-  const zonedDate = toDate(parsedDate, { timeZone: "America/Sao_Paulo" });
-
-  // Check if the parsed date is valid
-  if (isNaN(zonedDate.getTime())) {
-    throw new RangeError("Invalid time value");
-  }
-
-  // Format the parsed date to the desired format using formatInTimeZone
-  return formatInTimeZone(zonedDate, "America/Sao_Paulo", "yyyy-MM-dd");
-};
-
-const states = [
-  { value: "AL", label: "Alagoas" },
-  { value: "AP", label: "Amapá" },
-  { value: "AM", label: "Amazonas" },
-  { value: "BA", label: "Bahia" },
-  { value: "CE", label: "Ceará" },
-  { value: "DF", label: "Distrito Federal" },
-  { value: "ES", label: "Espírito Santo" },
-  { value: "GO", label: "Goiás" },
-  { value: "MA", label: "Maranhão" },
-  { value: "MT", label: "Mato Grosso" },
-  { value: "MS", label: "Mato Grosso do Sul" },
-  { value: "MG", label: "Minas Gerais" },
-  { value: "PA", label: "Pará" },
-  { value: "PB", label: "Paraíba" },
-  { value: "PR", label: "Paraná" },
-  { value: "PE", label: "Pernambuco" },
-  { value: "PI", label: "Piauí" },
-  { value: "RJ", label: "Rio de Janeiro" },
-  { value: "RN", label: "Rio Grande do Norte" },
-  { value: "RS", label: "Rio Grande do Sul" },
-  { value: "RO", label: "Rondônia" },
-  { value: "RR", label: "Roraima" },
-  { value: "SC", label: "Santa Catarina" },
-  { value: "SP", label: "São Paulo" },
-  { value: "SE", label: "Sergipe" },
-  { value: "TO", label: "Tocantins" },
-  { value: "EX", label: "Estrangeiro" },
-];
-
-type Address = z.infer<typeof schemaUserAddressUpdate> & {
-  id: string;
-  cep: string;
-  street: string;
-  number: string;
-  state: string;
-  city: string;
-  neighborhood: string;
-  complement: string;
-};
-
-type User = z.infer<typeof schemaUserUpdate> & {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  birthDate: string;
-  documentNumber: string;
-  gender: string;
-  address: Address;
-};
-
-type UserDetails = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  birthDate: string;
-  documentNumber: string;
-  gender: string;
-  createdAt: string;
-  updatedAt: string;
-  active: boolean;
-  addressString: string;
-  address: Address;
-};
-
-type UserUpdate = z.infer<typeof schemaUserUpdate>;
-
-type UpdateUserPassword = z.infer<typeof schemaUserUpdatePassword>;
 
 const UserProfile = () => {
   const [userId, setUserId] = useState<string>("");
@@ -208,109 +109,6 @@ const UserProfile = () => {
     }
   }, [token, isAuthenticated, router]);
 
-  const getUserById = async (userId: string) => {
-    try {
-      const response = await fetch(`http://localhost:8080/v1/user/${userId}`, {
-        method: "GET",
-      });
-      if (!response.ok) {
-        const errorJson = await response.json();
-        const errorMessage = errorJson.errors
-          ? errorJson.errors.join(", ")
-          : "Erro desconhecido";
-        toast.error(`Erro ao obter o usuário: ${errorMessage}`);
-        return null;
-      }
-      const userData = await response.json();
-      return userData;
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        toast.error(`Erro ao obter o usuário: ${error.message}`);
-      } else {
-        console.log("Ocorreu um erro desconhecido");
-      }
-      return null;
-    }
-  };
-
-  const updateUser = async (user: UserUpdate) => {
-    try {
-      const response = await fetch(
-        `http://localhost:8080/v1/user/update/${userId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            firstName: user.firstName,
-            lastName: user.lastName,
-            phone: unMask(user.phone),
-            birthDate: user.birthDate,
-            documentNumber: unMask(user.documentNumber),
-            gender: user.gender,
-            address: {
-              id: user.address.id,
-              cep: unMask(user.address.cep),
-              street: user.address.street,
-              number: user.address.number,
-              state: user.address.state,
-              city: user.address.city,
-              neighborhood: user.address.neighborhood,
-              complement: user.address.complement,
-            },
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const errorJson = await response.json();
-        const errorMessage = errorJson.errors
-          ? errorJson.errors.join(", ")
-          : "Erro desconhecido";
-        toast.error(`Erro ao atualizar o usuário: ${errorMessage}`);
-        return false;
-      }
-
-      toast.success("Usuário atualizado com sucesso!");
-      return true;
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        toast.error(`Erro ao atualizar o usuário: ${error.message}`);
-        console.log(userId);
-      } else {
-        console.log("Ocorreu um erro desconhecido");
-      }
-      return false;
-    }
-  };
-
-  const updateUserPassword = async (data: UpdateUserPassword) => {
-    try {
-      const response = await fetch("http://localhost:8080/v1/user/update-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-  
-      if (!response.ok) {
-        const errorJson = await response.json();
-        const errorMessage = errorJson.errors.join(", ");
-        toast.error(`Erro ao atualizar a senha: ${errorMessage}`);
-        return;
-      }
-      deleteCookie("balada-user-token");
-      toast.success("Senha atualizada com sucesso!");
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        toast.error(`Erro ao atualizar a senha: ${error.message}`);
-      } else {
-        console.log("Ocorreu um erro desconhecido");
-      }
-    }
-  };
 
   const handleEditClick = () => {
     if (isEditing) {
@@ -325,7 +123,7 @@ const UserProfile = () => {
     console.log("Data passada no onSubmit: " + data.birthDate);
 
     // Atualiza o usuário com a data de nascimento no formato correto
-    const success = await updateUser(data);
+    const success = await updateUser(userId, data);
 
     if (success) {
       const userData = await getUserById(userId);
@@ -339,23 +137,6 @@ const UserProfile = () => {
 
   const onSubmitUpdateUserPassword = async (data: UpdateUserPassword) => {
     updateUserPassword(data);
-  };
-
-  const renderErrors = (errors: FieldErrors) => {
-    return Object.keys(errors).map((field) => {
-      const error = errors[field];
-      if (error && "message" in error) {
-        return <p key={field}>{(error as FieldError).message}</p>;
-      }
-      if (error && typeof error === "object") {
-        return (
-          <div key={field}>
-            <strong>{field}:</strong> {renderErrors(error as FieldErrors)}
-          </div>
-        );
-      }
-      return null;
-    });
   };
 
   if (!user) {
