@@ -113,7 +113,7 @@ export const updateUserPassword = async (data: UpdateUserPassword) => {
 
 export const sendEmailVerification = async (idToken: string) => {
     try {
-      const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}`, {
+      const response = await fetch(`http://localhost:8080/v1/user/sendAccountEmailVerification`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -15,11 +15,7 @@ import {
   selectUserStatus,
   selectUserGreeting,
 } from "@/utils/Functions";
-import {
-  FieldError,
-  FormProvider,
-  useForm,
-} from "react-hook-form";
+import { FieldError, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaUserUpdate, schemaUserUpdatePassword } from "@/utils/schemas";
 import Modal, { useModal } from "@/components/modal/DefaultModal";
@@ -40,7 +36,7 @@ import {
   getUserById,
   updateUser,
   updateUserPassword,
-  sendEmailVerification
+  sendEmailVerification,
 } from "@/services/userProfileService";
 
 minimumAge.setFullYear(minimumAge.getFullYear() - 14);
@@ -293,11 +289,16 @@ const UserProfile = () => {
                       </span>
                     </span>
                   </li>
-                  <li className="flex mb-4 w-full justify-end cursor-pointer hover:text-balada_green_675">
-                    {!userDetails?.active && (
-                      <div className=" flex float-end text-xs" onClick={ () => sendEmailVerification(token)}>enviar link de ativação por e-mail</div>
-                    )}
-                  </li>
+                  {!userDetails?.active && (
+                    <li className="flex mb-4 w-full justify-end cursor-pointer hover:text-balada_green_675">
+                      <div
+                        className=" flex float-end text-xs"
+                        onClick={() => sendEmailVerification(token)}
+                      >
+                        enviar link de ativação por e-mail
+                      </div>
+                    </li>
+                  )}
                   <li className="flex items-center py-3">
                     <span className="font-semibold text-xs text-balada_green_675">
                       {" "}
