@@ -37,6 +37,7 @@ import {
   updateUser,
   updateUserPassword,
   sendEmailVerification,
+  isEmailVerified
 } from "@/services/userProfileService";
 
 minimumAge.setFullYear(minimumAge.getFullYear() - 14);
@@ -53,6 +54,7 @@ const UserProfile = () => {
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(eye);
   const router = useRouter();
+  const [userActive, setUserActive] = useState<boolean | null>(null);
 
   const methods = useForm<UserUpdate>({
     mode: "all",
@@ -101,6 +103,8 @@ const UserProfile = () => {
           setAddressId(userData.address.id);
           setUserDetails(userData);
         }
+        const emailVerified = await isEmailVerified(token)
+        setUserActive(emailVerified);
       };
 
       fetchUser();
@@ -282,14 +286,14 @@ const UserProfile = () => {
                     <span className="ml-auto">
                       <span
                         className={`py-1 px-2 rounded text-white text-sm ${
-                          userDetails?.active ? "bg-green-500" : "bg-red-500"
+                          userActive ? "bg-green-500" : "bg-red-500"
                         }`}
                       >
-                        {selectUserStatus(userDetails?.active!!)}
+                        {selectUserStatus(userActive!!)}
                       </span>
                     </span>
                   </li>
-                  {!userDetails?.active && (
+                  {!userActive && (
                     <li className="flex mb-4 w-full justify-end cursor-pointer hover:text-balada_green_675">
                       <div
                         className=" flex float-end text-xs"
@@ -741,7 +745,7 @@ const UserProfile = () => {
                       {!isEditing && (
                         <button
                           onClick={handleEditClick}
-                          className="bg-balada_green_675 text-white py-2 px-4 rounded"
+                          className="bg-balada_green_675 text-white py-2 px-4 rounded hover:bg-balada_violet_500"
                         >
                           Editar
                         </button>

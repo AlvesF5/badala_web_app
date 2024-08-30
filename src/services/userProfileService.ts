@@ -140,3 +140,46 @@ export const sendEmailVerification = async (idToken: string) => {
       }
     }
   };
+
+
+  interface FirebaseUserInfo {
+    email: string;
+    emailVerified: boolean;
+  }
+  
+  interface FirebaseUserResponse {
+    users: FirebaseUserInfo[];
+  }
+  
+  export const isEmailVerified = async (idToken: string): Promise<boolean> => {
+    try {
+      const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          idToken,
+        }),
+      });
+  
+      if (!response.ok) {
+        const errorJson = await response.json();
+        const errorMessage = errorJson.error.message;
+        toast.error(`Erro ao verificar e-mail: ${errorMessage}`);
+        return false;
+      }
+  
+      const data: FirebaseUserResponse = await response.json();
+      const user = data.users[0];
+  
+      return user.emailVerified;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(`Erro ao verificar e-mail: ${error.message}`);
+      } else {
+        console.log('Ocorreu um erro desconhecido');
+      }
+      return false;
+    }
+  };
