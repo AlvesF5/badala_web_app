@@ -264,7 +264,7 @@ export default function SignUp() {
           title={"Cadastro Realizado!"}
         >
           <div className="flex flex-col gap-4">
-            <div className="flex">
+            <div className="md:flex flex-wrap-reverse">
               <div className="p-2">
                 <p className=" text-sm text-gray-300 flex-wrap">
                   Cadastro realizado com sucesso! Um link de confirmação foi
@@ -272,7 +272,7 @@ export default function SignUp() {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-2 items-center justify-center w-full border-l p-4 border-gray-600">
+              <div className="flex flex-col gap-2 items-center justify-center w-full md:border-l md:p-4 md:border-gray-600">
                 <p className=" text-nowrap text-xs text-gray-400">
                   clique aqui, caso não tenha recebido
                 </p>

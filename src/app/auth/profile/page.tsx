@@ -148,7 +148,7 @@ const UserProfile = () => {
   }
 
   return (
-    <main className="text-center h-screen flex justify-center items-center w-full mx-auto">
+    <main className="text-center md:h-screen flex justify-center items-center w-full mx-auto">
       <div className="container mx-auto w-4/12 flex">
         <div className="md:flex no-wrap md:-mx-2 w-f mx-auto justify-center">
           <div className="w-full md:w-3/12 md:mx-2">
@@ -765,8 +765,8 @@ const UserProfile = () => {
               </div>
             </div>
           </div>
-          <div className="w-8/12">
-            <div className="py-14">
+          <div className="md:w-8/12 w-full px-4">
+            <div className="md:py-14">
               <div className="flex justify-start item-start space-y-2 flex-col">
                 <h1 className="text-2xl font-semibold leading-7 lg:leading-9 text-balada_green_675">
                   Meus eventos
@@ -778,14 +778,14 @@ const UserProfile = () => {
               <div className="mt-10 flex flex-col xl:flex-row jusitfy-center items-stretch w-full xl:space-x-8 space-y-4 md:space-y-6 xl:space-y-0">
                 <div className="flex flex-col justify-start items-start w-full">
                   <div className="flex flex-col justify-start items-start bg-gray-800 px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full">
-                    <p className="text-lg md:text-xl dark:text-white font-semibold leading-6 xl:leading-5 text-gray-800">
+                    <p className="text-lg md:text-xl dark:text-white font-semibold leading-6 xl:leading-5 text-gray-800 mb-6 md:mb-0">
                       Eventos confirmados
                     </p>
                     <div className="mt-4 md:mt-6 flex flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full">
-                      <div className=" w-64 h-32">
+                      <div className=" md:w-64 md:h-32 w-full h-48">
                         <FullSizeImage src={brega} alt="Descrição da imagem" />
                       </div>
-                      <div className="border-b border-gray-200 md:flex-row flex-col flex justify-between items-start w-full pb-8 space-y-4 md:space-y-0">
+                      <div className="border-b border-gray-200 md:flex-row flex-col flex justify-between items-start w-full pb-8 space-y-4 md:space-y-0 mt-4">
                         <div className="w-full flex flex-col justify-start items-start space-y-8">
                           <h3 className="text-xl dark:text-white xl:text-2xl font-semibold leading-6 text-gray-800">
                             Brega Light
@@ -825,7 +825,7 @@ const UserProfile = () => {
                       </div>
                     </div>
                     <div className="mt-6 md:mt-0 flex justify-start flex-col md:flex-row items-start md:items-center space-y-4 md:space-x-6 xl:space-x-8 w-full">
-                      <div className="w-64 h-32">
+                      <div className="md:w-64 md:h-32 w-full h-48">
                         <FullSizeImage
                           src={safadao}
                           alt="Descrição da imagem"
