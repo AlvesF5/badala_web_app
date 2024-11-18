@@ -3,13 +3,13 @@
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import { eventSchema } from "@/utils/schemas";
+import { eventDetailschema, eventSectorSchema, eventAddressSchema } from "@/utils/schemas";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { FiSend } from "react-icons/fi";
 import Steps from "@/components/signup/Steps"; // Componente de Steps
-import EventDetails from '@/components/events/create/steps/EventDetails'
-import AddressDetails from '@/components/events/create/steps/AddressDetails'
-import SectorDetails from '@/components/events/create/steps/SectorDetails'
+import EventDetails from '@/components/events/create/steps/EventDetails';
+import AddressDetails from '@/components/events/create/steps/AddressDetails';
+import SectorDetails from '@/components/events/create/steps/SectorDetails';
 
 const formTemplate = {
     eventDTO: {
@@ -44,7 +44,7 @@ const formTemplate = {
 };
 
 const EventRegistration = () => {
-    const [data, setData] = useState(formTemplate); // Mover o useState para dentro do componente
+    const [data, setData] = useState(formTemplate);
 
     const updateFielHandler = (key: any, value: any) => {
         setData((prev) => {
@@ -52,10 +52,17 @@ const EventRegistration = () => {
         });
     };
 
+    const steps = ["Info. Básicas", "Setores", "Endereço"];
+    const [step, setStep] = useState(1);
+
     const methods = useForm({
         mode: "all",
         reValidateMode: "onChange",
-        resolver: zodResolver(eventSchema),
+        resolver: zodResolver(step === 1
+            ? eventDetailschema
+            : step === 2
+            ? eventSectorSchema
+            : eventAddressSchema),
     });
 
     const {
@@ -64,11 +71,9 @@ const EventRegistration = () => {
         formState: { errors, isValid },
         setValue,
         getValues,
-        control
+        control,
+        trigger, // Importante para validar manualmente
     } = methods;
-
-    const steps = ["Info. Básicas", "Setores", "Endereço"];
-    const [step, setStep] = useState(1);
 
     const onSubmit = async (data: any) => {
         if (isValid) {
@@ -93,14 +98,20 @@ const EventRegistration = () => {
         }
     };
 
-    const nextStep = () => setStep((prev) => prev + 1);
+    const nextStep = async () => {
+        const isStepValid = await trigger(); // Valida o formulário da etapa atual
+        if (isStepValid) {
+            setStep((prev) => prev + 1);
+        }
+    };
+
     const prevStep = () => setStep((prev) => prev - 1);
 
     return (
         <div className="flex flex-col h-full items-center w-full mt-44 gap-8">
             <Steps currentStep={step} steps={steps} /> {/* Barra de progresso */}
             <FormProvider {...methods}>
-                <form onSubmit={methods.handleSubmit(onSubmit)} className="w-full flex justify-center flex-col items-center">
+                <form onSubmit={handleSubmit(onSubmit)} className="w-full flex justify-center flex-col items-center">
                     <div className="w-10/12 md:w-4/12">
                         {step === 1 && <EventDetails
                             key="event-details"
@@ -137,8 +148,8 @@ const EventRegistration = () => {
                         )}
                         {step < 3 ? (
                             <button
-                                type="button"
-                                onClick={nextStep}
+                                type="button" // Alterado para "button" para evitar submissão prematura
+                                onClick={nextStep} // Chama a função que valida antes de avançar
                                 className="py-3 px-3 bg-balada_green_900 flex items-center rounded-md uppercase text-sm"
                             >
                                 <span>Avançar</span>
