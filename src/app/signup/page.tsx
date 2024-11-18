@@ -7,7 +7,7 @@ import Steps from "@/components/signup/Steps";
 import logo from "../../images/logo.png";
 import Image from "next/image";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
-import { FiSend } from "react-icons/Fi";
+import { FiSend } from "react-icons/fi";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Icon } from "react-icons-kit";
@@ -29,6 +29,7 @@ import Modal, { useModal } from "@/components/modal/DefaultModal";
 import TimerButton from "@/components/utils/TimerButton";
 
 export default function SignUp() {
+  const steps = ["Login", "Info. Pessoais", "Endereço", "Revisão"];
   const [step, setStep] = useState(0);
 
   const { isModalOpen, openModal, closeModal } = useModal();
@@ -210,7 +211,7 @@ export default function SignUp() {
           <Image src={logo} width={240} alt="" className=" dark:filter-none" />
         </div>
 
-        <Steps currentStep={currentStep} />
+        <Steps currentStep={currentStep} steps={steps} />
 
         <FormProvider {...methods}>
           <form

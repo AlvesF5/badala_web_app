@@ -100,3 +100,35 @@ export const loginUserSchema = z.object({
   email: z.string().email({ message: 'Email inválido' }),
   password: z.string().min(8, { message: 'A senha deve ter no mínimo 8 caracteres' }),
 });
+
+export const eventSchema = z.object({
+  eventDTO: z.object({
+    name: z.string().min(5, 'Nome do evento é obrigatório'),
+    startDate: z.string().min(1, 'Data de início é obrigatória'),
+    endDate: z.string().min(1, 'Data de término é obrigatória'),
+    spaceName: z.string().min(1, 'Nome do espaço é obrigatório'),
+    category: z.string().min(1, 'Categoria é obrigatória'),
+    classification: z.string().min(1, 'Classificação é obrigatória'),
+    description: z.string().min(10, 'Descrição é obrigatória')
+  }),
+  sectorDTO: z.object({
+    sectors: z.array(
+      z.object({
+        name: z.string().min(1, 'Nome do setor é obrigatório'),
+        capacity: z.number().min(1, 'Capacidade é obrigatória'),
+        description: z.string().min(1, 'Descrição é obrigatória'),
+        salePrice: z.number().min(1, 'Preço de venda é obrigatório'),
+        sectorType: z.string().min(1, 'Tipo de setor é obrigatório'),
+      })
+    ),
+  }),
+  addressDTO: z.object({
+    cep: z.string().min(1, 'CEP é obrigatório'),
+    street: z.string().min(1, 'Rua é obrigatória'),
+    number: z.string().min(1, 'Número é obrigatório'),
+    state: z.string().min(1, 'Estado é obrigatório'),
+    city: z.string().min(1, 'Cidade é obrigatória'),
+    neighborhood: z.string().min(1, 'Bairro é obrigatório'),
+    complement: z.string().optional(),
+  }),
+});
