@@ -12,55 +12,37 @@ import AddressDetails from '@/components/events/create/steps/AddressDetails';
 import SectorDetails from '@/components/events/create/steps/SectorDetails';
 
 const formTemplate = {
-    eventDTO: {
-        name: "",
-        startDate: "",
-        endDate: "",
-        spaceName: "",
-        category: "",
-        classification: "",
-        description: "",
-    },
-    sectorDTO: {
-        sectors: [
-            {
-                name: "",
-                capacity: 0,
-                description: "",
-                salePrice: 0,
-                sectorType: "",
-            },
-        ],
-    },
-    addressDTO: {
-        cep: "",
-        street: "",
-        number: "",
-        state: "",
-        city: "",
-        neighborhood: "",
-        complement: "",
-    },
+    eventName: "",
+    startDate: "",
+    endDate: "",
+    spaceName: "",
+    category: "",
+    classification: "",
+    eventDescription: "",
+    sectors: [
+        {
+            sectorName: "",
+            capacity: 0,
+            sectorDescription: "",
+            salePrice: 0,
+            sectorType: "",
+        },
+    ],
+    cep: "",
+    street: "",
+    number: "",
+    state: "",
+    city: "",
+    neighborhood: "",
+    complement: "",
 };
 
 const EventRegistration = () => {
     const [data, setData] = useState(formTemplate);
 
-    const updateFielHandler = (path: string, value: any) => {
+    const updateFielHandler = (key: any, value: any) => {
         setData((prev) => {
-            const keys = path.split('.');
-            const lastKey = keys.pop();
-            let nested: any = { ...prev };
-
-            keys.forEach((key) => {
-                nested = nested[key] = { ...nested[key] };
-            });
-
-            if (lastKey) {
-                nested[lastKey] = value;
-            }
-
-            return { ...prev };
+            return { ...prev, [key]: value };
         });
     };
 

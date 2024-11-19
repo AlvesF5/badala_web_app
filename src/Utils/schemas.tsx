@@ -103,7 +103,7 @@ export const loginUserSchema = z.object({
 
 // Schema para os detalhes do evento
 export const eventDetailschema = z.object({
-  name: z.string().min(5, 'Nome do evento é obrigatório'),
+  eventName: z.string().min(5, 'Nome do evento é obrigatório'),
   startDate: z.string().min(1, 'Data de início é obrigatória'),
   endDate: z.string().min(1, 'Data de término é obrigatória'),
   spaceName: z.string().min(1, 'Nome do espaço é obrigatório'),
@@ -116,9 +116,9 @@ export const eventDetailschema = z.object({
 export const eventSectorSchema = z.object({
   sectors: z.array(
     z.object({
-      name: z.string().min(1, 'Nome do setor é obrigatório'),
+      sectorName: z.string().min(1, 'Nome do setor é obrigatório'),
       capacity: z.number().min(1, 'Capacidade é obrigatória'),
-      description: z.string().min(1, 'Descrição é obrigatória'),
+      sectorDescription: z.string().min(1, 'Descrição é obrigatória'),
       salePrice: z.number().min(1, 'Preço de venda é obrigatório'),
       sectorType: z.string().min(1, 'Tipo de setor é obrigatório'),
     })

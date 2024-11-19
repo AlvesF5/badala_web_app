@@ -4,21 +4,22 @@ export default function EventDetails({ data, updateFielHandler, register, errors
             <h2 className="text-xl font-semibold mb-4">Detalhes do Evento</h2>
             <div className="relative z-0 w-full mb-5 group">
                 <input
-                    {...register('name')}
-                    onChange={(e) => updateFielHandler("eventDTO.name", e.target.value)}
-                    value={data.eventDTO.name || ""} 
-                    name="name"
-                    id="name"
+                    {...register('eventName')}
+                    onChange={(e) => updateFielHandler("eventName", e.target.value)}
+                    value={data.eventName || ""} 
+                    name="eventName"
+                    id="eventName"
                     className="input_default_one_line peer"
                 />
-                <label htmlFor="name" className="label_input_default_one_line">Nome do Evento</label>
+                <label htmlFor="eventName" className="label_input_default_one_line">Nome do Evento</label>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="relative z-0 w-full mb-5 group">
                     <input
                         {...register('startDate')}
                         type="datetime-local"
-                        onChange={(e) => updateFielHandler("eventDTO.startDate", e.target.value)}
+                        onChange={(e) => updateFielHandler("startDate", e.target.value)}
+                        value={data.startDate || ""}
                         name="startDate"
                         id="startDate"
                         className="input_default_one_line peer"
@@ -29,8 +30,8 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                     <input
                         {...register('endDate')}
                         type="datetime-local"
-                 
-                        onChange={(e) => updateFielHandler("eventDTO.endDate", e.target.value)}
+                        onChange={(e) => updateFielHandler("endDate", e.target.value)}
+                        value={data.endDate || ""}
                         name="endDate"
                         id="endDate"
                         className="input_default_one_line peer"
@@ -43,8 +44,8 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                 <div className="relative z-0 w-full mb-5 group">
                     <input
                         {...register('spaceName')}
-                    
-                        onChange={(e) => updateFielHandler("eventDTO.spaceName", e.target.value)}
+                        onChange={(e) => updateFielHandler("spaceName", e.target.value)}
+                        value={data.spaceName || ""}
                         name="spaceName"
                         id="spaceName"
                         className="input_default_one_line peer"
@@ -54,8 +55,8 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                 <div className="relative z-0 w-full mb-5 group">
                     <select
                         {...register('category')}
-                     
-                        onChange={(e) => updateFielHandler("eventDTO.category", e.target.value)}
+                        onChange={(e) => updateFielHandler("category", e.target.value)}
+                        value={data.category || ""}
                         name="category"
                         id="category"
                         className="select_input_default_one_line peer"
@@ -71,8 +72,8 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                 <div className="relative z-0 w-full mb-5 group">
                     <select
                         {...register('classification')}
-                      
-                        onChange={(e) => updateFielHandler("eventDTO.classification", e.target.value)}
+                        onChange={(e) => updateFielHandler("classification", e.target.value)}
+                        value={data.classification || ""}
                         name="classification"
                         id="classification"
                         className="select_input_default_one_line peer">
@@ -90,8 +91,8 @@ export default function EventDetails({ data, updateFielHandler, register, errors
             <div className="relative z-0 w-full mb-5 mt-4 group">
                 <textarea
                     {...register('eventDescription')}
-               
-                    onChange={(e) => updateFielHandler("eventDTO.eventDescription", e.target.value)}
+                    onChange={(e) => updateFielHandler("eventDescription", e.target.value)}
+                    value={data.eventDescription || ""}
                     name="eventDescription"
                     id="eventDescription"
                     className="textarea_default min-h-32 peer"
@@ -102,13 +103,13 @@ export default function EventDetails({ data, updateFielHandler, register, errors
             </div>
 
             <div className="div_container_form_errors">
-                {errors?.name && <span className='label_error_input_forms'>{errors.name.message}</span>}
+                {errors?.eventName && <span className='label_error_input_forms'>{errors.eventName.message}</span>}
                 {errors?.startDate && <span className='label_error_input_forms'>{errors.startDate.message}</span>}
                 {errors?.endDate && <span className='label_error_input_forms'>{errors.endDate.message}</span>}
                 {errors?.spaceName && <span className='label_error_input_forms'>{errors.spaceName.message}</span>}
                 {errors?.category && <span className='label_error_input_forms'>{errors.category.message}</span>}
                 {errors?.classification && <span className='label_error_input_forms'>{errors.classification.message}</span>}
-                {errors?.description && <span className='label_error_input_forms'>{errors.description.message}</span>}
+                {errors?.eventDescription && <span className='label_error_input_forms'>{errors.eventDescription.message}</span>}
             </div>
         </div>
     );

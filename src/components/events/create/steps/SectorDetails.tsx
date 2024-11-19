@@ -10,9 +10,9 @@ export default function SectorDetails({ data, updateFielHandler, register, error
     // Função para adicionar um novo setor
     const addSector = () => {
         append({
-            name: "",
+            sectorName: "",
             capacity: 0,
-            description: "",
+            sectorDescription: "",
             salePrice: 0,
             sectorType: "",
         });
@@ -26,14 +26,14 @@ export default function SectorDetails({ data, updateFielHandler, register, error
                 <div key={field.id} className="mb-6">
                     <div className="relative z-0 w-full mb-8 group">
                         <input
-                            {...register(`sectors.${index}.name`)}
-              
-                            onChange={(e) => updateFielHandler("name", e.target.value)}
+                            {...register(`sectors.${index}.sectorName`)}
+                            onChange={(e) => updateFielHandler(`sectors.${index}.sectorName`, e.target.value)}
+                            value={data.sectors[index]?.sectorName || ""}
                             className="input_default_one_line peer"
-                            name={`sectors.${index}.name`}
-                            id={`sectors.${index}.name`}
+                            name={`sectors.${index}.sectorName`}
+                            id={`sectors.${index}.sectorName`}
                         />
-                        <label htmlFor={`sectors.${index}.name`} className="label_input_default_one_line">
+                        <label htmlFor={`sectors.${index}.sectorName`} className="label_input_default_one_line">
                             Nome do Setor
                         </label>
                     </div>
@@ -41,8 +41,8 @@ export default function SectorDetails({ data, updateFielHandler, register, error
                     <div className="relative z-0 w-full mb-5 group">
                         <textarea
                             {...register(`sectors.${index}.description`)}
-                       
-                            onChange={(e) => updateFielHandler("description", e.target.value)}
+                            onChange={(e) => updateFielHandler(`sectors.${index}.description`, e.target.value)}
+                            value={data.sectors[index]?.description || ""}
                             className="textarea_default peer min-h-32"
                             name={`sectors.${index}.description`}
                             id={`sectors.${index}.description`}
@@ -53,16 +53,16 @@ export default function SectorDetails({ data, updateFielHandler, register, error
                     </div>
 
                     <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-
                         <div className="relative z-0 w-full mb-5 group">
                             <input
                                 {...register(`sectors.${index}.capacity`, { valueAsNumber: true })}
                                 type="number"
                                 name={`sectors.${index}.capacity`}
                                 id={`sectors.${index}.capacity`}
+                                value={data.sectors[index]?.capacity || 0}
                                 className="input_default_one_line peer"
                             />
-                            <label htmlFor={`sectorDTO.sectors.${index}.capacity`} className="label_input_default_one_line">
+                            <label htmlFor={`sectors.${index}.capacity`} className="label_input_default_one_line">
                                 Capacidade
                             </label>
                         </div>
@@ -73,6 +73,7 @@ export default function SectorDetails({ data, updateFielHandler, register, error
                                 type="number"
                                 name={`sectors.${index}.salePrice`}
                                 id={`sectors.${index}.salePrice`}
+                                value={data.sectors[index]?.salePrice || 0}
                                 placeholder="Preço de Venda"
                                 className="input_default_one_line peer"
                             />
@@ -87,8 +88,9 @@ export default function SectorDetails({ data, updateFielHandler, register, error
                                 className="select_input_default_one_line peer"
                                 name={`sectors.${index}.sectorType`}
                                 id={`sectors.${index}.sectorType`}
+                                value={data.sectors[index]?.sectorType || "TRACK"}
                             >
-                                <option value="TRACK" selected>Pista</option>
+                                <option value="TRACK">Pista</option>
                                 <option value="CABIN">Camarote</option>
                                 <option value="TABLE">Mesa</option>
                                 <option value="LOUNGE">Lounge</option>
@@ -98,7 +100,6 @@ export default function SectorDetails({ data, updateFielHandler, register, error
                                 Tipo de Setor
                             </label>
                         </div>
-
                     </div>
 
                     {/* Botão para remover setor */}
@@ -120,10 +121,11 @@ export default function SectorDetails({ data, updateFielHandler, register, error
             >
                 Adicionar Setor
             </button>
+
             <div>
                 {errors?.sectors && errors.sectors.map((sectorError: any, index: number) => (
                     <div key={index} className="div_container_form_errors">
-                        {sectorError?.name && <span className='label_error_input_forms'>{sectorError.name.message}</span>}
+                        {sectorError?.sectorName && <span className='label_error_input_forms'>{sectorError.sectorName.message}</span>}
                         {sectorError?.description && <span className='label_error_input_forms'>{sectorError.description.message}</span>}
                         {sectorError?.capacity && <span className='label_error_input_forms'>{sectorError.capacity.message}</span>}
                         {sectorError?.salePrice && <span className='label_error_input_forms'>{sectorError.salePrice.message}</span>}
