@@ -20,7 +20,7 @@ export default function StepThree({ data, updateFielHandler, register, errors, s
                                     type="text"
                                     {...register("cep")}
                                     value={mask(data?.cep, ['99999-999']) || ""}
-                                    onChange={(e) => { checkCEP(e, setValue, getValues, updateFielHandler); updateFielHandler("cep", e.target.value) }}
+                                    onChange={(e) => { checkCEP(e, setValue, getValues); updateFielHandler("cep", e.target.value) }}
                                     name="cep"
                                     id="cep"
                                     className="input_default_one_line peer"

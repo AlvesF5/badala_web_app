@@ -1,25 +1,23 @@
-export default function EventDetails({ data, updateFielHandler, register, errors }: { data: any; updateFielHandler: any, register: any, errors: any }) {
+export default function EventDetails({ register, errors }: { register: any; errors: any }) {
     return (
         <div>
             <h2 className="text-xl font-semibold mb-4">Detalhes do Evento</h2>
+
             <div className="relative z-0 w-full mb-5 group">
                 <input
                     {...register('eventName')}
-                    onChange={(e) => updateFielHandler("eventName", e.target.value)}
-                    value={data.eventName || ""} 
                     name="eventName"
                     id="eventName"
                     className="input_default_one_line peer"
                 />
                 <label htmlFor="eventName" className="label_input_default_one_line">Nome do Evento</label>
             </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="relative z-0 w-full mb-5 group">
                     <input
                         {...register('startDate')}
                         type="datetime-local"
-                        onChange={(e) => updateFielHandler("startDate", e.target.value)}
-                        value={data.startDate || ""}
                         name="startDate"
                         id="startDate"
                         className="input_default_one_line peer"
@@ -30,8 +28,6 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                     <input
                         {...register('endDate')}
                         type="datetime-local"
-                        onChange={(e) => updateFielHandler("endDate", e.target.value)}
-                        value={data.endDate || ""}
                         name="endDate"
                         id="endDate"
                         className="input_default_one_line peer"
@@ -44,24 +40,21 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                 <div className="relative z-0 w-full mb-5 group">
                     <input
                         {...register('spaceName')}
-                        onChange={(e) => updateFielHandler("spaceName", e.target.value)}
-                        value={data.spaceName || ""}
                         name="spaceName"
                         id="spaceName"
                         className="input_default_one_line peer"
                     />
                     <label htmlFor="spaceName" className="label_input_default_one_line">Local do evento</label>
                 </div>
+
                 <div className="relative z-0 w-full mb-5 group">
                     <select
                         {...register('category')}
-                        onChange={(e) => updateFielHandler("category", e.target.value)}
-                        value={data.category || ""}
                         name="category"
                         id="category"
                         className="select_input_default_one_line peer"
                     >
-                        <option value="SHOWS" selected>Shows</option>
+                        <option value="SHOWS">Shows</option>
                         <option value="THEATER">Teatro</option>
                         <option value="TALK">Palestra</option>
                         <option value="STAND_UP">Stand-up</option>
@@ -69,15 +62,15 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                     </select>
                     <label htmlFor="category" className="label_input_default_one_line">Categoria</label>
                 </div>
+
                 <div className="relative z-0 w-full mb-5 group">
                     <select
                         {...register('classification')}
-                        onChange={(e) => updateFielHandler("classification", e.target.value)}
-                        value={data.classification || ""}
                         name="classification"
                         id="classification"
-                        className="select_input_default_one_line peer">
-                        <option value="CL" selected>Livre</option>
+                        className="select_input_default_one_line peer"
+                    >
+                        <option value="CL">Livre</option>
                         <option value="C10">10 Anos</option>
                         <option value="C12">12 Anos</option>
                         <option value="C14">14 Anos</option>
@@ -91,15 +84,11 @@ export default function EventDetails({ data, updateFielHandler, register, errors
             <div className="relative z-0 w-full mb-5 mt-4 group">
                 <textarea
                     {...register('eventDescription')}
-                    onChange={(e) => updateFielHandler("eventDescription", e.target.value)}
-                    value={data.eventDescription || ""}
                     name="eventDescription"
                     id="eventDescription"
                     className="textarea_default min-h-32 peer"
                 />
-                <label htmlFor="eventDescription" className="label_textarea">
-                    Descrição do Evento
-                </label>
+                <label htmlFor="eventDescription" className="label_textarea">Descrição do Evento</label>
             </div>
 
             <div className="div_container_form_errors">

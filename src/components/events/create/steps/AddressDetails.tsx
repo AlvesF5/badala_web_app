@@ -1,56 +1,46 @@
 import { checkCEP } from '@/components/utils/checkCep';
 import { mask } from "remask";
 
-export default function AddressDetails({ data, updateFielHandler, register, errors, setValue, getValues }: { data: any; updateFielHandler: any, register: any, errors: any, setValue: any, getValues: any }) {
+export default function AddressDetails({ register, errors, setValue, getValues }: { register: any, errors: any, setValue: any, getValues: any }) {
     return (
         <div className="grid grid-cols-6 md:gap-6 gap-2">
             <div className="relative z-0 w-full mb-5 group md:col-span-1 col-span-2">
                 <input
                     type="text"
                     {...register("cep")}
-                    value={mask(data?.cep || "", ['99999-999'])}
-                    onChange={(e) => { checkCEP(e, setValue, getValues, updateFielHandler); updateFielHandler("cep", e.target.value) }}
+                    onChange={(e) => { 
+                        checkCEP(e, setValue, getValues); 
+                        setValue("cep", mask(e.target.value, ['99999-999'])); 
+                    }}
                     name="cep"
                     id="cep"
                     className="input_default_one_line peer"
                 />
-                <label
-                    htmlFor="cep"
-                    className="label_input_default_one_line">CEP</label>
+                <label htmlFor="cep" className="label_input_default_one_line">CEP</label>
             </div>
             <div className="relative z-0 w-full mb-5 group col-span-4">
                 <input
                     type="text"
                     {...register("street")}
-                    value={data?.street || ""}
-                    onChange={(e) => updateFielHandler("street", e.target.value)}
                     name="street"
                     id="street"
                     className="input_default_one_line peer"
                 />
-                <label
-                    htmlFor="street"
-                    className="label_input_default_one_line">Rua/Logradouro</label>
+                <label htmlFor="street" className="label_input_default_one_line">Rua/Logradouro</label>
             </div>
             <div className="relative z-0 w-full mb-5 group col-span-1">
                 <input
                     type="text"
                     {...register("number")}
-                    value={data?.number || ""}
-                    onChange={(e) => updateFielHandler("number", e.target.value)}
                     name="number"
                     id="number"
                     className="input_default_one_line peer"
                 />
-                <label
-                    htmlFor="number"
-                    className="label_input_default_one_line">Número</label>
+                <label htmlFor="number" className="label_input_default_one_line">Número</label>
             </div>
             <div className="relative z-0 w-full mb-5 group col-span-1">
                 <select
                     {...register("state")}
-                    value={data?.state || ""}
-                    onChange={(e) => updateFielHandler("state", e.target.value)}
                     name="state"
                     id="state"
                     className="select_input_default_one_line peer"
@@ -84,51 +74,37 @@ export default function AddressDetails({ data, updateFielHandler, register, erro
                     <option value="TO">Tocantins</option>
                     <option value="EX">Estrangeiro</option>
                 </select>
-                <label
-                    htmlFor="state"
-                    className="label_input_default_one_line">Estado</label>
+                <label htmlFor="state" className="label_input_default_one_line">Estado</label>
             </div>
             <div className="relative z-0 w-full mb-5 group md:col-span-3 col-span-4">
                 <input
                     type="text"
                     {...register("city")}
-                    value={data?.city || ""}
-                    onChange={(e) => updateFielHandler("city", e.target.value)}
                     name="city"
                     id="city"
                     className="input_default_one_line peer"
                 />
-                <label
-                    htmlFor="city"
-                    className="label_input_default_one_line">Cidade</label>
+                <label htmlFor="city" className="label_input_default_one_line">Cidade</label>
             </div>
             <div className="relative z-0 w-full mb-5 group md:col-span-2 col-span-6">
                 <input
                     type="text"
                     {...register("neighborhood")}
-                    value={data?.neighborhood || ""}
-                    onChange={(e) => updateFielHandler("neighborhood", e.target.value)}
                     name="neighborhood"
                     id="neighborhood"
                     className="input_default_one_line peer"
                 />
-                <label
-                    htmlFor="neighborhood"
-                    className="label_input_default_one_line">Bairro</label>
+                <label htmlFor="neighborhood" className="label_input_default_one_line">Bairro</label>
             </div>
             <div className="relative z-0 w-full mb-5 group col-span-6">
                 <input
                     type="text"
                     {...register("complement")}
-                    value={data?.complement || ""}
-                    onChange={(e) => updateFielHandler("complement", e.target.value)}
                     name="complement"
                     id="complement"
                     className="input_default_one_line peer"
                 />
-                <label
-                    htmlFor="complement"
-                    className="label_input_default_one_line">Complemento</label>
+                <label htmlFor="complement" className="label_input_default_one_line">Complemento</label>
             </div>
 
             <div className="div_container_form_errors">

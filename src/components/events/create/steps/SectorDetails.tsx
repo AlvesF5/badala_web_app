@@ -1,6 +1,6 @@
 import { useFieldArray } from 'react-hook-form';
 
-export default function SectorDetails({ data, updateFielHandler, register, errors, control }: { data: any; updateFielHandler: any, register: any, errors: any, control: any }) {
+export default function SectorDetails({ register, errors, control }: { register: any, errors: any, control: any }) {
     // useFieldArray para gerenciar a lista de setores
     const { fields, append, remove } = useFieldArray({
         control,
@@ -20,8 +20,6 @@ export default function SectorDetails({ data, updateFielHandler, register, error
                     <div className="relative z-0 w-full mb-8 group">
                         <input
                             {...register(`sectors.${index}.sectorName`)}
-                            onChange={(e) => updateFielHandler(`sectors.${index}.sectorName`, e.target.value)}
-                            value={data.sectors[index]?.sectorName || ""}
                             className="input_default_one_line peer"
                             name={`sectors.${index}.sectorName`}
                             id={`sectors.${index}.sectorName`}
@@ -31,8 +29,6 @@ export default function SectorDetails({ data, updateFielHandler, register, error
                     <div className="relative z-0 w-full mb-5 group">
                         <textarea
                             {...register(`sectors.${index}.sectorDescription`)}
-                            onChange={(e) => updateFielHandler(`sectors.${index}.sectorDescription`, e.target.value)}
-                            value={data.sectors[index]?.sectorDescription || ""}
                             className="textarea_default peer min-h-32"
                             name={`sectors.${index}.sectorDescription`}
                             id={`sectors.${index}.sectorDescription`}
@@ -46,8 +42,6 @@ export default function SectorDetails({ data, updateFielHandler, register, error
                                 type="number"
                                 name={`sectors.${index}.capacity`}
                                 id={`sectors.${index}.capacity`}
-                                onChange={(e) => updateFielHandler(`sectors.${index}.capacity`, Number(e.target.value))}
-                                value={data.sectors[index]?.capacity || 0}
                                 className="input_default_one_line peer"
                             />
                             <label htmlFor={`sectors.${index}.capacity`} className="label_input_default_one_line">Capacidade</label>
@@ -58,8 +52,6 @@ export default function SectorDetails({ data, updateFielHandler, register, error
                                 type="number"
                                 name={`sectors.${index}.salePrice`}
                                 id={`sectors.${index}.salePrice`}
-                                onChange={(e) => updateFielHandler(`sectors.${index}.salePrice`, Number(e.target.value))}
-                                value={data.sectors[index]?.salePrice || 0}
                                 placeholder="Preço de Venda"
                                 className="input_default_one_line peer"
                             />
@@ -71,9 +63,8 @@ export default function SectorDetails({ data, updateFielHandler, register, error
                                 className="select_input_default_one_line peer"
                                 name={`sectors.${index}.sectorType`}
                                 id={`sectors.${index}.sectorType`}
-                                value={data.sectors[index]?.sectorType || "TRACK"}
                             >
-                                <option value="TRACK" selected>Pista</option>
+                                <option value="TRACK">Pista</option>
                                 <option value="CABIN">Camarote</option>
                                 <option value="TABLE">Mesa</option>
                                 <option value="LOUNGE">Lounge</option>

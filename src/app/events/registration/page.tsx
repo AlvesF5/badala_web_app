@@ -43,8 +43,14 @@ const EventRegistration = () => {
 
     const updateFielHandler = (key: string, value: any) => {
         setData((prevData) => {
-            const updatedData = { ...prevData };
-            set(updatedData, key, value); // Atualiza o campo aninhado
+            const updatedData: any = { ...prevData };
+            // Verifica se a chave é para um campo aninhado (como sectors)
+            if (key.startsWith("sectors")) {
+                const [_, index, field] = key.split(".");
+                updatedData.sectors[parseInt(index)][field] = value;
+            } else {
+                set(updatedData, key, value); // Atualiza o campo aninhado
+            }
             return updatedData;
         });
     };
@@ -60,6 +66,7 @@ const EventRegistration = () => {
             : step === 2
                 ? eventSectorSchema
                 : eventAddressSchema),
+        defaultValues: data, // Adiciona os valores iniciais do formulário
     });
 
     const {
@@ -79,9 +86,10 @@ const EventRegistration = () => {
             // Adiciona o banner (ou outro arquivo, se necessário)
             formData.append('bannerEvent', new Blob(['Banner Placeholder'], { type: 'text/plain' }));
 
-            console.log(data)
+            // Verifica se data.sectors é um array antes de usar map
+            const sectors = Array.isArray(data.sectors) ? data.sectors : [];
 
-            // Monta o objeto createEventDTO conforme o exemplo do curl
+            // Monta o objeto createEventDTO conforme o backend espera
             const createEventDTO = {
                 eventDTO: {
                     name: data.eventName,
@@ -93,10 +101,10 @@ const EventRegistration = () => {
                     eventDescription: data.eventDescription,
                 },
                 sectorDTO: {
-                    sectors: data.sectors.map((sector: any) => ({
-                        sectorName: sector.name,
+                    sectors: sectors.map((sector: any) => ({
+                        sectorName: sector.sectorName,
                         capacity: sector.capacity,
-                        sectorDescription: sector.description,
+                        sectorDescription: sector.sectorDescription,
                         salePrice: sector.salePrice,
                         sectorType: sector.sectorType,
                     })),
@@ -108,7 +116,7 @@ const EventRegistration = () => {
                     state: data.state,
                     city: data.city,
                     neighborhood: data.neighborhood,
-                    complement: data.complement,
+                    complement: data.complement || '',
                 },
             };
 
@@ -149,20 +157,15 @@ const EventRegistration = () => {
                     <div className="w-10/12 md:w-4/12">
                         {step === 1 && <EventDetails
                             key="event-details"
-                            data={data}
-                            updateFielHandler={updateFielHandler}
                             register={register}
                             errors={errors} />}
-                        {step === 2 && <SectorDetails key="event-details"
-                            data={data}
-                            updateFielHandler={updateFielHandler}
+                        {step === 2 && <SectorDetails
+                            key="event-details"
                             register={register}
                             errors={errors}
                             control={control} />}
                         {step === 3 && <AddressDetails
                             key="address-details"
-                            data={data}
-                            updateFielHandler={updateFielHandler}
                             register={register}
                             errors={errors}
                             setValue={setValue}
