@@ -46,9 +46,21 @@ const formTemplate = {
 const EventRegistration = () => {
     const [data, setData] = useState(formTemplate);
 
-    const updateFielHandler = (key: any, value: any) => {
+    const updateFielHandler = (path: string, value: any) => {
         setData((prev) => {
-            return { ...prev, [key]: value };
+            const keys = path.split('.');
+            const lastKey = keys.pop();
+            let nested: any = { ...prev };
+
+            keys.forEach((key) => {
+                nested = nested[key] = { ...nested[key] };
+            });
+
+            if (lastKey) {
+                nested[lastKey] = value;
+            }
+
+            return { ...prev };
         });
     };
 
@@ -61,8 +73,8 @@ const EventRegistration = () => {
         resolver: zodResolver(step === 1
             ? eventDetailschema
             : step === 2
-            ? eventSectorSchema
-            : eventAddressSchema),
+                ? eventSectorSchema
+                : eventAddressSchema),
     });
 
     const {
@@ -78,8 +90,44 @@ const EventRegistration = () => {
     const onSubmit = async (data: any) => {
         if (isValid) {
             const formData = new FormData();
+
+            // Adiciona o banner (ou outro arquivo, se necessário)
             formData.append('bannerEvent', new Blob(['Banner Placeholder'], { type: 'text/plain' }));
-            formData.append('createEventDTO', JSON.stringify(data));
+
+            console.log(data)
+
+            // Monta o objeto createEventDTO conforme o exemplo do curl
+            const createEventDTO = {
+                eventDTO: {
+                    name: data.eventDTO.name,
+                    startDate: data.eventDTO.startDate,
+                    endDate: data.eventDTO.endDate,
+                    spaceName: data.eventDTO.spaceName,
+                    category: data.eventDTO.category,
+                    classification: data.eventDTO.classification,
+                },
+                sectorDTO: {
+                    sectors: data.sectorDTO.sectors.map((sector: any) => ({
+                        name: sector.name,
+                        capacity: sector.capacity,
+                        description: sector.description,
+                        salePrice: sector.salePrice,
+                        sectorType: sector.sectorType,
+                    })),
+                },
+                addressDTO: {
+                    cep: data.addressDTO.cep,
+                    street: data.addressDTO.street,
+                    number: data.addressDTO.number,
+                    state: data.addressDTO.state,
+                    city: data.addressDTO.city,
+                    neighborhood: data.addressDTO.neighborhood,
+                    complement: data.addressDTO.complement,
+                },
+            };
+
+            // Adiciona o objeto createEventDTO como JSON stringificado
+            formData.append('createEventDTO', JSON.stringify(createEventDTO));
 
             try {
                 const response = await fetch('http://localhost:8080/v1/events/create', {

@@ -5,7 +5,8 @@ export default function EventDetails({ data, updateFielHandler, register, errors
             <div className="relative z-0 w-full mb-5 group">
                 <input
                     {...register('name')}
-                    onChange={(e) => updateFielHandler("name", e.target.value)}
+                    onChange={(e) => updateFielHandler("eventDTO.name", e.target.value)}
+                    value={data.eventDTO.name || ""} 
                     name="name"
                     id="name"
                     className="input_default_one_line peer"
@@ -17,7 +18,7 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                     <input
                         {...register('startDate')}
                         type="datetime-local"
-                        onChange={(e) => updateFielHandler("startDate", e.target.value)}
+                        onChange={(e) => updateFielHandler("eventDTO.startDate", e.target.value)}
                         name="startDate"
                         id="startDate"
                         className="input_default_one_line peer"
@@ -28,7 +29,8 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                     <input
                         {...register('endDate')}
                         type="datetime-local"
-                        onChange={(e) => updateFielHandler("endDate", e.target.value)}
+                 
+                        onChange={(e) => updateFielHandler("eventDTO.endDate", e.target.value)}
                         name="endDate"
                         id="endDate"
                         className="input_default_one_line peer"
@@ -41,7 +43,8 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                 <div className="relative z-0 w-full mb-5 group">
                     <input
                         {...register('spaceName')}
-                        onChange={(e) => updateFielHandler("spaceName", e.target.value)}
+                    
+                        onChange={(e) => updateFielHandler("eventDTO.spaceName", e.target.value)}
                         name="spaceName"
                         id="spaceName"
                         className="input_default_one_line peer"
@@ -51,7 +54,8 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                 <div className="relative z-0 w-full mb-5 group">
                     <select
                         {...register('category')}
-                        onChange={(e) => updateFielHandler("category", e.target.value)}
+                     
+                        onChange={(e) => updateFielHandler("eventDTO.category", e.target.value)}
                         name="category"
                         id="category"
                         className="select_input_default_one_line peer"
@@ -67,7 +71,8 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                 <div className="relative z-0 w-full mb-5 group">
                     <select
                         {...register('classification')}
-                        onChange={(e) => updateFielHandler("classification", e.target.value)}
+                      
+                        onChange={(e) => updateFielHandler("eventDTO.classification", e.target.value)}
                         name="classification"
                         id="classification"
                         className="select_input_default_one_line peer">
@@ -85,7 +90,8 @@ export default function EventDetails({ data, updateFielHandler, register, errors
             <div className="relative z-0 w-full mb-5 mt-4 group">
                 <textarea
                     {...register('eventDescription')}
-                    onChange={(e) => updateFielHandler("eventDescription", e.target.value)}
+               
+                    onChange={(e) => updateFielHandler("eventDTO.eventDescription", e.target.value)}
                     name="eventDescription"
                     id="eventDescription"
                     className="textarea_default min-h-32 peer"

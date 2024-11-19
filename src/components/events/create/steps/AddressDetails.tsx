@@ -7,49 +7,52 @@ export default function AddressDetails({ data, updateFielHandler, register, erro
             <div className="relative z-0 w-full mb-5 group md:col-span-1 col-span-2">
                 <input
                     type="text"
-                    {...register("addressDTO.cep")}
-                    value={mask(data?.cep, ['99999-999']) || ""}
+                    {...register("cep")}
+                    value={mask(data?.cep || "", ['99999-999'])}
                     onChange={(e) => { checkCEP(e, setValue, getValues, updateFielHandler); updateFielHandler("cep", e.target.value) }}
-                    name="addressDTO.cep"
-                    id="addressDTO.cep"
+                    name="cep"
+                    id="cep"
                     className="input_default_one_line peer"
                 />
                 <label
-                    htmlFor="addressDTO.cep"
+                    htmlFor="cep"
                     className="label_input_default_one_line">CEP</label>
             </div>
             <div className="relative z-0 w-full mb-5 group col-span-4">
                 <input
                     type="text"
-                    {...register("addressDTO.street")}
-                    value={data.street || ""}
-                    name="addressDTO.street"
-                    id="addressDTO.street"
+                    {...register("street")}
+                    value={data?.street || ""}
+                    onChange={(e) => updateFielHandler("street", e.target.value)}
+                    name="street"
+                    id="street"
                     className="input_default_one_line peer"
                 />
                 <label
-                    htmlFor="addressDTO.street"
+                    htmlFor="street"
                     className="label_input_default_one_line">Rua/Logradouro</label>
             </div>
             <div className="relative z-0 w-full mb-5 group col-span-1">
                 <input
                     type="text"
-                    {...register("addressDTO.number")}
-                    value={data.number || ""}
-                    name="addressDTO.number"
-                    id="addressDTO.number"
+                    {...register("number")}
+                    value={data?.number || ""}
+                    onChange={(e) => updateFielHandler("number", e.target.value)}
+                    name="number"
+                    id="number"
                     className="input_default_one_line peer"
                 />
                 <label
-                    htmlFor="addressDTO.number"
+                    htmlFor="number"
                     className="label_input_default_one_line">Número</label>
             </div>
             <div className="relative z-0 w-full mb-5 group col-span-1">
                 <select
-                    value={data.state || ""}
-                    {...register("addressDTO.state")}
-                    name="addressDTO.state"
-                    id="addressDTO.state"
+                    {...register("state")}
+                    value={data?.state || ""}
+                    onChange={(e) => updateFielHandler("state", e.target.value)}
+                    name="state"
+                    id="state"
                     className="select_input_default_one_line peer"
                 >
                     <option selected value="AC">Acre</option>
@@ -82,51 +85,61 @@ export default function AddressDetails({ data, updateFielHandler, register, erro
                     <option value="EX">Estrangeiro</option>
                 </select>
                 <label
-                    htmlFor="addressDTO.state"
+                    htmlFor="state"
                     className="label_input_default_one_line">Estado</label>
             </div>
             <div className="relative z-0 w-full mb-5 group md:col-span-3 col-span-4">
                 <input
                     type="text"
-                    {...register("addressDTO.city")}
-                    value={data.city || ""}
-                    name="addressDTO.city"
-                    id="addressDTO.city"
+                    {...register("city")}
+                    value={data?.city || ""}
+                    onChange={(e) => updateFielHandler("city", e.target.value)}
+                    name="city"
+                    id="city"
                     className="input_default_one_line peer"
                 />
                 <label
-                    htmlFor="addressDTO.city"
+                    htmlFor="city"
                     className="label_input_default_one_line">Cidade</label>
             </div>
             <div className="relative z-0 w-full mb-5 group md:col-span-2 col-span-6">
                 <input
                     type="text"
-                    {...register("addressDTO.neighborhood")}
-                    value={data.neighborhood || ""}
-                    name="addressDTO.neighborhood"
-                    id="addressDTO.neighborhood"
+                    {...register("neighborhood")}
+                    value={data?.neighborhood || ""}
+                    onChange={(e) => updateFielHandler("neighborhood", e.target.value)}
+                    name="neighborhood"
+                    id="neighborhood"
                     className="input_default_one_line peer"
                 />
                 <label
-                    htmlFor="addressDTO.neighborhood"
+                    htmlFor="neighborhood"
                     className="label_input_default_one_line">Bairro</label>
             </div>
             <div className="relative z-0 w-full mb-5 group col-span-6">
                 <input
                     type="text"
-                    {...register("addressDTO.complement")}
-                    value={data.complement || ""}
-                    name="addressDTO.complement"
-                    id="addressDTO.complement"
+                    {...register("complement")}
+                    value={data?.complement || ""}
+                    onChange={(e) => updateFielHandler("complement", e.target.value)}
+                    name="complement"
+                    id="complement"
                     className="input_default_one_line peer"
                 />
                 <label
-                    htmlFor="addressDTO.complement"
+                    htmlFor="complement"
                     className="label_input_default_one_line">Complemento</label>
             </div>
 
-
+            <div className="div_container_form_errors">
+                {errors?.cep && <span className='label_error_input_forms'>{errors.cep.message}</span>}
+                {errors?.street && <span className='label_error_input_forms'>{errors.street.message}</span>}
+                {errors?.number && <span className='label_error_input_forms'>{errors.number.message}</span>}
+                {errors?.state && <span className='label_error_input_forms'>{errors.state.message}</span>}
+                {errors?.city && <span className='label_error_input_forms'>{errors.city.message}</span>}
+                {errors?.neighborhood && <span className='label_error_input_forms'>{errors.neighborhood.message}</span>}
+                {errors?.complement && <span className='label_error_input_forms'>{errors.complement.message}</span>}
+            </div>
         </div>
-
     );
 }
