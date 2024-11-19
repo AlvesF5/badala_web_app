@@ -10,6 +10,7 @@ import Steps from "@/components/signup/Steps"; // Componente de Steps
 import EventDetails from '@/components/events/create/steps/EventDetails';
 import AddressDetails from '@/components/events/create/steps/AddressDetails';
 import SectorDetails from '@/components/events/create/steps/SectorDetails';
+import { set } from 'lodash';
 
 const formTemplate = {
     eventName: "",
@@ -40,9 +41,11 @@ const formTemplate = {
 const EventRegistration = () => {
     const [data, setData] = useState(formTemplate);
 
-    const updateFielHandler = (key: any, value: any) => {
-        setData((prev) => {
-            return { ...prev, [key]: value };
+    const updateFielHandler = (key: string, value: any) => {
+        setData((prevData) => {
+            const updatedData = { ...prevData };
+            set(updatedData, key, value); // Atualiza o campo aninhado
+            return updatedData;
         });
     };
 
@@ -81,30 +84,31 @@ const EventRegistration = () => {
             // Monta o objeto createEventDTO conforme o exemplo do curl
             const createEventDTO = {
                 eventDTO: {
-                    name: data.eventDTO.name,
-                    startDate: data.eventDTO.startDate,
-                    endDate: data.eventDTO.endDate,
-                    spaceName: data.eventDTO.spaceName,
-                    category: data.eventDTO.category,
-                    classification: data.eventDTO.classification,
+                    name: data.eventName,
+                    startDate: data.startDate,
+                    endDate: data.endDate,
+                    spaceName: data.spaceName,
+                    category: data.category,
+                    classification: data.classification,
+                    eventDescription: data.eventDescription,
                 },
                 sectorDTO: {
-                    sectors: data.sectorDTO.sectors.map((sector: any) => ({
-                        name: sector.name,
+                    sectors: data.sectors.map((sector: any) => ({
+                        sectorName: sector.name,
                         capacity: sector.capacity,
-                        description: sector.description,
+                        sectorDescription: sector.description,
                         salePrice: sector.salePrice,
                         sectorType: sector.sectorType,
                     })),
                 },
                 addressDTO: {
-                    cep: data.addressDTO.cep,
-                    street: data.addressDTO.street,
-                    number: data.addressDTO.number,
-                    state: data.addressDTO.state,
-                    city: data.addressDTO.city,
-                    neighborhood: data.addressDTO.neighborhood,
-                    complement: data.addressDTO.complement,
+                    cep: data.cep,
+                    street: data.street,
+                    number: data.number,
+                    state: data.state,
+                    city: data.city,
+                    neighborhood: data.neighborhood,
+                    complement: data.complement,
                 },
             };
 
