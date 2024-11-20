@@ -1,4 +1,4 @@
-export default function EventDetails({ register, errors }: { register: any; errors: any }) {
+export default function EventDetails({ data, updateFielHandler, register, errors }: { data: any, updateFielHandler: any, register: any; errors: any }) {
     return (
         <div>
             <h2 className="text-xl font-semibold mb-4">Detalhes do Evento</h2>
@@ -6,6 +6,9 @@ export default function EventDetails({ register, errors }: { register: any; erro
             <div className="relative z-0 w-full mb-5 group">
                 <input
                     {...register('eventName')}
+                    type="text"
+                    value={data.eventName || ""}
+                    onChange={(e) => updateFielHandler("eventName", e.target.value)}
                     name="eventName"
                     id="eventName"
                     className="input_default_one_line peer"
@@ -18,6 +21,8 @@ export default function EventDetails({ register, errors }: { register: any; erro
                     <input
                         {...register('startDate')}
                         type="datetime-local"
+                        value={data.startDate || ""}
+                        onChange={(e) => updateFielHandler("startDate", e.target.value)}
                         name="startDate"
                         id="startDate"
                         className="input_default_one_line peer"
@@ -28,6 +33,8 @@ export default function EventDetails({ register, errors }: { register: any; erro
                     <input
                         {...register('endDate')}
                         type="datetime-local"
+                        value={data.endDate || ""}
+                        onChange={(e) => updateFielHandler("endDate", e.target.value)}
                         name="endDate"
                         id="endDate"
                         className="input_default_one_line peer"
@@ -40,6 +47,9 @@ export default function EventDetails({ register, errors }: { register: any; erro
                 <div className="relative z-0 w-full mb-5 group">
                     <input
                         {...register('spaceName')}
+                        type="text"
+                        value={data.spaceName || ""}
+                        onChange={(e) => updateFielHandler("spaceName", e.target.value)}
                         name="spaceName"
                         id="spaceName"
                         className="input_default_one_line peer"
@@ -50,11 +60,13 @@ export default function EventDetails({ register, errors }: { register: any; erro
                 <div className="relative z-0 w-full mb-5 group">
                     <select
                         {...register('category')}
+                        value={data.category || ""}
+                        onChange={(e) => updateFielHandler("category", e.target.value)}
                         name="category"
                         id="category"
                         className="select_input_default_one_line peer"
                     >
-                        <option value="SHOWS">Shows</option>
+                        <option value="SHOWS">SHOWS</option>
                         <option value="THEATER">Teatro</option>
                         <option value="TALK">Palestra</option>
                         <option value="STAND_UP">Stand-up</option>
@@ -66,11 +78,13 @@ export default function EventDetails({ register, errors }: { register: any; erro
                 <div className="relative z-0 w-full mb-5 group">
                     <select
                         {...register('classification')}
+                        value={data.classification || ""}
+                        onChange={(e) => updateFielHandler("classification", e.target.value)}
                         name="classification"
                         id="classification"
                         className="select_input_default_one_line peer"
                     >
-                        <option value="CL">Livre</option>
+                        <option value="CL">CL</option>
                         <option value="C10">10 Anos</option>
                         <option value="C12">12 Anos</option>
                         <option value="C14">14 Anos</option>
@@ -84,6 +98,8 @@ export default function EventDetails({ register, errors }: { register: any; erro
             <div className="relative z-0 w-full mb-5 mt-4 group">
                 <textarea
                     {...register('eventDescription')}
+                    value={data.eventDescription || ""}
+                    onChange={(e) => updateFielHandler("eventDescription", e.target.value)}
                     name="eventDescription"
                     id="eventDescription"
                     className="textarea_default min-h-32 peer"
