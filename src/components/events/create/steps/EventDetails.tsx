@@ -1,4 +1,19 @@
-export default function EventDetails({ data, updateFielHandler, register, errors }: { data: any, updateFielHandler: any, register: any; errors: any }) {
+import { useState } from 'react';
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css'; // Importa o tema do Quill
+
+// Carrega o ReactQuill dinamicamente para evitar problemas de SSR
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+
+export default function EventDetails({ data, updateFielHandler, register, errors, setValue }: { data: any, updateFielHandler: any, register: any; errors: any, setValue: any }) {
+    const [description, setDescription] = useState<string>(data.eventDescription || "");
+
+    const handleDescriptionChange = (value: string) => {
+        setDescription(value);
+        setValue('eventDescription', value); // Atualiza o valor no react-hook-form
+        updateFielHandler("eventDescription",value)
+    };
+
     return (
         <div>
             <h2 className="text-xl font-semibold mb-4">Detalhes do Evento</h2>
@@ -65,7 +80,7 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                         name="category"
                         id="category"
                         className="select_input_default_one_line peer"
-                    >   
+                    >
                         <option value="" selected>Definir</option>
                         <option value="SHOWS">Shows</option>
                         <option value="THEATER">Teatro</option>
@@ -98,13 +113,10 @@ export default function EventDetails({ data, updateFielHandler, register, errors
             </div>
 
             <div className="relative z-0 w-full mb-5 mt-4 group">
-                <textarea
-                    {...register('eventDescription')}
-                    value={data.eventDescription || ""}
-                    onChange={(e) => updateFielHandler("eventDescription", e.target.value)}
-                    name="eventDescription"
-                    id="eventDescription"
-                    className="textarea_default min-h-32 peer"
+                <ReactQuill
+                    value={description}
+                    onChange={handleDescriptionChange}
+                    theme="snow"
                 />
                 <label htmlFor="eventDescription" className="label_textarea">Descrição do Evento</label>
             </div>

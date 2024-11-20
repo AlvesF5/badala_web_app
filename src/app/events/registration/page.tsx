@@ -78,6 +78,7 @@ const EventRegistration = () => {
             updateFielHandler={updateFieldHandler}
             register={register}
             errors={errors}
+            setValue={setValue}
         />,
         <SectorDetails
             key="sector-details"
