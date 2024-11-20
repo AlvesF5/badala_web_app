@@ -34,7 +34,6 @@ const EventRegistration = () => {
         register,
         formState: { errors, isValid },
         setValue,
-        getValues,
     } = methods;
 
     const formTemplate = {
@@ -86,14 +85,14 @@ const EventRegistration = () => {
             updateFieldHandler={updateFieldHandler}
             register={register}
             errors={errors}
-            control={methods.control}
         />,
         <AddressDetails
             key="address-details"
+            data={data}
+            updateFieldHandler={updateFieldHandler}
             register={register}
             errors={errors}
             setValue={setValue}
-            getValues={getValues}
         />,
     ];
 
@@ -105,15 +104,13 @@ const EventRegistration = () => {
     };
 
     const createEvent = async () => {
-        console.log(data)
+        console.log(data.sectors);
+        console.log(data.eventName);
         if (isValid) {
-            // Verifica se data.sectors é um array antes de usar map
-            const sectors = Array.isArray(data.sectors) ? data.sectors : [];
-
             // Monta o objeto createEventDTO conforme o backend espera
             const createEventDTO = {
                 eventDTO: {
-                    name: data.eventName,
+                    eventName: data.eventName,
                     startDate: data.startDate,
                     endDate: data.endDate,
                     spaceName: data.spaceName,
@@ -122,11 +119,11 @@ const EventRegistration = () => {
                     eventDescription: data.eventDescription,
                 },
                 sectorDTO: {
-                    sectors: sectors.map((sector: any) => ({
+                    sectors: data.sectors.map((sector: any) => ({
                         sectorName: sector.sectorName,
-                        capacity: sector.capacity,
+                        capacity: Number(sector.capacity), // Certifique-se de que 'capacity' seja um número
                         sectorDescription: sector.sectorDescription,
-                        salePrice: sector.salePrice,
+                        salePrice: Number(sector.salePrice), // Certifique-se de que 'salePrice' seja um número
                         sectorType: sector.sectorType,
                     })),
                 },
@@ -140,7 +137,7 @@ const EventRegistration = () => {
                     complement: data.complement || '',
                 },
             };
-
+    
             try {
                 const response = await fetch('http://localhost:8080/v1/events/create', {
                     method: 'POST',
@@ -149,13 +146,15 @@ const EventRegistration = () => {
                     },
                     body: JSON.stringify(createEventDTO),
                 });
-
+    
+                console.log(JSON.stringify(createEventDTO));
+    
                 if (!response.ok) {
                     const errorJson = await response.json();
                     const errorMessage = errorJson.errors.join(", ");
                     toast.error(`Erro ao criar evento: ${errorMessage}`);
                 }
-
+    
                 if (response.ok) {
                     toast.success("Evento criado com sucesso!");
                 }

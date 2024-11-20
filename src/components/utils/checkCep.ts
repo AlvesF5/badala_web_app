@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 
-export const checkCEP = async (e: any, setValue: any, getValues: any) => {
+export const checkCEP = async (e: any, setValue: any, updateFieldHandler: any) => {
     const cep: string = e.target.value.replace(/\D/g, '');
 
     if (cep.length === 8) {
@@ -14,6 +14,8 @@ export const checkCEP = async (e: any, setValue: any, getValues: any) => {
 
             const address = await response.json();
 
+            console.log(address)
+
             if (address.erro) {
                 toast.error('Por favor, verifique se o CEP digitado está correto e digite novamente!');
             } else {
@@ -24,6 +26,13 @@ export const checkCEP = async (e: any, setValue: any, getValues: any) => {
                 setValue('city', address.localidade, { shouldValidate: true });
                 setValue('neighborhood', address.bairro, { shouldValidate: true });
                 setValue('complement', address.complemento, { shouldValidate: true });
+
+                updateFieldHandler("cep", address.cep)
+                updateFieldHandler("street", address.logradouro)
+                updateFieldHandler("state", address.uf)
+                updateFieldHandler("city", address.localidade)
+                updateFieldHandler("neighborhood", address.bairro)
+                updateFieldHandler("complement", address.complemento)
             }
         } catch (error: unknown) {
             if (error instanceof Error) {

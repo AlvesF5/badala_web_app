@@ -1,17 +1,15 @@
 import { checkCEP } from '@/components/utils/checkCep';
 import { mask } from "remask";
 
-export default function AddressDetails({ register, errors, setValue, getValues }: { register: any, errors: any, setValue: any, getValues: any }) {
+export default function AddressDetails({ data, updateFieldHandler, register, errors, setValue }: { data: any, updateFieldHandler: any, register: any, errors: any, setValue: any}) {
     return (
         <div className="grid grid-cols-6 md:gap-6 gap-2">
             <div className="relative z-0 w-full mb-5 group md:col-span-1 col-span-2">
                 <input
                     type="text"
                     {...register("cep")}
-                    onChange={(e) => { 
-                        checkCEP(e, setValue, getValues); 
-                        setValue("cep", mask(e.target.value, ['99999-999'])); 
-                    }}
+                    value={mask(data?.cep, ['99999-999']) || ""}
+                    onChange={(e) => { checkCEP(e, setValue, updateFieldHandler); updateFieldHandler("cep", e.target.value) }}
                     name="cep"
                     id="cep"
                     className="input_default_one_line peer"
@@ -22,6 +20,7 @@ export default function AddressDetails({ register, errors, setValue, getValues }
                 <input
                     type="text"
                     {...register("street")}
+                    onChange={(e) => updateFieldHandler("street", e.target.value)}
                     name="street"
                     id="street"
                     className="input_default_one_line peer"
@@ -32,6 +31,7 @@ export default function AddressDetails({ register, errors, setValue, getValues }
                 <input
                     type="text"
                     {...register("number")}
+                    onChange={(e) => updateFieldHandler("number", e.target.value)}
                     name="number"
                     id="number"
                     className="input_default_one_line peer"
@@ -41,6 +41,7 @@ export default function AddressDetails({ register, errors, setValue, getValues }
             <div className="relative z-0 w-full mb-5 group col-span-1">
                 <select
                     {...register("state")}
+                    onChange={(e) => updateFieldHandler("state", e.target.value)}
                     name="state"
                     id="state"
                     className="select_input_default_one_line peer"
@@ -80,6 +81,7 @@ export default function AddressDetails({ register, errors, setValue, getValues }
                 <input
                     type="text"
                     {...register("city")}
+                    onChange={(e) => updateFieldHandler("city", e.target.value)}
                     name="city"
                     id="city"
                     className="input_default_one_line peer"
@@ -90,6 +92,8 @@ export default function AddressDetails({ register, errors, setValue, getValues }
                 <input
                     type="text"
                     {...register("neighborhood")}
+
+                    onChange={(e) => updateFieldHandler("neighborhood", e.target.value)}
                     name="neighborhood"
                     id="neighborhood"
                     className="input_default_one_line peer"
@@ -100,6 +104,8 @@ export default function AddressDetails({ register, errors, setValue, getValues }
                 <input
                     type="text"
                     {...register("complement")}
+                    value={data.complement || ""}
+                    onChange={(e) => updateFieldHandler("complement", e.target.value)}
                     name="complement"
                     id="complement"
                     className="input_default_one_line peer"

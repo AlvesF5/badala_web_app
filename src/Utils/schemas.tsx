@@ -107,8 +107,16 @@ export const eventDetailschema = z.object({
   startDate: z.string().min(1, 'Data de início é obrigatória'),
   endDate: z.string().min(1, 'Data de término é obrigatória'),
   spaceName: z.string().min(1, 'Nome do espaço é obrigatório'),
-  category: z.string().min(1, 'Categoria é obrigatória'),
-  classification: z.string().min(1, 'Classificação é obrigatória'),
+  category: z.enum(["SHOWS", "THEATER", "TALK", "STAND_UP", "KIDS"], {
+    errorMap: () => {
+      return { message: "Selecione uma opção válida para a categoria!" };
+    },
+  }),
+  classification: z.enum(["CL", "C10", "C12", "C14", "C16", "C18"], {
+    errorMap: () => {
+      return { message: "Selecione uma opção válida para a classificação!" };
+    },
+  }),
   eventDescription: z.string().min(1, 'Descrição é obrigatória'),
 });
 
@@ -120,7 +128,11 @@ export const eventSectorSchema = z.object({
       capacity: z.number().min(1, 'Capacidade é obrigatória'),
       sectorDescription: z.string().min(1, 'Descrição é obrigatória'),
       salePrice: z.number().min(1, 'Preço de venda é obrigatório'),
-      sectorType: z.string().min(1, 'Tipo de setor é obrigatório'),
+      sectorType: z.enum(["TRACK", "CABIN", "TABLE", "LOUNGE", "OTHER"], {
+        errorMap: () => {
+          return { message: "Selecione uma opção válida para a tipo!" };
+        },
+      }),
     })
   ),
 });

@@ -65,8 +65,9 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                         name="category"
                         id="category"
                         className="select_input_default_one_line peer"
-                    >
-                        <option value="SHOWS">SHOWS</option>
+                    >   
+                        <option value="" selected>Definir</option>
+                        <option value="SHOWS">Shows</option>
                         <option value="THEATER">Teatro</option>
                         <option value="TALK">Palestra</option>
                         <option value="STAND_UP">Stand-up</option>
@@ -84,7 +85,8 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                         id="classification"
                         className="select_input_default_one_line peer"
                     >
-                        <option value="CL">CL</option>
+                        <option value="" selected>Definir</option>
+                        <option value="CL">Livre</option>
                         <option value="C10">10 Anos</option>
                         <option value="C12">12 Anos</option>
                         <option value="C14">14 Anos</option>
