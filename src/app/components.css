@@ -425,3 +425,17 @@ p {
 .label_textarea{
   @apply peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-0 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-balada_green_675 peer-focus:dark:text-balada_green_675 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6
 }
+
+.ql-container {
+  min-height: 200px; /* Define a altura mínima */
+  max-height: 500px; /* Opcional: Define uma altura máxima */
+  overflow-y: auto; /* Adiciona rolagem vertical se necessário */
+}
+
+.custom-editor {
+  min-height: 200px; /* Define a altura mínima */
+  border: 1px solid #ccc; /* Adiciona uma borda */
+  padding: 10px; /* Adiciona espaçamento interno */
+  border-radius: 4px; /* Adiciona bordas arredondadas */
+  overflow-y: auto; /* Adiciona rolagem vertical, se necessário */
+}

@@ -27,6 +27,31 @@ const EventRegistration = () => {
                     ? eventSectorSchema
                     : eventAddressSchema
         ),
+        defaultValues: {
+            eventName: "",
+            startDate: "",
+            endDate: "",
+            spaceName: "",
+            category: "",
+            classification: "",
+            eventDescription: "",
+            sectors: [
+                {
+                    sectorName: "",
+                    capacity: 0,
+                    sectorDescription: "",
+                    salePrice: 0,
+                    sectorType: "",
+                },
+            ],
+            cep: "",
+            street: "",
+            number: "",
+            state: "",
+            city: "",
+            neighborhood: "",
+            complement: "",
+        },
     });
 
     const {
@@ -34,6 +59,7 @@ const EventRegistration = () => {
         register,
         formState: { errors, isValid },
         setValue,
+        control
     } = methods;
 
     const formTemplate = {
@@ -78,7 +104,7 @@ const EventRegistration = () => {
             updateFielHandler={updateFieldHandler}
             register={register}
             errors={errors}
-            setValue={setValue}
+            control={control}
         />,
         <SectorDetails
             key="sector-details"
@@ -138,7 +164,7 @@ const EventRegistration = () => {
                     complement: data.complement || '',
                 },
             };
-    
+
             try {
                 const response = await fetch('http://localhost:8080/v1/events/create', {
                     method: 'POST',
@@ -147,15 +173,15 @@ const EventRegistration = () => {
                     },
                     body: JSON.stringify(createEventDTO),
                 });
-    
+
                 console.log(JSON.stringify(createEventDTO));
-    
+
                 if (!response.ok) {
                     const errorJson = await response.json();
                     const errorMessage = errorJson.errors.join(", ");
                     toast.error(`Erro ao criar evento: ${errorMessage}`);
                 }
-    
+
                 if (response.ok) {
                     toast.success("Evento criado com sucesso!");
                 }
@@ -204,11 +230,10 @@ const EventRegistration = () => {
                             <button
                                 type="submit"
                                 onClick={createEvent}
-                                className={`py-1 px-4 flex items-center rounded-md uppercase text-sm ${
-                                    isValid
+                                className={`py-1 px-4 flex items-center rounded-md uppercase text-sm ${isValid
                                         ? "bg-balada_green_900 text-white"
                                         : "bg-red-500 text-white"
-                                }`}
+                                    }`}
                             >
                                 <span>Enviar</span>
                                 <FiSend />

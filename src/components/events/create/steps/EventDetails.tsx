@@ -1,19 +1,13 @@
-import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css'; // Importa o tema do Quill
+import { Controller } from 'react-hook-form';
+import TextEditor from '@/components/texteditor/TextEditor';
 
 // Carrega o ReactQuill dinamicamente para evitar problemas de SSR
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
-export default function EventDetails({ data, updateFielHandler, register, errors, setValue }: { data: any, updateFielHandler: any, register: any; errors: any, setValue: any }) {
-    const [description, setDescription] = useState<string>(data.eventDescription || "");
-
-    const handleDescriptionChange = (value: string) => {
-        setDescription(value);
-        setValue('eventDescription', value); // Atualiza o valor no react-hook-form
-        updateFielHandler("eventDescription",value)
-    };
-
+export default function EventDetails({ data, updateFielHandler, register, errors, control }: { data: any, updateFielHandler: any, register: any; errors: any, control: any }) {
+   
     return (
         <div>
             <h2 className="text-xl font-semibold mb-4">Detalhes do Evento</h2>
@@ -113,10 +107,19 @@ export default function EventDetails({ data, updateFielHandler, register, errors
             </div>
 
             <div className="relative z-0 w-full mb-5 mt-4 group">
-                <ReactQuill
-                    value={description}
-                    onChange={handleDescriptionChange}
-                    theme="snow"
+                <Controller
+                    name="eventDescription"
+                    control={control}
+                    rules={{
+                        required: 'A descrição do evento é obrigatória.', // Mensagem personalizada
+                    }}
+                    render={({ field }) => (
+                        <ReactQuill
+                            {...field}
+                            theme="snow"
+                            onChange={(value) => {field.onChange(value), updateFielHandler("eventDescription", value)}} // Atualiza o valor no react-hook-form
+                        />
+                    )}
                 />
                 <label htmlFor="eventDescription" className="label_textarea">Descrição do Evento</label>
             </div>
