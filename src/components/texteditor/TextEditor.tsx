@@ -1,28 +1,81 @@
-import React from "react";
-import { useForm, Controller } from "react-hook-form";
+import React, { useRef, useState } from "react";
 import { Icon } from "react-icons-kit";
-import { bold, italic, underline, list, listNumbered, eraser } from "react-icons-kit/fa";
-import { toast } from "sonner";
+import { list } from "react-icons-kit/fa/list";
+import { listOl } from "react-icons-kit/fa/listOl";
 
 type TextEditorProps = {
-  name: string;
-  control: any;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
-const TextEditor: React.FC<TextEditorProps> = ({ name, control }) => {
-  const handleCommand = (command: string) => {
-    document.execCommand(command, false, "");
-    toast.success(`Comando "${command}" aplicado!`);
+const TextEditor: React.FC<TextEditorProps> = ({ value, onChange }) => {
+  const textAreaRef = useRef<HTMLDivElement>(null);
+  const [isPlaceholderVisible, setIsPlaceholderVisible] = useState(true);
+
+  const handleCommand = (command: string, value?: string) => {
+    if (isPlaceholderVisible) {
+      setIsPlaceholderVisible(false);
+      if (textAreaRef.current) {
+        textAreaRef.current.innerHTML = ""; // Limpa o texto inicial
+      }
+    }
+    if (textAreaRef.current) {
+      textAreaRef.current.focus(); // Garante que o elemento está focado
+      document.execCommand(command, false, value || "");
+    }
   };
 
-  const handleFontSize = (size: string) => {
-    document.execCommand("fontSize", false, size);
-    toast.success(`Tamanho da fonte ajustado para ${size}`);
+  const handleFocus = () => {
+    if (isPlaceholderVisible) {
+      setIsPlaceholderVisible(false);
+      if (textAreaRef.current) {
+        textAreaRef.current.innerHTML = ""; // Limpa o texto inicial
+      }
+    }
   };
 
-  const handleClearFormatting = () => {
-    document.execCommand("removeFormat", false, "");
-    toast.success("Formatação limpa!");
+  const formatLists = () => {
+    if (textAreaRef.current) {
+      const editorContent = textAreaRef.current.innerHTML;
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(editorContent, "text/html");
+
+      // Formatar listas ordenadas
+      const orderedLists = doc.querySelectorAll("ol");
+      orderedLists.forEach((ol) => {
+        let index = 1;
+        ol.querySelectorAll("li").forEach((li) => {
+          li.textContent = `${index}. ${li.textContent?.trim()}`;
+          index++;
+        });
+      });
+
+      // Formatar listas não ordenadas
+      const unorderedLists = doc.querySelectorAll("ul");
+      unorderedLists.forEach((ul) => {
+        ul.querySelectorAll("li").forEach((li) => {
+          li.textContent = `# ${li.textContent?.trim()}`;
+        });
+      });
+
+      // Atualizar o conteúdo do editor
+      textAreaRef.current.innerHTML = doc.body.innerHTML;
+    }
+  };
+
+  const clearFormatting = () => {
+    if (textAreaRef.current) {
+      const content = textAreaRef.current.innerHTML;
+
+      // Remove todas as tags HTML, incluindo listas ordenadas e não ordenadas
+      const plainText = content
+        .replace(/<\/?[^>]+(>|$)/g, "") // Remove todas as tags HTML
+        .replace(/^\s*\d+\.\s+/gm, "") // Remove números de listas ordenadas
+        .replace(/^\s*#\s+/gm, ""); // Remove marcadores de listas não ordenadas
+
+      // Atualiza o editor com o texto sem formatação
+      textAreaRef.current.innerHTML = plainText;
+    }
   };
 
   return (
@@ -34,72 +87,64 @@ const TextEditor: React.FC<TextEditorProps> = ({ name, control }) => {
           onClick={() => handleCommand("bold")}
           className="p-2 border rounded hover:bg-gray-200"
         >
-          <Icon icon={bold} />
+          <b>B</b>
         </button>
         <button
           type="button"
           onClick={() => handleCommand("italic")}
           className="p-2 border rounded hover:bg-gray-200"
         >
-          <Icon icon={italic} />
+          <i>I</i>
         </button>
         <button
           type="button"
           onClick={() => handleCommand("underline")}
           className="p-2 border rounded hover:bg-gray-200"
         >
-          <Icon icon={underline} />
+          <u>U</u>
         </button>
         <button
           type="button"
-          onClick={() => handleCommand("insertOrderedList")}
+          onClick={() => {
+            handleCommand("insertOrderedList");
+            setTimeout(formatLists, 0); // Formatar após a execução do comando
+          }}
           className="p-2 border rounded hover:bg-gray-200"
         >
-          <Icon icon={listNumbered} />
+          <Icon icon={listOl} /> {/* Ícone para lista ordenada */}
         </button>
         <button
           type="button"
-          onClick={() => handleCommand("insertUnorderedList")}
+          onClick={() => {
+            handleCommand("insertUnorderedList");
+            setTimeout(formatLists, 0); // Formatar após a execução do comando
+          }}
           className="p-2 border rounded hover:bg-gray-200"
         >
-          <Icon icon={list} />
+          <Icon icon={list} /> {/* Ícone para lista não ordenada */}
         </button>
         <button
           type="button"
-          onClick={() => handleFontSize("3")}
+          onClick={clearFormatting}
           className="p-2 border rounded hover:bg-gray-200"
         >
-          A+
-        </button>
-        <button
-          type="button"
-          onClick={() => handleFontSize("1")}
-          className="p-2 border rounded hover:bg-gray-200"
-        >
-          A-
-        </button>
-        <button
-          type="button"
-          onClick={handleClearFormatting}
-          className="p-2 border rounded hover:bg-gray-200"
-        >
-          <Icon icon={eraser} />
+          Limpar formatação {/* Botão para limpar formatação */}
         </button>
       </div>
 
       {/* Área de Edição */}
-      <Controller
-        name={name}
-        control={control}
-        render={({ field }) => (
-          <div
-            contentEditable
-            className="border p-4 rounded min-h-[200px] focus:outline-none"
-            onInput={(e) => field.onChange((e.target as HTMLDivElement).innerHTML)}
-            dangerouslySetInnerHTML={{ __html: field.value || "" }}
-          />
-        )}
-      />
+      <div
+        ref={textAreaRef}
+        contentEditable
+        className="border p-4 rounded min-h-[200px] focus:outline-none peer"
+        style={{
+          whiteSpace: "pre-wrap",
+          color: isPlaceholderVisible ? "gray" : "black",
+        }}
+        onFocus={handleFocus}
+      >
+        {isPlaceholderVisible ? "Escreva algo aqui..." : ""}
+      </div>
     </div>
   );
 };
