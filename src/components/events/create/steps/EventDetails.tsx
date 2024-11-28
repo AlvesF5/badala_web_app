@@ -1,6 +1,12 @@
-import TextEditor from '@/components/texteditor/TextEditor'
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { Controller } from 'react-hook-form';
+import { useState } from "react";
+import { EditorState, convertToRaw } from 'draft-js';
 
 export default function EventDetails({ data, updateFielHandler, register, errors, control }: { data: any, updateFielHandler: any, register: any; errors: any, control: any }) {
+
+    const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
     return (
         <div>
@@ -101,10 +107,24 @@ export default function EventDetails({ data, updateFielHandler, register, errors
             </div>
 
             <div className="relative z-0 w-full mb-5 mt-4 group">
-                <TextEditor
-                    {...register("eventDescription")}
-                    value={data.eventDescription || ""}
-                    onChange={(e) => updateFielHandler("eventDescription", e.target.value)}
+                <Controller
+                    name="eventDescription"
+                    control={control}
+                    defaultValue="" // Inicializa como string vazia
+                    render={({ field }) => (
+                        <Editor
+                            editorState={editorState}
+                            onEditorStateChange={(state) => {
+                                setEditorState(state); // Atualiza o estado local
+                                const rawContent = convertToRaw(state.getCurrentContent()); // Converte o conteúdo para raw
+                                const contentAsString = JSON.stringify(rawContent); // Converte para string JSON
+                                field.onChange(contentAsString); // Atualiza o estado do formulário com a string
+                            }}
+                            wrapperClassName="border border-gray-300 rounded-md"
+                            editorClassName="p-4 min-h-[200px] text-gray-800"
+                            toolbarClassName="border-b border-gray-300 bg-gray-100"
+                        />
+                    )}
                 />
                 <label htmlFor="eventDescription" className="label_textarea">Descrição do Evento</label>
             </div>
