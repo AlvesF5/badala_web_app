@@ -130,16 +130,22 @@ const EventRegistration = () => {
         setStep(currentStep + 1);
     };
 
+    const convertToUTC = (dateString: string): string => {
+        const localDate = new Date(dateString);
+        const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+        return utcDate.toISOString();
+    };
+
     const createEvent = async () => {
-        console.log(data.sectors);
-        console.log(data.eventName);
+        console.log("startDate before conversion:", data.startDate);
+        console.log("endDate before conversion:", data.endDate);
         if (isValid) {
             // Monta o objeto createEventDTO conforme o backend espera
             const createEventDTO = {
                 eventDTO: {
                     eventName: data.eventName,
-                    startDate: data.startDate,
-                    endDate: data.endDate,
+                    startDate: convertToUTC(`${data.startDate}:00`),
+                    endDate: convertToUTC(`${data.endDate}:00`),
                     spaceName: data.spaceName,
                     category: data.category,
                     classification: data.classification,
@@ -231,8 +237,8 @@ const EventRegistration = () => {
                                 type="submit"
                                 onClick={createEvent}
                                 className={`py-1 px-4 flex items-center rounded-md uppercase text-sm ${isValid
-                                        ? "bg-balada_green_900 text-white"
-                                        : "bg-red-500 text-white"
+                                    ? "bg-balada_green_900 text-white"
+                                    : "bg-red-500 text-white"
                                     }`}
                             >
                                 <span>Enviar</span>
