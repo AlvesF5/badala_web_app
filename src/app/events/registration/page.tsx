@@ -130,12 +130,6 @@ const EventRegistration = () => {
         setStep(currentStep + 1);
     };
 
-    const convertToUTC = (dateString: string): string => {
-        const localDate = new Date(dateString);
-        const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
-        return utcDate.toISOString();
-    };
-
     const createEvent = async () => {
         console.log("startDate before conversion:", data.startDate);
         console.log("endDate before conversion:", data.endDate);
@@ -144,8 +138,8 @@ const EventRegistration = () => {
             const createEventDTO = {
                 eventDTO: {
                     eventName: data.eventName,
-                    startDate: convertToUTC(`${data.startDate}:00`),
-                    endDate: convertToUTC(`${data.endDate}:00`),
+                    startDate: new Date(`${data.startDate}:00`).toISOString(),
+                    endDate: new Date(`${data.endDate}:00`).toISOString(),
                     spaceName: data.spaceName,
                     category: data.category,
                     classification: data.classification,
