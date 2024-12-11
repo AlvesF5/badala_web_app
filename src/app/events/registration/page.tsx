@@ -116,6 +116,7 @@ const EventRegistration = () => {
             updateFieldHandler={updateFieldHandler}
             register={register}
             errors={errors}
+            control={control}
         />,
         <AddressDetails
             key="address-details"

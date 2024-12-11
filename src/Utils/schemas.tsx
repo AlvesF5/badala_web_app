@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { unMask } from "remask"
 
 const currentDate = new Date();
 const minimumAge = new Date(
@@ -127,7 +128,20 @@ export const eventSectorSchema = z.object({
       sectorName: z.string().min(1, 'Nome do setor é obrigatório'),
       capacity: z.number().min(1, 'Capacidade é obrigatória'),
       sectorDescription: z.string().min(1, 'Descrição é obrigatória'),
-      salePrice: z.number().min(1, 'Preço de venda é obrigatório'),
+      salePrice: z
+        .string()
+        .nonempty("O valor é obrigatório")
+        .refine((value) => /^\d{1,3}(\.\d{3})*,\d{2}$/.test(value), {
+          message: "Formato inválido. Use o formato R$ 1.234,56",
+        })
+        .transform((value) => {
+          // Remove "R$", pontos e substitui vírgula por ponto
+          const numericValue = value
+            .replace("R$ ", "")
+            .replace(/\./g, "")
+            .replace(",", ".");
+          return parseFloat(numericValue); // Converte para número
+        }),
       sectorType: z.enum(["TRACK", "CABIN", "TABLE", "LOUNGE", "OTHER"], {
         errorMap: () => {
           return { message: "Selecione uma opção válida para a tipo!" };

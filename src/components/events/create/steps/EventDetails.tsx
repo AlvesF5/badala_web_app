@@ -13,7 +13,7 @@ export default function EventDetails({ data, updateFielHandler, register, errors
         const dateWithSeconds = new Date(`${value}:00`);
         updateFielHandler(key, dateWithSeconds.toISOString()); // Converte para ISO 8601
     };
-  
+
     return (
         <div>
             <h2 className="text-xl font-semibold mb-4">Detalhes do Evento</h2>
@@ -123,8 +123,9 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                             onEditorStateChange={(state) => {
                                 setEditorState(state); // Atualiza o estado local
                                 const rawContent = convertToRaw(state.getCurrentContent()); // Converte o conteúdo para raw
-                                const contentAsString = JSON.stringify(rawContent); // Converte para string JSON
-                                field.onChange(contentAsString); // Atualiza o estado do formulário com a string
+                                const hasText = state.getCurrentContent().hasText(); // Verifica se há texto no editor
+                                const contentAsString = hasText ? JSON.stringify(rawContent) : ""; // Converte para string JSON ou vazio
+                                field.onChange(contentAsString); // Atualiza o estado do formulário com a string ou vazio
                             }}
                             wrapperClassName="border border-gray-300 rounded-md"
                             editorClassName="p-4 min-h-[200px] text-gray-800"
