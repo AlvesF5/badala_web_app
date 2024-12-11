@@ -14,7 +14,7 @@ import {
   selectGender,
   selectUserStatus,
   selectUserGreeting,
-} from "@/utils/Functions";
+} from "@/Utils/Functions";
 import { FieldError, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaUserUpdate, schemaUserUpdatePassword } from "@/utils/schemas";
@@ -23,7 +23,7 @@ import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
 import { handleToggle } from "../../../utils/togglePasswordVisibility";
-import { useAuth } from "@/utils/AuthClient";
+import { useAuth } from "@/Utils/AuthClient";
 import { useRouter } from "next/navigation";
 import {
   UserDetails,

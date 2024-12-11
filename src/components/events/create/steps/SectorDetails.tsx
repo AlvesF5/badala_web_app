@@ -64,7 +64,7 @@ export default function SectorDetails({ register, errors, data, updateFieldHandl
                                 id={`sectors.${index}.capacity`}
                                 className="input_default_one_line peer"
                             />
-                            <label htmlFor={`sectors.${index}.capacity`} className="label_input_default_one_line">Capacidade</label>
+                            <label htmlFor={`sectors.${index}.capacity`} className="label_input_default_one_line">Qtd. Ingressos</label>
                         </div>
 
                         <div className="relative z-0 w-full mb-5 group">

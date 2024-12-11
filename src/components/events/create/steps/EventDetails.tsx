@@ -8,6 +8,12 @@ export default function EventDetails({ data, updateFielHandler, register, errors
 
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
+    const handleDateChange = (key: string, value: string) => {
+        // Adiciona segundos ao valor do input e converte para um objeto Date
+        const dateWithSeconds = new Date(`${value}:00`);
+        updateFielHandler(key, dateWithSeconds.toISOString()); // Converte para ISO 8601
+    };
+  
     return (
         <div>
             <h2 className="text-xl font-semibold mb-4">Detalhes do Evento</h2>
@@ -30,8 +36,8 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                     <input
                         {...register('startDate')}
                         type="datetime-local"
-                        value={data.startDate || ""}
-                        onChange={(e) => updateFielHandler("startDate", e.target.value)}
+                        value={data.startDate ? new Date(data.startDate).toISOString().slice(0, 16) : ""}
+                        onChange={(e) => handleDateChange("startDate", e.target.value)}
                         name="startDate"
                         id="startDate"
                         className="input_default_one_line peer"
@@ -42,8 +48,8 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                     <input
                         {...register('endDate')}
                         type="datetime-local"
-                        value={data.endDate || ""}
-                        onChange={(e) => updateFielHandler("endDate", e.target.value)}
+                        value={data.endDate ? new Date(data.endDate).toISOString().slice(0, 16) : ""}
+                        onChange={(e) => handleDateChange("endDate", e.target.value)}
                         name="endDate"
                         id="endDate"
                         className="input_default_one_line peer"

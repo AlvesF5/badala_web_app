@@ -10,12 +10,16 @@ import Steps from "@/components/signup/Steps"; // Componente de Steps
 import EventDetails from '@/components/events/create/steps/EventDetails';
 import AddressDetails from '@/components/events/create/steps/AddressDetails';
 import SectorDetails from '@/components/events/create/steps/SectorDetails';
+import EventBanner from '@/components/events/create/steps/EventBanner';
 import useMyForms from "@/hooks/useMyForms";
 import { toast } from "sonner";
 
 const EventRegistration = () => {
     const steps = ["Info. Básicas", "Setores", "Endereço"];
     const [step, setStep] = useState(0);
+    const [bannerFile, setBannerFile] = useState<File | null>(null);
+    const [eventId, setEventId] = useState<string | null>(null); // Armazena o ID do evento criado
+    const [uploadFailed, setUploadFailed] = useState(false); // Indica se o upload do banner falhou
 
     const methods = useForm({
         mode: "all",
@@ -121,6 +125,7 @@ const EventRegistration = () => {
             errors={errors}
             setValue={setValue}
         />,
+        <EventBanner onBannerSelect={setBannerFile} />
     ];
 
     const { currentStep, currentComponent, changeStep, isLastStep, isFirstStep } = useMyForms(formComponents);
@@ -131,15 +136,12 @@ const EventRegistration = () => {
     };
 
     const createEvent = async () => {
-        console.log("startDate before conversion:", data.startDate);
-        console.log("endDate before conversion:", data.endDate);
         if (isValid) {
-            // Monta o objeto createEventDTO conforme o backend espera
             const createEventDTO = {
                 eventDTO: {
                     eventName: data.eventName,
-                    startDate: new Date(`${data.startDate}:00`).toISOString(),
-                    endDate: new Date(`${data.endDate}:00`).toISOString(),
+                    startDate: new Date(data.startDate).toISOString(),
+                    endDate: new Date(data.endDate).toISOString(),
                     spaceName: data.spaceName,
                     category: data.category,
                     classification: data.classification,
@@ -148,9 +150,9 @@ const EventRegistration = () => {
                 sectorDTO: {
                     sectors: data.sectors.map((sector: any) => ({
                         sectorName: sector.sectorName,
-                        capacity: Number(sector.capacity), // Certifique-se de que 'capacity' seja um número
+                        capacity: Number(sector.capacity),
                         sectorDescription: sector.sectorDescription,
-                        salePrice: Number(sector.salePrice), // Certifique-se de que 'salePrice' seja um número
+                        salePrice: Number(sector.salePrice),
                         sectorType: sector.sectorType,
                     })),
                 },
@@ -166,32 +168,74 @@ const EventRegistration = () => {
             };
 
             try {
+                // Chamada para criar o evento
                 const response = await fetch('http://localhost:8080/v1/events/create', {
                     method: 'POST',
                     headers: {
-                        "Content-Type": "application/json", // Informa o tipo de conteúdo que está sendo enviado
+                        "Content-Type": "application/json",
                     },
                     body: JSON.stringify(createEventDTO),
                 });
-
-                console.log(JSON.stringify(createEventDTO));
 
                 if (!response.ok) {
                     const errorJson = await response.json();
                     const errorMessage = errorJson.errors.join(", ");
                     toast.error(`Erro ao criar evento: ${errorMessage}`);
+                    return;
                 }
 
-                if (response.ok) {
-                    toast.success("Evento criado com sucesso!");
+                const responseData = await response.json();
+                const createdEventId = responseData.eventId; // Obtém o ID do evento criado
+                setEventId(createdEventId); // Armazena o ID do evento
+                setUploadFailed(false); // Reseta o estado de falha do upload
+
+                // Verifica se o arquivo do banner foi selecionado
+                if (bannerFile) {
+                    await uploadBanner(createdEventId);
+                } else {
+                    toast.warning("Nenhum banner foi selecionado para upload.");
                 }
+
+                // Exibe o toast de sucesso apenas se ambas as chamadas forem bem-sucedidas
+                toast.success("Evento criado com sucesso!");
             } catch (error: unknown) {
                 if (error instanceof Error) {
                     toast.error(`Erro ao criar evento: ${error.message}`);
                 } else {
-                    console.log("Ocorreu um erro desconhecido");
+                    console.error("Ocorreu um erro desconhecido");
                 }
             }
+        }
+    };
+
+    const uploadBanner = async (eventId: string) => {
+        if (!bannerFile) return;
+
+        const formData = new FormData();
+        formData.append('bannerEvent', bannerFile);
+
+        try {
+            const uploadResponse = await fetch(`http://localhost:8080/v1/events/create/${eventId}/upload-banner`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!uploadResponse.ok) {
+                const uploadError = await uploadResponse.json();
+                const uploadErrorMessage = uploadError.errors.join(", ");
+                toast.error(`Erro ao fazer upload do banner: ${uploadErrorMessage}`);
+                setUploadFailed(true); // Marca que o upload falhou
+                return;
+            }
+
+            setUploadFailed(false); // Reseta o estado de falha do upload
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                toast.error(`Erro ao fazer upload do banner: ${error.message}`);
+            } else {
+                console.error("Ocorreu um erro desconhecido");
+            }
+            setUploadFailed(true); // Marca que o upload falhou
         }
     };
 
@@ -227,17 +271,28 @@ const EventRegistration = () => {
                                 <GrFormNext />
                             </button>
                         ) : (
-                            <button
-                                type="submit"
-                                onClick={createEvent}
-                                className={`py-1 px-4 flex items-center rounded-md uppercase text-sm ${isValid
-                                    ? "bg-balada_green_900 text-white"
-                                    : "bg-red-500 text-white"
-                                    }`}
-                            >
-                                <span>Enviar</span>
-                                <FiSend />
-                            </button>
+                            <>
+                                <button
+                                    type="submit"
+                                    onClick={createEvent}
+                                    className={`py-1 px-4 flex items-center rounded-md uppercase text-sm ${isValid
+                                        ? "bg-balada_green_900 text-white"
+                                        : "bg-red-500 text-white"
+                                        }`}
+                                >
+                                    <span>Enviar</span>
+                                    <FiSend />
+                                </button>
+                                {uploadFailed && (
+                                    <button
+                                        type="button"
+                                        onClick={() => eventId && uploadBanner(eventId)}
+                                        className="py-1 px-4 bg-red-500 text-white flex items-center rounded-md uppercase text-sm"
+                                    >
+                                        Enviar banner novamente
+                                    </button>
+                                )}
+                            </>
                         )}
                     </div>
                 </form>
