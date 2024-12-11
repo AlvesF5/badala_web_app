@@ -228,6 +228,12 @@ const EventRegistration = () => {
                 return;
             }
 
+            // Reseta o estado de falha do upload
+            if (uploadFailed) {
+                // Exibe a mensagem de sucesso apenas se houve falha anteriormente
+                toast.success("Banner enviado com sucesso!");
+            }
+
             setUploadFailed(false); // Reseta o estado de falha do upload
         } catch (error: unknown) {
             if (error instanceof Error) {
