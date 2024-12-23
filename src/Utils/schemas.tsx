@@ -125,23 +125,10 @@ export const eventDetailschema = z.object({
 export const eventSectorSchema = z.object({
   sectors: z.array(
     z.object({
-      sectorName: z.string().min(1, 'Nome do setor é obrigatório'),
+      sectorName: z.string().min(1, 'Nome do setor é obrigatório!'),
       capacity: z.number().min(1, 'Capacidade é obrigatória'),
-      sectorDescription: z.string().min(1, 'Descrição é obrigatória'),
-      salePrice: z
-        .string()
-        .nonempty("O valor é obrigatório")
-        .refine((value) => /^\d{1,3}(\.\d{3})*,\d{2}$/.test(value), {
-          message: "Formato inválido. Use o formato R$ 1.234,56",
-        })
-        .transform((value) => {
-          // Remove "R$", pontos e substitui vírgula por ponto
-          const numericValue = value
-            .replace("R$ ", "")
-            .replace(/\./g, "")
-            .replace(",", ".");
-          return parseFloat(numericValue); // Converte para número
-        }),
+      sectorDescription: z.string().min(1, 'Descrição é obrigatória!'),
+      salePrice: z.string().min(1, 'Preço é obrigatório!'),
       sectorType: z.enum(["TRACK", "CABIN", "TABLE", "LOUNGE", "OTHER"], {
         errorMap: () => {
           return { message: "Selecione uma opção válida para a tipo!" };

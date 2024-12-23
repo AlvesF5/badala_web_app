@@ -1,8 +1,8 @@
-import { Controller } from 'react-hook-form';
 import { useState } from "react";
-import { mask } from "remask";
+import numeral from "numeral";
+import "numeral/locales/pt-br";
 
-const currencyMask = "R$ 999.999.999,99";
+numeral.locale("pt-br");
 
 export default function SectorDetails({
     register,
@@ -42,7 +42,21 @@ export default function SectorDetails({
         updateFieldHandler("sectors", updatedSectors); // Update the state with the new sectors array
     };
 
-    const [maskedValue, setMaskedValue] = useState("");
+
+    const [value, setValue] = useState("");
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const inputValue = e.target.value;
+
+        // Remove caracteres não numéricos
+        const numericValue = inputValue.replace(/[^0-9]/g, "");
+
+        // Converte para número e formata no padrão BRL
+        const formattedValue = numeral(Number(numericValue) / 100).format("0,0.00");
+
+        // Atualiza o estado com o valor formatado
+        setValue(`R$ ${formattedValue}`);
+    };
 
     return (
         <div>
@@ -94,23 +108,14 @@ export default function SectorDetails({
                         </div>
 
                         <div className="relative z-0 w-full mb-5 group">
-                            <Controller
+                            <input
+                                {...register(`sectors.${index}.salePrice`)}
+                                value={value|| ""}
                                 name={`sectors.${index}.salePrice`}
-                                control={control}
-                                defaultValue="0,00"
-                                render={({ field }) => (
-                                    <input
-                                        {...field}
-                                        value={maskedValue}
-                                        onChange={(e) => {
-                                            const masked = mask(e.target.value, [currencyMask]);
-                                            setMaskedValue(masked);
-                                            field.onChange(masked); // Atualiza o valor no react-hook-form
-                                        }}
-                                        type="text"
-                                        className="input_default_one_line peer"
-                                    />
-                                )}
+                                className="input_default_one_line peer"
+                                type="text"
+
+                                onChange={handleChange}
                             />
                             <label htmlFor={`sectors.${index}.salePrice`} className="label_input_default_one_line">
                                 Preço de Venda
