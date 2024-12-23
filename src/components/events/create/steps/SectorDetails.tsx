@@ -1,6 +1,8 @@
 import { useState } from "react";
 import numeral from "numeral";
 import "numeral/locales/pt-br";
+import InputMoney from "@/components/input/InputMoney";
+import { Controller } from "react-hook-form";
 
 numeral.locale("pt-br");
 
@@ -40,22 +42,6 @@ export default function SectorDetails({
         const updatedSectors = [...data.sectors]; // Create a copy of the sectors array
         updatedSectors[index] = { ...updatedSectors[index], [field]: value }; // Update the specific field
         updateFieldHandler("sectors", updatedSectors); // Update the state with the new sectors array
-    };
-
-
-    const [value, setValue] = useState("");
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const inputValue = e.target.value;
-
-        // Remove caracteres não numéricos
-        const numericValue = inputValue.replace(/[^0-9]/g, "");
-
-        // Converte para número e formata no padrão BRL
-        const formattedValue = numeral(Number(numericValue) / 100).format("0,0.00");
-
-        // Atualiza o estado com o valor formatado
-        setValue(`R$ ${formattedValue}`);
     };
 
     return (
@@ -108,14 +94,15 @@ export default function SectorDetails({
                         </div>
 
                         <div className="relative z-0 w-full mb-5 group">
-                            <input
-                                {...register(`sectors.${index}.salePrice`)}
-                                value={value|| ""}
+                            <Controller
                                 name={`sectors.${index}.salePrice`}
-                                className="input_default_one_line peer"
-                                type="text"
-
-                                onChange={handleChange}
+                                control={control}
+                                render={({ field }) => (
+                                    <InputMoney
+                                        className="input_default_one_line peer"
+                                        onChange={field.onChange}
+                                    />
+                                )}
                             />
                             <label htmlFor={`sectors.${index}.salePrice`} className="label_input_default_one_line">
                                 Preço de Venda

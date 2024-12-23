@@ -128,7 +128,7 @@ export const eventSectorSchema = z.object({
       sectorName: z.string().min(1, 'Nome do setor é obrigatório!'),
       capacity: z.number().min(1, 'Capacidade é obrigatória'),
       sectorDescription: z.string().min(1, 'Descrição é obrigatória!'),
-      salePrice: z.string().min(1, 'Preço é obrigatório!'),
+      salePrice: z.number().min(1, 'Preço é obrigatório!'),
       sectorType: z.enum(["TRACK", "CABIN", "TABLE", "LOUNGE", "OTHER"], {
         errorMap: () => {
           return { message: "Selecione uma opção válida para a tipo!" };
