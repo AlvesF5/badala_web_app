@@ -2,7 +2,7 @@ import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { Controller } from 'react-hook-form';
 import { useState } from "react";
-import { EditorState, convertToRaw } from 'draft-js';
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 
 export default function EventDetails({ data, updateFielHandler, register, errors, control }: { data: any, updateFielHandler: any, register: any; errors: any, control: any }) {
 
@@ -116,22 +116,30 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                 <Controller
                     name="eventDescription"
                     control={control}
-                    defaultValue="" // Inicializa como string vazia
-                    render={({ field }) => (
-                        <Editor
-                            editorState={editorState}
-                            onEditorStateChange={(state) => {
-                                setEditorState(state); // Atualiza o estado local
-                                const rawContent = convertToRaw(state.getCurrentContent()); // Converte o conteúdo para raw
-                                const hasText = state.getCurrentContent().hasText(); // Verifica se há texto no editor
-                                const contentAsString = hasText ? JSON.stringify(rawContent) : ""; // Converte para string JSON ou vazio
-                                field.onChange(contentAsString); // Atualiza o estado do formulário com a string ou vazio
-                            }}
-                            wrapperClassName="border border-gray-300 rounded-md"
-                            editorClassName="p-4 min-h-[200px] text-gray-800"
-                            toolbarClassName="border-b border-gray-300 bg-gray-100"
-                        />
-                    )}
+                    defaultValue={data.eventDescription || ""} // Inicializa com o valor do formulário
+                    render={({ field }) => {
+                        // Sincroniza o estado do editor com o valor do formulário
+                        const initialEditorState = field.value
+                            ? EditorState.createWithContent(convertFromRaw(JSON.parse(field.value)))
+                            : EditorState.createEmpty();
+
+                        return (
+                            <Editor
+                                editorState={editorState || initialEditorState} // Usa o estado local ou inicial
+                                onEditorStateChange={(state) => {
+                                    setEditorState(state); // Atualiza o estado local
+                                    const rawContent = convertToRaw(state.getCurrentContent());
+                                    const hasText = state.getCurrentContent().hasText();
+                                    const contentAsString = hasText ? JSON.stringify(rawContent) : "";
+                                    field.onChange(contentAsString); // Atualiza o estado do formulário
+                                    updateFielHandler("eventDescription", contentAsString);
+                                }}
+                                wrapperClassName="border border-gray-300 rounded-md"
+                                editorClassName="p-4 min-h-[200px] text-gray-800"
+                                toolbarClassName="border-b border-gray-300 bg-gray-100"
+                            />
+                        );
+                    }}
                 />
                 <label htmlFor="eventDescription" className="label_textarea">Descrição do Evento</label>
             </div>

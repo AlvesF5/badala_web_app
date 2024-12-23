@@ -13,6 +13,7 @@ import SectorDetails from '@/components/events/create/steps/SectorDetails';
 import EventBanner from '@/components/events/create/steps/EventBanner';
 import useMyForms from "@/hooks/useMyForms";
 import { toast } from "sonner";
+import numeral from "numeral";
 
 const EventRegistration = () => {
     const steps = ["Info. Básicas", "Setores", "Endereço"];
@@ -137,6 +138,7 @@ const EventRegistration = () => {
     };
 
     const createEvent = async () => {
+        console.log(data)
         if (isValid) {
             const createEventDTO = {
                 eventDTO: {
@@ -153,7 +155,7 @@ const EventRegistration = () => {
                         sectorName: sector.sectorName,
                         capacity: Number(sector.capacity),
                         sectorDescription: sector.sectorDescription,
-                        salePrice: Number(sector.salePrice),
+                        salePrice: numeral(sector.salePrice / 100).format("0,0.00"),
                         sectorType: sector.sectorType,
                     })),
                 },

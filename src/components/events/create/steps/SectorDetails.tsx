@@ -94,16 +94,23 @@ export default function SectorDetails({
                         </div>
 
                         <div className="relative z-0 w-full mb-5 group">
+
                             <Controller
                                 name={`sectors.${index}.salePrice`}
                                 control={control}
+                                defaultValue={sector.salePrice || 0} // Valor inicial como número
                                 render={({ field }) => (
                                     <InputMoney
                                         className="input_default_one_line peer"
-                                        onChange={field.onChange}
+                                        value={field.value} // Vincula o valor ao estado do formulário
+                                        onChange={(value) => {
+                                            field.onChange(value); // Atualiza o estado do formulário
+                                            handleSectorChange(index, "salePrice", value); // Atualiza o estado local
+                                        }}
                                     />
                                 )}
                             />
+
                             <label htmlFor={`sectors.${index}.salePrice`} className="label_input_default_one_line">
                                 Preço de Venda
                             </label>
