@@ -103,23 +103,46 @@ export const loginUserSchema = z.object({
 });
 
 // Schema para os detalhes do evento
-export const eventDetailschema = z.object({
-  eventName: z.string().min(5, 'Nome do evento é obrigatório'),
-  startDate: z.string().min(1, 'Data de início é obrigatória'),
-  endDate: z.string().min(1, 'Data de término é obrigatória'),
-  spaceName: z.string().min(1, 'Nome do espaço é obrigatório'),
-  category: z.enum(["SHOWS", "THEATER", "TALK", "STAND_UP", "KIDS"], {
-    errorMap: () => {
-      return { message: "Selecione uma opção válida para a categoria!" };
+export const eventDetailschema = z
+  .object({
+    eventName: z.string().min(5, "Nome do evento é obrigatório"),
+    startDate: z.string().min(1, "Data de início é obrigatória"),
+    endDate: z.string().min(1, "Data de término é obrigatória"),
+    spaceName: z.string().min(1, "Nome do espaço é obrigatório"),
+    category: z.enum(["SHOWS", "THEATER", "TALK", "STAND_UP", "KIDS"], {
+      errorMap: () => {
+        return { message: "Selecione uma opção válida para a categoria!" };
+      },
+    }),
+    classification: z.enum(["CL", "C10", "C12", "C14", "C16", "C18"], {
+      errorMap: () => {
+        return { message: "Selecione uma opção válida para a classificação!" };
+      },
+    }),
+    eventDescription: z.string().min(1, "Descrição é obrigatória"),
+  })
+  .refine(
+    (data) => {
+      const now = new Date();
+      const startDate = new Date(data.startDate + "Z"); // Adiciona o sufixo "Z"
+      return startDate > now;
     },
-  }),
-  classification: z.enum(["CL", "C10", "C12", "C14", "C16", "C18"], {
-    errorMap: () => {
-      return { message: "Selecione uma opção válida para a classificação!" };
+    {
+      message: "A data de início deve ser maior que a data atual.",
+      path: ["startDate"], // Aponta para o campo startDate
+    }
+  )
+  .refine(
+    (data) => {
+      const startDate = new Date(data.startDate + "Z"); // Adiciona o sufixo "Z"
+      const endDate = new Date(data.endDate + "Z"); // Adiciona o sufixo "Z"
+      return endDate >= startDate;
     },
-  }),
-  eventDescription: z.string().min(1, 'Descrição é obrigatória'),
-});
+    {
+      message: "A data de término não pode ser menor que a data de início.",
+      path: ["endDate"], // Aponta para o campo endDate
+    }
+  );
 
 // Schema para os setores do evento
 export const eventSectorSchema = z.object({

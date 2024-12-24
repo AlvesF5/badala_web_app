@@ -9,8 +9,8 @@ export default function EventDetails({ data, updateFielHandler, register, errors
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
     const handleDateChange = (key: string, value: string) => {
-        // Adiciona segundos ao valor do input e converte para um objeto Date
-        const dateWithSeconds = new Date(`${value}:00`);
+        // Adiciona segundos ao valor do input e converte para um objeto Date em UTC
+        const dateWithSeconds = new Date(`${value}:00Z`); // Adiciona o sufixo "Z" para UTC
         updateFielHandler(key, dateWithSeconds.toISOString()); // Converte para ISO 8601
     };
 
