@@ -1,12 +1,22 @@
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { Controller } from 'react-hook-form';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 
 export default function EventDetails({ data, updateFielHandler, register, errors, control }: { data: any, updateFielHandler: any, register: any; errors: any, control: any }) {
 
-    const [editorState, setEditorState] = useState(EditorState.createEmpty());
+    const [editorState, setEditorState] = useState(() => {
+        return data.eventDescription
+            ? EditorState.createWithContent(convertFromRaw(JSON.parse(data.eventDescription)))
+            : EditorState.createEmpty();
+    });
+
+    useEffect(() => {
+        if (data.eventDescription) {
+            setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(data.eventDescription))));
+        }
+    }, [data.eventDescription]);
 
     const handleDateChange = (key: string, value: string) => {
         // Adiciona segundos ao valor do input e converte para um objeto Date em UTC
@@ -67,9 +77,15 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                         onChange={(e) => updateFielHandler("spaceName", e.target.value)}
                         name="spaceName"
                         id="spaceName"
-                        className="input_default_one_line peer"
+                        className="input_default_one_line peer placeholder:text-xs"
+                        placeholder="Ex: Arena Axé Moí" // O placeholder será visível
                     />
-                    <label htmlFor="spaceName" className="label_input_default_one_line">Local do evento</label>
+                    <label
+                        htmlFor="spaceName"
+                        className="label_input_default_one_line_place_holder"
+                    >
+                        Local do evento
+                    </label>
                 </div>
 
                 <div className="relative z-0 w-full mb-5 group">
@@ -116,30 +132,23 @@ export default function EventDetails({ data, updateFielHandler, register, errors
                 <Controller
                     name="eventDescription"
                     control={control}
-                    defaultValue={data.eventDescription || ""} // Inicializa com o valor do formulário
-                    render={({ field }) => {
-                        // Sincroniza o estado do editor com o valor do formulário
-                        const initialEditorState = field.value
-                            ? EditorState.createWithContent(convertFromRaw(JSON.parse(field.value)))
-                            : EditorState.createEmpty();
-
-                        return (
-                            <Editor
-                                editorState={editorState || initialEditorState} // Usa o estado local ou inicial
-                                onEditorStateChange={(state) => {
-                                    setEditorState(state); // Atualiza o estado local
-                                    const rawContent = convertToRaw(state.getCurrentContent());
-                                    const hasText = state.getCurrentContent().hasText();
-                                    const contentAsString = hasText ? JSON.stringify(rawContent) : "";
-                                    field.onChange(contentAsString); // Atualiza o estado do formulário
-                                    updateFielHandler("eventDescription", contentAsString);
-                                }}
-                                wrapperClassName="border border-gray-300 rounded-md"
-                                editorClassName="p-4 min-h-[200px] text-gray-800"
-                                toolbarClassName="border-b border-gray-300 bg-gray-100"
-                            />
-                        );
-                    }}
+                    defaultValue={data.eventDescription || ""}
+                    render={({ field }) => (
+                        <Editor
+                            editorState={editorState}
+                            onEditorStateChange={(state) => {
+                                setEditorState(state);
+                                const rawContent = convertToRaw(state.getCurrentContent());
+                                const hasText = state.getCurrentContent().hasText();
+                                const contentAsString = hasText ? JSON.stringify(rawContent) : "";
+                                field.onChange(contentAsString);
+                                updateFielHandler("eventDescription", contentAsString);
+                            }}
+                            wrapperClassName="border border-gray-300 rounded-md bg-balada_gray_900"
+                            editorClassName="p-4 min-h-[200px] text-gray-800 bg-balada_gray_600"
+                            toolbarClassName="border-b border-gray-300"
+                        />
+                    )}
                 />
                 <label htmlFor="eventDescription" className="label_textarea">Descrição do Evento</label>
             </div>

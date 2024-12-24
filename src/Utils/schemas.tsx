@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { unMask } from "remask"
 
 const currentDate = new Date();
 const minimumAge = new Date(
@@ -149,8 +148,8 @@ export const eventSectorSchema = z.object({
   sectors: z.array(
     z.object({
       sectorName: z.string().min(1, 'Nome do setor é obrigatório!'),
-      capacity: z.number().min(1, 'Capacidade é obrigatória'),
-      sectorDescription: z.string().min(1, 'Descrição é obrigatória!'),
+      capacity: z.number().min(1, 'Quantidade de ingressos é obrigatório!'),
+      sectorDescription: z.string().min(1, 'Descrição é obrigatório!'),
       salePrice: z.number().min(1, 'Preço é obrigatório!'),
       sectorType: z.enum(["TRACK", "CABIN", "TABLE", "LOUNGE", "OTHER"], {
         errorMap: () => {
@@ -163,11 +162,11 @@ export const eventSectorSchema = z.object({
 
 // Schema para o endereço do evento
 export const eventAddressSchema = z.object({
-  cep: z.string().min(1, 'CEP é obrigatório'),
-  street: z.string().min(1, 'Rua é obrigatória'),
-  number: z.string().min(1, 'Número é obrigatório'),
-  state: z.string().min(1, 'Estado é obrigatório'),
-  city: z.string().min(1, 'Cidade é obrigatória'),
-  neighborhood: z.string().min(1, 'Bairro é obrigatório'),
+  cep: z.string().min(1, 'CEP é obrigatório!'),
+  street: z.string().min(1, 'Rua é obrigatório!'),
+  number: z.string().min(1, 'Número é obrigatório!'),
+  state: z.string().min(1, 'Estado é obrigatório!'),
+  city: z.string().min(1, 'Cidade é obrigatório!'),
+  neighborhood: z.string().min(1, 'Bairro é obrigatório!'),
   complement: z.string().optional(),
 });

@@ -1,8 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function EventBanner({ onBannerSelect }: { onBannerSelect: (file: File | null) => void }) {
-    const [imagePreview, setImagePreview] = useState<string | null>(null);
+export default function EventBanner({
+    onBannerSelect,
+    initialImagePreview,
+    initialFile,
+}: {
+    onBannerSelect: (file: File | null) => void;
+    initialImagePreview: string | null; // Preview inicial da imagem
+    initialFile: File | null; // Arquivo inicial
+}) {
+    const [imagePreview, setImagePreview] = useState<string | null>(initialImagePreview);
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        // Atualiza o estado inicial ao montar o componente
+        setImagePreview(initialImagePreview);
+    }, [initialImagePreview]);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];

@@ -1,8 +1,10 @@
-import { useState } from "react";
 import numeral from "numeral";
 import "numeral/locales/pt-br";
 import InputMoney from "@/components/input/InputMoney";
 import { Controller } from "react-hook-form";
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
+import { useState, useEffect } from "react";
 
 numeral.locale("pt-br");
 
@@ -11,13 +13,15 @@ export default function SectorDetails({
     errors,
     data,
     updateFieldHandler,
-    control
+    control,
+    updateFielHandler
 }: {
     register: any;
     errors: any;
     data: any;
     updateFieldHandler: any;
-    control: any
+    control: any;
+    updateFielHandler: any
 }) {
     // Função para adicionar um novo setor
     const addSector = () => {
@@ -44,6 +48,27 @@ export default function SectorDetails({
         updateFieldHandler("sectors", updatedSectors); // Update the state with the new sectors array
     };
 
+    const [editorState, setEditorState] = useState(() => {
+        try {
+            return data.sectorDescription && typeof data.sectorDescription === "string"
+                ? EditorState.createWithContent(convertFromRaw(JSON.parse(data.sectorDescription)))
+                : EditorState.createEmpty();
+        } catch (error) {
+            console.error("Erro ao processar sectorDescription:", error);
+            return EditorState.createEmpty();
+        }
+    });
+
+    useEffect(() => {
+        try {
+            if (data.sectorDescription && typeof data.sectorDescription === "string") {
+                setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(data.sectorDescription))));
+            }
+        } catch (error) {
+            console.error("Erro ao processar sectorDescription no useEffect:", error);
+        }
+    }, [data.sectorDescription]);
+
     return (
         <div>
             <h2 className="text-xl font-semibold mb-4">Setores</h2>
@@ -64,16 +89,29 @@ export default function SectorDetails({
                     </div>
 
                     <div className="relative z-0 w-full mb-5 group">
-                        <textarea
-                            {...register(`sectors.${index}.sectorDescription`)}
-                            value={sector.sectorDescription || ""}
-                            onChange={(e) => handleSectorChange(index, "sectorDescription", e.target.value)}
-                            className="textarea_default peer min-h-32"
+                        <Controller
                             name={`sectors.${index}.sectorDescription`}
-                            id={`sectors.${index}.sectorDescription`}
+                            control={control}
+                            defaultValue={data.sectorDescription || ""}
+                            render={({ field }) => (
+                                <Editor
+                                    editorState={editorState}
+                                    onEditorStateChange={(state) => {
+                                        setEditorState(state);
+                                        const rawContent = convertToRaw(state.getCurrentContent());
+                                        const hasText = state.getCurrentContent().hasText();
+                                        const contentAsString = hasText ? JSON.stringify(rawContent) : "";
+                                        field.onChange(contentAsString);
+                                        updateFielHandler("sectorDescription", contentAsString);
+                                    }}
+                                    wrapperClassName="border border-gray-300 rounded-md bg-balada_gray_900"
+                                    editorClassName="p-4 min-h-[200px] text-gray-800 bg-balada_gray_600"
+                                    toolbarClassName="border-b border-gray-300"
+                                />
+                            )}
                         />
                         <label htmlFor={`sectors.${index}.sectorDescription`} className="label_textarea">
-                            Descrição
+                            Descrição do setor
                         </label>
                     </div>
 
