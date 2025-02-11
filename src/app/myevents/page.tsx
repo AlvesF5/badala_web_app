@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { FaCalendarAlt, FaClock, FaMapMarkerAlt } from "react-icons/fa";
 
 interface Event {
   id: string;
@@ -66,7 +67,7 @@ const MeusEventos = ({ ownerId }: { ownerId: string }) => {
             <tr>
               <th className="border border-gray-300 px-4 py-2">Nome</th>
               <th className="border border-gray-300 px-4 py-2">Data de Início</th>
-              <th className="border border-gray-300 px-4 py-2">Data de Término</th>
+              <th className="border border-gray-300 px-4 py-2">Local</th>
               <th className="border border-gray-300 px-4 py-2">Ações</th>
             </tr>
           </thead>
@@ -74,13 +75,28 @@ const MeusEventos = ({ ownerId }: { ownerId: string }) => {
             {events.map((event) => (
               <tr key={event.id}>
                 <td className="border border-gray-300 px-4 py-2">{event.eventName}</td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {new Date(event.startDate.seconds * 1000).toLocaleDateString()}
+                <td className="border border-gray-300 px-4 py-2 flex items-center gap-2">
+                  <FaCalendarAlt className="text-blue-500" />
+                  {new Date(event.startDate.seconds * 1000)
+                    .toLocaleString(undefined, {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    })}
+                  <FaClock className="text-blue-500 ml-2" />
+                  {new Date(event.startDate.seconds * 1000)
+                    .toLocaleString(undefined, {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
-                  {new Date(event.endDate.seconds * 1000).toLocaleDateString()}
+                  <div className="flex items-center gap-2">
+                    <FaMapMarkerAlt className="text-red-500 flex-shrink-0" />
+                    <span className="truncate">{event.spaceName}</span>
+                  </div>
                 </td>
-                <td className="border border-gray-300 px-4 py-2">
+                <td className="border border-gray-300 px-4 py-2 flex justify-center">
                   <Button onClick={() => handleEdit(event)}>Editar</Button>
                 </td>
               </tr>
@@ -97,7 +113,6 @@ const MeusEventos = ({ ownerId }: { ownerId: string }) => {
           </DialogHeader>
           {selectedEvent && (
             <div>
-              <p>ID do Evento: {selectedEvent.id}</p>
               <p>Nome do Evento: {selectedEvent.eventName}</p>
               {/* Adicione aqui os campos de edição */}
               <Button onClick={closeDialog} className="mt-4">
