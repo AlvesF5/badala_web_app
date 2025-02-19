@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation"; // Import correto para o sistema de rotas do Next.js 13
 import { toast } from "sonner";
 import { FaCalendarAlt, FaClock, FaMapMarkerAlt } from "react-icons/fa";
+import { Button } from "@/components/ui/button";
 
 interface Event {
   id: string;
@@ -20,8 +20,7 @@ interface Event {
 const MeusEventos = ({ ownerId }: { ownerId: string }) => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const router = useRouter(); // Usando o hook correto do Next.js 13
 
   // Função para buscar eventos
   const fetchEvents = async () => {
@@ -32,6 +31,7 @@ const MeusEventos = ({ ownerId }: { ownerId: string }) => {
         throw new Error("Erro ao buscar eventos");
       }
       const data = await response.json();
+      console.log(data)
       setEvents(data);
     } catch (error) {
       toast.error("Erro ao carregar eventos");
@@ -40,16 +40,9 @@ const MeusEventos = ({ ownerId }: { ownerId: string }) => {
     }
   };
 
-  // Função para abrir o pop-up de edição
+  // Função para redirecionar para a página de edição
   const handleEdit = (event: Event) => {
-    setSelectedEvent(event);
-    setIsDialogOpen(true);
-  };
-
-  // Função para fechar o pop-up
-  const closeDialog = () => {
-    setSelectedEvent(null);
-    setIsDialogOpen(false);
+    router.push(`/myevents/edit-event/2160b940-5f60-4ae6-9a98-5d7caec05400`);
   };
 
   useEffect(() => {
@@ -77,18 +70,16 @@ const MeusEventos = ({ ownerId }: { ownerId: string }) => {
                 <td className="border border-gray-300 px-4 py-2">{event.eventName}</td>
                 <td className="border border-gray-300 px-4 py-2 flex items-center gap-2">
                   <FaCalendarAlt className="text-blue-500" />
-                  {new Date(event.startDate.seconds * 1000)
-                    .toLocaleString(undefined, {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                    })}
+                  {new Date(event.startDate.seconds * 1000).toLocaleString(undefined, {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })}
                   <FaClock className="text-blue-500 ml-2" />
-                  {new Date(event.startDate.seconds * 1000)
-                    .toLocaleString(undefined, {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                  {new Date(event.startDate.seconds * 1000).toLocaleString(undefined, {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
                   <div className="flex items-center gap-2">
@@ -104,24 +95,6 @@ const MeusEventos = ({ ownerId }: { ownerId: string }) => {
           </tbody>
         </table>
       )}
-
-      {/* Pop-up de edição */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Editar Evento</DialogTitle>
-          </DialogHeader>
-          {selectedEvent && (
-            <div>
-              <p>Nome do Evento: {selectedEvent.eventName}</p>
-              {/* Adicione aqui os campos de edição */}
-              <Button onClick={closeDialog} className="mt-4">
-                Fechar
-              </Button>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
