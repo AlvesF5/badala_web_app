@@ -42,7 +42,7 @@ const MeusEventos = ({ ownerId }: { ownerId: string }) => {
 
   // Função para redirecionar para a página de edição
   const handleEdit = (event: Event) => {
-    router.push(`/myevents/edit-event/2160b940-5f60-4ae6-9a98-5d7caec05400`);
+    router.push(`/myevents/edit-event/${event.id}`);
   };
 
   useEffect(() => {
